@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class OutputNeuron extends Neuron {
 	
 	BigDecimal deltaError; 
+	BigDecimal desiredOut;
 	
 
 	public OutputNeuron() {
@@ -22,6 +23,14 @@ public class OutputNeuron extends Neuron {
 
 	public void setDeltaError(BigDecimal deltaError) {
 		this.deltaError = deltaError;
+	}
+
+	public BigDecimal getDesiredOut() {
+		return desiredOut;
+	}
+
+	public void setDesiredOut(BigDecimal desiredOut) {
+		this.desiredOut = desiredOut;
 	}
 
 }

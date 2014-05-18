@@ -85,6 +85,15 @@ public class Neuron {
         connections.add(c);
     }
 
+    
+    public void printConnections (){
+    	for (Connection c: connections){
+    		System.out.print("\n From: " + c.getFrom().getOutValue()+ " to " + c.getTo().getOutValue()+ "\n "
+    				+ " Weight connection: " + c.getWeight());
+    	}
+    	
+    	
+    }
 
     // Sigmoid function
     public static float f(float x) {

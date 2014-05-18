@@ -35,11 +35,10 @@ public class Network {
 //	private Layer hiddenLayer;
 //	private Layer outputLayer;
 //	
-	Matrix M, V; 
+	Matrix W, V; 
 	
 	private BigDecimal[] desiredOutputLayer; //No es una neurona, es solo un valor q compararemos con el obtenido
-	
-	
+
 	
 	
 	
@@ -97,6 +96,7 @@ public class Network {
 		for (int i = 0; i < valuesInputLayer.length; i++){
 			OutputNeuron n = new OutputNeuron();
 			outputLayer[i] = n;
+			n.setDesiredOut(desiredOutputLayer[i]);
 		}
 
 		// Connect input layer to hidden layer
@@ -215,45 +215,26 @@ public class Network {
        Matrix deltaW = Matrix.product(mDeltaHidden,mInputOuts);
        deltaW = deltaW.multEscalar(learningCNT);
        deltaW.printMatrix();
-        
+
+       //Actualizamos las matrices con los deltas calculados
+       this.W = Matrix.addition(this.W, deltaW);
+	   this.V = Matrix.addition(this.V, deltaV);
+	   
+	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
+       updateConnections(W, V);
+       
+       
+     
+       
 	}
 	
-        
+      
         
 
 
        
         
-//        // ADJUST HIDDEN WEIGHTS
-//        for (int i = 0; i < hidden.length; i++) {
-//            connections = hidden[i].getConnections();
-//            float sum  = 0;
-//            // Sum output delta * hidden layer connections (just one output)
-//            for (int j = 0; j < connections.size(); j++) {
-//                Connection c = (Connection) connections.get(j);
-//                // Is this a connection from hidden layer to next layer (output)?
-//                if (c.getFrom() == hidden[i]) {
-//                    sum += c.getWeight()*deltaOutput;
-//                }
-//            }    
-//            // Then adjust the weights coming in based:
-//            // Above sum * derivative of sigmoid output function for hidden neurons
-//            for (int j = 0; j < connections.size(); j++) {
-//                Connection c = (Connection) connections.get(j);
-//                // Is this a connection from previous layer (input) to hidden layer?
-//                if (c.getTo() == hidden[i]) {
-//                    float output = hidden[i].getOutput();
-//                    float deltaHidden = output * (1 - output);  // Derivative of sigmoid(x)
-//                    deltaHidden *= sum;   // Would sum for all outputs if more than one output
-//                    Neuron neuron = c.getFrom();
-//                    float deltaWeight = neuron.getOutput()*deltaHidden;
-//                    c.adjustWeight(LEARNING_CONSTANT*deltaWeight);
-//                }
-//            } 
-//        }
-//
-//        return result;
-//    }
+
 	
 	
 	
@@ -283,7 +264,7 @@ public class Network {
 
 
 
-	public Neuron[] getOutputLayer() {
+	public OutputNeuron[] getOutputLayer() {
 		return outputLayer;
 	}
 
@@ -308,10 +289,10 @@ public class Network {
 	
 	//Las conexiones son creadas una vez,no dejan de ser punteros (aunq estemos en java)
 	//si las modificamos en un Layer no necesitamos cambiarlas en los otros,
-	//por lo q cogeremos solo hidden layer y asi modificaremos todos los pesos de la red
+	//por lo q cogeremos solo hidden layer y asi modificaremos todos los pesos de la red, 
+	//Si añadimos más hidden layer solo tendríamos q hacer esto por cada hidden layer
+	//post: modifica la clase network (vector hiddenLayer, inputLayer y outputLayer
 	public void updateConnections (Matrix W, Matrix V){
-		
-		
 		 for (int i = 0; i < hiddenLayer.length; i++) {
 			 for (Connection c: hiddenLayer[i].getConnections()){
 				 if (c.getTo() == hiddenLayer[i]){
@@ -323,7 +304,7 @@ public class Network {
 				 else{ //c.getFrom == hiddenLayer
 					 for (int j = 0; j < outputLayer.length; j++){
 						 if (outputLayer[j] == c.getTo())
-							 c.setWeight(V.getValuePos(i, j));
+							 c.setWeight(V.getValuePos(j,i));
 					 }
 				 }
 			 }
@@ -332,13 +313,30 @@ public class Network {
 	
 	
 	
-	//Calculamos el error en un
-	public void calculateError ()
+	
+	
+	//Calculamos el error en un patrón, con las matrices de pesos resultantes 
+	//(debemos actualizar el peso de las conexiones)
+	public BigDecimal calculateError (Matrix W, Matrix V)
 	{
+		this.W = W;
+		this.V = V;
+		updateConnections(W, V);
+		feedForward(); //Se calculan las nuevas salidas con las conexiones ya actualizadas
 		
 		
+		BigDecimal acum = new BigDecimal(0);
+	
+		for (OutputNeuron out: this.getOutputLayer()){
+			BigDecimal sub = out.getDesiredOut();
+			sub = sub.subtract(out.getOutValue());
+			acum = acum.add(sub);
+		}
 		
+		acum= acum.pow(2);
+		acum = acum.multiply(new BigDecimal (0.5));
 		
+		return acum;
 	}
 	
 	

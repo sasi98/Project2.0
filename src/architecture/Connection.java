@@ -37,6 +37,7 @@ public class Connection {
     
 
     public void setWeight(BigDecimal weight) {
+    	System.out.print("Updating weight: "+ weight + "\n");
 		this.weight = weight;
 	}
 
