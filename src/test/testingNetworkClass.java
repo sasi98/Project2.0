@@ -3,7 +3,9 @@ package test;
 import java.awt.Dimension;
 import java.math.BigDecimal;
 
+import architecture.Connection;
 import architecture.Network;
+import architecture.Neuron;
 import utilities.Matrix;
 
 public class testingNetworkClass {
@@ -76,6 +78,18 @@ public class testingNetworkClass {
 			System.out.print(ne.getOutputLayer()[i].getOutValue()+ "\n");
 		}	
 	
+		ne.train();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	
@@ -88,13 +102,25 @@ public class testingNetworkClass {
 	
 	//Prueba correspondiente a los folios escaneados
 	public static void main(String[] args){
-		testingNetworkClass  testN = new testingNetworkClass();
+//		testingNetworkClass  testN = new testingNetworkClass();
+//		
+//		
+//		testN.testSetUpNetworkANDFeedForward(); //works!!
+//		
 		
+		System.out.print ("Probando el funcionamiento de punteros en java: \n");
 		
-		testN.testSetUpNetworkANDFeedForward(); //works!!
+		Neuron a = new Neuron(new BigDecimal(56), false);
 		
+		Neuron[] prueba1 = new Neuron[2];
+		Neuron[] prueba2 = new Neuron[2];
 		
-	
+		prueba1[0] = a;
+		prueba2[0] = a;
+		
+		prueba2[0].setOutValue(new BigDecimal(23));
+		
+		System.out.print(prueba1[0].getOutValue() + "; "+ prueba2[0].getOutValue()); 
 	
 		
 	

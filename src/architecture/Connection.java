@@ -34,12 +34,19 @@ public class Connection {
     public BigDecimal getWeight() {
         return weight;
     }
+    
 
-    // Changing the weight of the connection
+    public void setWeight(BigDecimal weight) {
+		this.weight = weight;
+	}
+
+	// Changing the weight of the connection
     // Former weight plus (increment*learning constant) 
     public void adjustWeight (BigDecimal deltaWeight) {
     	weight.add(deltaWeight);
     }
+    
+  
 
 
 }
