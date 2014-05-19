@@ -12,7 +12,8 @@ public class Company {
 
 	private String id;
 	private String name;
-	private int quoteDays; //Número de dias de cotización
+	private int quoteDays; //Número de dias de cotización, no cuenta con el 11 de octubre para los que no tenemos rm ni ri
+							//nº que aparece en la hoja menos 1
 	private ArrayList<Date> dates;
 	private ArrayList<BigDecimal> ris;
 	private ArrayList<BigDecimal> rms;
