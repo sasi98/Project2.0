@@ -3,7 +3,9 @@ package test;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+
 
 
 
@@ -67,15 +69,25 @@ public class testingPatronClass {
 	
 	public void testPatronesAleatorios (){
 		PatronData patron = new PatronData("002");
-		System.out.print("Creando patrones Rm aletorios y de tamaño 8: \n");
-		ArrayList<BigDecimal[]> arrayRm = patron.createRandomArrayRm(5, 8, 100);
+		System.out.print("Creando lista de listas de aleatorios: \n");
+		ArrayList<ArrayList<Integer>> ale = patron.generateRandomLists(10, 8);
+		
+		for (ArrayList<Integer> list: ale){
+			for (int numAle: list){
+				System.out.print (numAle +" ");
+			}
+			System.out.print ("\n");
+		}
+		
+		
+		System.out.print("Creando 10 patrones Rm aletorios y de tamaño 8: \n");
+		ArrayList<BigDecimal[]> arrayRm = patron.createRandomArrayRm(100, ale);
 		patron.printPatrones(arrayRm);
 		
-		System.out.print("Creando patrones Ri no solapados y de tamaño 8: \n");
-		ArrayList<BigDecimal[]> arrayRi = patron.createRandomArrayRi(5, 8, 100);
+		System.out.print("Creando 10 patrones Ri aleatorios y de tamaño 8: \n");
+		ArrayList<BigDecimal[]> arrayRi = patron.createRandomArrayRi(100, ale);
 		patron.printPatrones(arrayRi);
-		
-		
+	
 		
 	}
 	
@@ -88,8 +100,8 @@ public class testingPatronClass {
 		
 		testingPatronClass testP = new testingPatronClass();
 	//	testP.testPatronesSolapados(); //Works
-		testP.testPatronesNoSolapados(); //Works fine
-		//testP.testPatronesAleatorios();
+	//	testP.testPatronesNoSolapados(); //Works fine
+		testP.testPatronesAleatorios();
 	
 		
 		

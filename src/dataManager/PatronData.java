@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import jxl.read.biff.BiffException;
@@ -133,26 +134,54 @@ public class PatronData {
 		
 		
 		
-		//Pre: Los patrones son seleccionados de forma aletoria de entre toda la tabla de datos 
-		//Return: array de patrones de datos Rm aleatorios. 
-		public ArrayList<BigDecimal[]> createRandomArrayRm (int numPatrones, int numdays, int cnt){
-			ArrayList<BigDecimal[]> arrayRm = new ArrayList<BigDecimal[]>();
+		// Los patrones deben ser seleccionados de forma aletoria de entre toda la tabla de datos, 
+		//rm  y ri van siempre a la par, por lo q en el caso de los aletorios hay q usar la misma 
+		//lista de aleatorios para seleccionarlos
+		//numPatrones= nº de listas de aletorios a generar
+		//numdays= nº de valores aleatorios por patrón
+		//Return: Lista de listas de enteros correspondientes a los aletorios generados para la selección de los patrones 
+		
+		public ArrayList<ArrayList<Integer>> generateRandomLists (int numPatrones, int numdays){
+			ArrayList<ArrayList<Integer>> randoms = new ArrayList<ArrayList<Integer>>();
 			for (int i = 0; i< numPatrones; i++){
-				ArrayList<Integer> randomList = generateRandomList(company.getQuoteDays(), numdays);  
-				arrayRm.add(createRandomPatron(company.getRms(), randomList, cnt));
+				ArrayList<Integer> randomList = generateRandomList(company.getQuoteDays(), numdays);
+				randoms.add(randomList);
+				
+				//map.put(createRandomPatron(company.getRms(), randomList, cnt), createRandomPatron(company.getRis(), randomList, cnt));
 			}
-			return arrayRm;
+			return randoms;
 		}
 		
-		public ArrayList<BigDecimal[]> createRandomArrayRi (int numPatrones, int numdays, int cnt){
+		
+		//Pre:  generateRandomLists debe ser ejecutado
+		//cnt: cnt por la que multiplicaremos los valores
+		//randomList: lista de listas que contiene los aleatorios (corrrespondientes a los índices) de los valores que debemos seleccionar
+		//return: array de patrones Rm aleatorios
+		public ArrayList<BigDecimal[]> createRandomArrayRm (int cnt, ArrayList<ArrayList<Integer>> randomLists){
 			ArrayList<BigDecimal[]> arrayRm = new ArrayList<BigDecimal[]>();
-			for (int i = 0; i< numPatrones; i++){
-				ArrayList<Integer> randomList = generateRandomList(company.getQuoteDays(), numdays);  
-				arrayRm.add(createRandomPatron(company.getRis(), randomList, cnt));
-			}
+			for (ArrayList<Integer> randomList: randomLists){
+					arrayRm.add(createRandomPatron(company.getRms(), randomList, cnt));
+				}
 			return arrayRm;
 		}
+			
 		
+		//Pre:  generateRandomLists debe ser ejecutado
+		//cnt: cnt por la que multiplicaremos los valores
+		//randomList: lista de listas que contiene los aleatorios (corrrespondientes a los índices) de los valores que debemos seleccionar
+		//return: array de patrones Ri aleatorios		
+		public ArrayList<BigDecimal[]> createRandomArrayRi (int cnt, ArrayList<ArrayList<Integer>> randomLists){
+			ArrayList<BigDecimal[]> arrayRi = new ArrayList<BigDecimal[]>();
+			for (ArrayList<Integer> randomList: randomLists){
+				arrayRi.add(createRandomPatron(company.getRis(), randomList, cnt));
+				}
+			return arrayRi;
+		}
+		
+		
+		
+		
+	
 		
 	
 		//it: iterador posicionado al inicio del array del q seleccionaremos los datos (rm o ri de la empresa)	
