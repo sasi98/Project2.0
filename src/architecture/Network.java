@@ -5,41 +5,32 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import dataManager.ReadExcel;
 import utilities.Matrix;
 
 public class Network {
 	
-	
-	public static final int PRECISION = 10; //variable pública la usaremos por toda la red
 
-	private int numNeuronsES, /*Número de neuronas de entrada o salida por patrón*/
-				numNeuronsO,  /*Número de neuronas en la capa oculta*/
-				numPatrones;  /*Número de patrones utilizados en el entrenamiento*/ 
+	
+	private int 					numNeuronsES, /*Número de neuronas de entrada o salida por patrón*/
+									numNeuronsO,  /*Número de neuronas en la capa oculta*/
+									numPatrones,  /*Número de patrones utilizados en el entrenamiento*/ 
+									iterationMAX;
 	
 	
-	
-	private double 		learningCNT = 1;
-	private int 		iterationMAX;
-	private BigDecimal 	cota;
+	private double 					learningCNT = 1;
+	private BigDecimal 				cota;
 	
 	
+	private Neuron[] 				inputLayer,
+									hiddenLayer;
+	private OutputNeuron[] 			outputLayer; 
 	
-	//No se aún si lo dejaremos así o con herencia o los pondremos en la otra clase layer
-	
-	private Neuron[] inputLayer;
-	private Neuron[] hiddenLayer;
-	private OutputNeuron[] outputLayer; 
-	
-	
-//	private Layer inputLayer;
-//	private Layer hiddenLayer;
-//	private Layer outputLayer;
-//	
-	Matrix W, V; 
+	private Matrix W, V; 
 	
 	private BigDecimal[] desiredOutputLayer; //No es una neurona, es solo un valor q compararemos con el obtenido
 
-	
+	private static Logger log = Logger.getLogger(Network.class);
 	
 	
 	
@@ -52,8 +43,6 @@ public class Network {
 	
 	public Network() {
 		super();
-		
-
 	}
 
 
@@ -61,68 +50,86 @@ public class Network {
 	
 	
 
+	//pre: W, V valuesInputLayer y desiredOutputLayer deben de estar inicializados
+	//numNeuronsO = número de neuronas en la capa oculta
+	//valuesInputLayer =  vector que contiene los valores de las neuronas de entrada del patrón
+	//desiredOutputLayer = contiene los valores de salida deseados
+	//W tiene que tener dimensiones: nº ocultas X nª entradas
+	//V tiene que tener dimensiones: nº salidas X nº ocultas
+	//post: 
+	
 	public void setUpPatron (int numNeuronsO, BigDecimal[] valuesInputLayer, 
 			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
 	{	
+		log.debug ("Entrando en SetUpPatron. Número de neuronas E/S: "+ valuesInputLayer.length + 
+					"Número de neuronas ocultas: "+ numNeuronsO);
+		log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
+		log.debug("Dimensiones de V (Filas X Columnas): (" + V.getRow()+ " X " + V.getColumn() +" )\n");
 		
-	//W tiene que tener dimensiones: nº ocultas X nª entradas
-	// V tiene que tener dimensiones: nº salidas X nº ocultas
-		
-		
-		this.desiredOutputLayer = desiredOutputLayer;
-		this.numNeuronsES = valuesInputLayer.length;
-		this.numNeuronsO = numNeuronsO;
-//		
-		
-		
-		//Creamos las 3 capas
-		this.inputLayer = new Neuron[valuesInputLayer.length];
-		this.hiddenLayer = new Neuron[numNeuronsO];
-		this.outputLayer = new OutputNeuron[valuesInputLayer.length];
-		
-		
-		//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
-		for (int i = 0; i < valuesInputLayer.length; i++){
-			Neuron n = new Neuron(valuesInputLayer[i], false);
-			inputLayer[i] = n;
+		if ( (W.getRow()  == numNeuronsO) && (W.getColumn() == valuesInputLayer.length) &&
+			(V.getRow() == valuesInputLayer.length) && (V.getColumn() == numNeuronsO) ){
+			
+			this.desiredOutputLayer = desiredOutputLayer;
+			this.numNeuronsES = valuesInputLayer.length;
+			this.numNeuronsO = numNeuronsO;
+			this.W = W;
+			this.V = V;
+			
+			//Creamos las 3 capas
+			this.inputLayer = new Neuron[numNeuronsES];
+			this.hiddenLayer = new Neuron[numNeuronsO];
+			this.outputLayer = new OutputNeuron[numNeuronsES];
+			
+			
+			//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
+			for (int i = 0; i < valuesInputLayer.length; i++){
+				Neuron n = new Neuron(valuesInputLayer[i], false);
+				inputLayer[i] = n;
+			}
+	
+			//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
+			for (int i = 0; i < numNeuronsO; i++){
+				Neuron n = new Neuron();
+				hiddenLayer[i] = n;
+			}
+			
+			for (int i = 0; i < valuesInputLayer.length; i++){
+				OutputNeuron n = new OutputNeuron();
+				outputLayer[i] = n;
+				n.setDesiredOut(desiredOutputLayer[i]);
+			}
+	
+			// Connect input layer to hidden layer
+	        for (int i = 0; i < hiddenLayer.length; i++) {
+	            for (int j = 0; j < inputLayer.length; j++) {
+	                // Create the connection object and put it in both neurons, and give it the weight from the matriz W            	
+	                Connection c = new Connection(inputLayer[j],hiddenLayer[i],W.getValuePos(i, j));
+	                hiddenLayer[i].addConnection(c);
+	                inputLayer[j].addConnection(c);
+	            }
+	        }
+	        
+	        // Connect the hidden layer to the output neuron, and give the weight from the matriz V
+	        for (int i = 0; i < outputLayer.length; i++) {
+	        	  for (int j = 0; j < hiddenLayer.length; j++) {
+	        		  Connection c = new Connection(hiddenLayer[j],outputLayer[i], V.getValuePos(i, j));
+	        		  hiddenLayer[j].addConnection(c);
+	        		  outputLayer[i].addConnection(c);
+	        	  }	  
+	        }
 		}
-
-		//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
-		for (int i = 0; i < numNeuronsO; i++){
-			Neuron n = new Neuron();
-			hiddenLayer[i] = n;
+		else{
+			log.error("Las dimensiones de W y/o V no coinciden con el número de neuronas del patrón \n");
+			
+			
 		}
-		
-		for (int i = 0; i < valuesInputLayer.length; i++){
-			OutputNeuron n = new OutputNeuron();
-			outputLayer[i] = n;
-			n.setDesiredOut(desiredOutputLayer[i]);
-		}
-
-		// Connect input layer to hidden layer
-        for (int i = 0; i < hiddenLayer.length; i++) {
-            for (int j = 0; j < inputLayer.length; j++) {
-                // Create the connection object and put it in both neurons, and give it the weight from the matriz W            	
-                Connection c = new Connection(inputLayer[j],hiddenLayer[i],W.getValuePos(i, j));
-                hiddenLayer[i].addConnection(c);
-                inputLayer[j].addConnection(c);
-            }
-        }
-        
-        // Connect the hidden layer to the output neuron, and give the weight from the matriz V
-        for (int i = 0; i < outputLayer.length; i++) {
-        	  for (int j = 0; j < hiddenLayer.length; j++) {
-        		  Connection c = new Connection(hiddenLayer[j],outputLayer[i], V.getValuePos(i, j));
-        		  hiddenLayer[j].addConnection(c);
-        		  outputLayer[i].addConnection(c);
-        	  }	  
-        }
-		
 	}
 	
 	
-	//Los inputs ya tienen valores (dados en la inicialización) 
+	//Pre: Las neuronas de entrada deben de estar inicializados con valores válidos
+	//Pre: ejecución de setUpPatron
 	public void feedForward (){
+		log.trace("Ejecutando módulo feedForward() \n");
 		
 		// Have the hidden layer calculate its output
         for (int i = 0; i < hiddenLayer.length; i++) {
@@ -140,6 +147,7 @@ public class Network {
 	//pre: Realizar el setup antes
 	//
 	public void train () {
+		log.trace("Ejecutando módulo train() \n");
         feedForward();
         //This is what backpropagation starts
         
@@ -172,15 +180,15 @@ public class Network {
         	deltaHidden[i] = deltaE;   	
         }
     
-        System.out.println ("Muestro los delta de salida: \n ");
-        for (BigDecimal b: deltaOutput){
-        	System.out.print(b + " ");
-        }
-        
-        System.out.println ("Muestro los delta de la capa oculta: \n ");
-        for (BigDecimal b: deltaHidden){
-        	System.out.print(b + " ");
-        }
+//        System.out.println ("Muestro los delta de salida: \n ");
+//        for (BigDecimal b: deltaOutput){
+//        	System.out.print(b + " ");
+//        }
+//        
+//        System.out.println ("Muestro los delta de la capa oculta: \n ");
+//        for (BigDecimal b: deltaHidden){
+//        	System.out.print(b + " ");
+//        }
         
         //Actualización de matrices: Cálculo de deltaV y deltaW
         
@@ -199,7 +207,7 @@ public class Network {
         Matrix deltaV = Matrix.product(mDeltaOutput, mHiddenOuts);
         deltaV = deltaV.multEscalar(learningCNT);
         
-        deltaV.printMatrix();
+        //deltaV.printMatrix();
         
         
       //Matriz W: Delta de error de la oculta por salidas de la capa de entrada (inputs)
@@ -214,14 +222,15 @@ public class Network {
        mDeltaHidden = Matrix.transponer(mDeltaHidden);
        Matrix deltaW = Matrix.product(mDeltaHidden,mInputOuts);
        deltaW = deltaW.multEscalar(learningCNT);
-       deltaW.printMatrix();
+       
+      // deltaW.printMatrix();
 
        //Actualizamos las matrices con los deltas calculados
        this.W = Matrix.addition(this.W, deltaW);
 	   this.V = Matrix.addition(this.V, deltaV);
 	   
 	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
-       updateConnections(W, V);
+       //updateConnections(W, V);
        
        
      
@@ -282,6 +291,39 @@ public class Network {
 
 
 
+	public Matrix getW() {
+		return W;
+	}
+
+
+
+	public void setW(Matrix w) {
+		W = w;
+	}
+
+
+
+
+
+
+	public Matrix getV() {
+		return V;
+	}
+
+
+
+
+
+
+	public void setV(Matrix v) {
+		V = v;
+	}
+
+
+
+
+
+
 	public void setDesiredOutputLayer(BigDecimal[] desiredOutputLayer) {
 		this.desiredOutputLayer = desiredOutputLayer;
 	}
@@ -315,13 +357,15 @@ public class Network {
 	
 	
 	
-	//Calculamos el error en un patrón, con las matrices de pesos resultantes 
-	//(debemos actualizar el peso de las conexiones)
-	public BigDecimal calculateError (Matrix W, Matrix V)
+	//Calculamos el error en un patrón, con las matrices de pesos resultantes
+	//W: matriz W obtenida en el último patron entrenado
+	//V: matriz V obtenida en el último patron entrenado
+	//pre: W y V deben de ser matrices válidas 
+	public BigDecimal calculateError ()
 	{
-		this.W = W;
-		this.V = V;
-		updateConnections(W, V);
+//		this.W = W;
+//		this.V = V;
+//		updateConnections(W, V);  //debemos actualizar el peso de las conexiones
 		feedForward(); //Se calculan las nuevas salidas con las conexiones ya actualizadas
 		
 		
@@ -338,6 +382,7 @@ public class Network {
 		
 		return acum;
 	}
+	
 	
 	
 	

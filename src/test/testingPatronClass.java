@@ -101,7 +101,7 @@ public class testingPatronClass {
 		testingPatronClass testP = new testingPatronClass();
 	//	testP.testPatronesSolapados(); //Works
 	//	testP.testPatronesNoSolapados(); //Works fine
-		testP.testPatronesAleatorios();
+		testP.testPatronesAleatorios(); //Worsk fine 
 	
 		
 		

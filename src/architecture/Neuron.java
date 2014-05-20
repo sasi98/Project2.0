@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 
 
 public class Neuron {
@@ -11,6 +13,8 @@ public class Neuron {
 	private BigDecimal outValue;
 	private ArrayList<Connection> connections; //tanto las conexiones hacia delante como las que tenga hacia atrás
 	private boolean bias;
+	
+	private static Logger log = Logger.getLogger(Neuron.class);
 	
 	
 	
@@ -25,6 +29,7 @@ public class Neuron {
 	
 	public Neuron(BigDecimal outValue, boolean bias) {
 		super();
+		log.debug("Creando neurona con valor: " + outValue + "; Bias: "+ bias);
 		this.outValue = outValue;
 		this.connections = new ArrayList<>();
 		this.bias = bias;
@@ -59,7 +64,8 @@ public class Neuron {
 	//Calcula el valor de salida de una neurona, evidentemente esto será para las de las capas ocultas o salida,
 	//a las entradas les damos directamente el valor 
     public void calculateOutValue() {
-    	System.out.println("Looking through " + connections.size() + " connections");
+    	//System.out.println("Looking through " + connections.size() + " connections");
+    	log.debug("Nº de conexiones en la neurona: " + connections.size()+"\n");
     	BigDecimal acum = new BigDecimal(0);
         for (int i = 0; i < connections.size(); i++) {
         	Connection c = (Connection) connections.get(i);
@@ -70,14 +76,15 @@ public class Neuron {
         	if (to == this) { //CONEXIONES HACIA DELANTE, "TO" is our neuron
         		BigDecimal aux = c.getWeight();
         		aux = aux.multiply(from.getOutValue());  //value neuron * connexion weight
-        		aux.setScale(Network.PRECISION, RoundingMode.HALF_UP);
+        		aux.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         		acum = acum.add(aux);
-        		outValue = acum;
                      //sum = sum + input_from*weight
         		// Output is result of sigmoid function o la que sea
         		//output = f(bias+sum);
         	} 	
         }
+        outValue = acum;
+        log.debug("Valor de salida de la neurona: " + outValue+"\n");
     }
 
     

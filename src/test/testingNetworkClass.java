@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import architecture.Connection;
 import architecture.Network;
+import architecture.NetworkManager;
 import architecture.Neuron;
 import utilities.Matrix;
 
@@ -14,7 +15,7 @@ public class testingNetworkClass {
 	public void testCreateRandomMatrix (){
 		int row = 2, column = 3;
 		Dimension d = new Dimension(row, column); //ancho = nºfilas;  largo = nºcolumnas
-		Matrix randomW = Matrix.createRandomMatrix(-10, 10, d, Network.PRECISION);
+		Matrix randomW = Matrix.createRandomMatrix(-10, 10, d, NetworkManager.PRECISION);
 		randomW.printMatrix();
 	}
 	
@@ -258,7 +259,7 @@ Network ne = new Network();
 		
 		V2.printMatrix();
 		
-		System.out.print("Error obtenido: "+ ne.calculateError(W2, V2));
+		//System.out.print("Error obtenido: "+ ne.calculateError(W2, V2));
 	
 		
 		
@@ -297,7 +298,8 @@ Network ne = new Network();
 		
 		testingNetworkClass  testN = new testingNetworkClass();
 		//testN.testUpdateConnections();
-		testN.testCalculateError();
+		//testN.testCalculateError();
+		testN.testSetUpNetworkANDFeedForward();
 	
 	
 		

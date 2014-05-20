@@ -2,12 +2,16 @@ package architecture;
 
 import java.math.BigDecimal;
 
+import org.apache.log4j.Logger;
+
 
 public class Connection {
 
     private Neuron from;     // Connection goes from. . .
     private Neuron to;       // To. . .
     private BigDecimal weight;   // Weight of the connection. . .
+    
+    private static Logger log = Logger.getLogger(Connection.class);
 
     // Constructor  builds a connection with a random weight
     public Connection (Neuron a, Neuron b) {

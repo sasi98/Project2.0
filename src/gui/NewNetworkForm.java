@@ -15,7 +15,9 @@ import javax.swing.JOptionPane;
 
 import jxl.read.biff.BiffException;
 import dataManager.Company;
+import dataManager.PatronData;
 import architecture.Network;
+import architecture.NetworkManager;
 import architecture.Neuron;
 import dataManager.ReadExcel;
 
@@ -34,8 +36,8 @@ import javax.swing.JRadioButton;
 public class NewNetworkForm extends javax.swing.JFrame {
 
 	private String idCompany;
-	private BigDecimal cotaError;
-	private double learningCnt;
+	private BigDecimal cotaError, 
+						learningCnt;
 	private int numNeuronES, numNeuronO, numPatrones, iteractionMax, inicio;
 	private boolean bias;
 
@@ -68,7 +70,7 @@ public class NewNetworkForm extends javax.swing.JFrame {
 		tfCnsLearning = new javax.swing.JTextField();
 		tfIteractionMax = new javax.swing.JTextField();
 		tfInicio = new javax.swing.JTextField();
-		//tfNumNeuronO = new JTextField();
+		tfNumNeuronO = new javax.swing.JTextField();
 		
 		sPatrones = new javax.swing.JSpinner();
 		sPatrones.setValue(10);
@@ -117,6 +119,12 @@ public class NewNetworkForm extends javax.swing.JFrame {
 			}
 		});
 
+		tfNumNeuronO.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				tfNumNeuronOActionPerformed(evt);
+			}
+		});
+		
 		tfCnsLearning.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				tfCnsLearningActionPerformed(evt);
@@ -162,6 +170,16 @@ public class NewNetworkForm extends javax.swing.JFrame {
 		tfNumNeuronO = new JTextField();
 		tfNumNeuronO.setColumns(10);
 		
+		JLabel lblSeleccinDeDatos = new JLabel("Selecci\u00F3n de datos: ");
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("Solapados");
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("No solapados\r\n");
+		
+		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Aleatorios");
+		
+		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Manual");
+		
 				
 		
 
@@ -175,67 +193,84 @@ public class NewNetworkForm extends javax.swing.JFrame {
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(jLabel2)
 							.addGap(141)
-							.addComponent(tfCnsLearning, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+							.addComponent(tfCnsLearning, GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
 							.addGap(350))
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(jLabel7)
 							.addContainerGap())
-						.addGroup(layout.createParallelGroup(Alignment.LEADING)
-							.addGroup(layout.createSequentialGroup()
-								.addGroup(layout.createParallelGroup(Alignment.LEADING)
-									.addComponent(jLabel5)
-									.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-										.addComponent(cbBias)
-										.addComponent(jLabel6)))
-								.addGroup(layout.createParallelGroup(Alignment.LEADING)
-									.addGroup(layout.createSequentialGroup()
-										.addGroup(layout.createParallelGroup(Alignment.LEADING)
-											.addGroup(layout.createSequentialGroup()
-												.addGap(46)
-												.addComponent(rbLineal)
-												.addGap(26)
-												.addComponent(rbTangencial))
-											.addGroup(layout.createSequentialGroup()
-												.addGap(115)
-												.addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)))
-										.addPreferredGap(ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
-										.addComponent(bCreateNN)
-										.addGap(27))
-									.addGroup(layout.createSequentialGroup()
-										.addGap(29)
-										.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap())))
-							.addGroup(layout.createSequentialGroup()
-								.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-								.addGap(30)
-								.addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(522, Short.MAX_VALUE))
-							.addGroup(layout.createSequentialGroup()
-								.addGroup(layout.createParallelGroup(Alignment.LEADING)
-									.addGroup(layout.createSequentialGroup()
-										.addComponent(jLabel4)
-										.addGap(27)
-										.addComponent(sPatrones, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-									.addGroup(layout.createSequentialGroup()
-										.addGroup(layout.createParallelGroup(Alignment.LEADING)
-											.addComponent(jLabel3)
-											.addComponent(lblNDeNeuronas))
-										.addGap(35)
-										.addGroup(layout.createParallelGroup(Alignment.LEADING)
-											.addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addComponent(tfNumNeuronES, GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))))
-								.addGap(81)
-								.addComponent(jLabel8)
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(tfInicio, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-								.addGap(72)))))
+						.addGroup(layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup(Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(jLabel4)
+									.addGap(27)
+									.addComponent(sPatrones, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+								.addGroup(layout.createSequentialGroup()
+									.addGroup(layout.createParallelGroup(Alignment.LEADING)
+										.addComponent(jLabel3)
+										.addComponent(lblNDeNeuronas))
+									.addGap(35)
+									.addGroup(layout.createParallelGroup(Alignment.LEADING)
+										.addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(tfNumNeuronES, GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE))))
+							.addGap(81)
+							.addComponent(jLabel8)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(tfInicio, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+							.addGap(72))
+						.addGroup(layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup(Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+									.addGap(30)
+									.addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+									.addGap(147)
+									.addComponent(lblSeleccinDeDatos))
+								.addGroup(layout.createSequentialGroup()
+									.addGroup(layout.createParallelGroup(Alignment.LEADING)
+										.addComponent(jLabel5)
+										.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+											.addComponent(cbBias)
+											.addComponent(jLabel6)))
+									.addGroup(layout.createParallelGroup(Alignment.LEADING)
+										.addGroup(layout.createSequentialGroup()
+											.addGroup(layout.createParallelGroup(Alignment.LEADING)
+												.addGroup(layout.createSequentialGroup()
+													.addGap(46)
+													.addComponent(rbLineal)
+													.addGap(26)
+													.addComponent(rbTangencial))
+												.addGroup(layout.createSequentialGroup()
+													.addGap(115)
+													.addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)))
+											.addPreferredGap(ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+											.addComponent(bCreateNN)
+											.addGap(27))
+										.addGroup(layout.createSequentialGroup()
+											.addGap(29)
+											.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED)))))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(layout.createParallelGroup(Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(rdbtnNewRadioButton_2)
+									.addGap(18)
+									.addComponent(rdbtnNewRadioButton_3))
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(rdbtnNewRadioButton)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(rdbtnNewRadioButton_1)))
+							.addContainerGap(75, Short.MAX_VALUE))))
 		);
 		layout.setVerticalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 					.addGap(29)
 					.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblSeleccinDeDatos)
+							.addComponent(rdbtnNewRadioButton)
+							.addComponent(rdbtnNewRadioButton_1))
 						.addComponent(jLabel1))
 					.addGroup(layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
@@ -243,7 +278,12 @@ public class NewNetworkForm extends javax.swing.JFrame {
 							.addComponent(jLabel5))
 						.addGroup(layout.createSequentialGroup()
 							.addGap(7)
-							.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(layout.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtnNewRadioButton_2)
+								.addComponent(rdbtnNewRadioButton_3))))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(jLabel4)
@@ -301,7 +341,6 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
 	private void tfIdCompanyActionPerformed(ActionEvent evt) {
 		idCompany = tfIdCompany.getText();
-		System.out.print("escribiendo iden");
 	}
 
 	private void tfCotaErrorActionPerformed(ActionEvent evt) {
@@ -314,11 +353,19 @@ public class NewNetworkForm extends javax.swing.JFrame {
 		String stneuronSize = tfNumNeuronES.getText();
 		numNeuronES = Integer.parseInt(stneuronSize);
 	}
+	
+	private void tfNumNeuronOActionPerformed(ActionEvent evt) {
+		// TODO add your handling code here:
+		String stNumNeuronO = tfNumNeuronO.getText();
+		numNeuronO = Integer.parseInt(stNumNeuronO);
+	}
 
 	private void tfCnsLearningActionPerformed(ActionEvent evt) {
 		String stCnsLearning = tfCnsLearning.getText();
-		learningCnt = Double.parseDouble(stCnsLearning);
+		learningCnt = new BigDecimal(stCnsLearning);
 	}
+	
+	
 
 	private void cbBiasActionPerformed(ActionEvent evt) {
 		bias = cbBias.isSelected();
@@ -370,14 +417,25 @@ public class NewNetworkForm extends javax.swing.JFrame {
 			} else {
 				numNeuronES = Integer.parseInt(stneuronSize);
 			}
+			
+			String stnumNeuronO = tfNumNeuronO.getText();
+			if ((stnumNeuronO == null) || (stnumNeuronO.equals(""))) {
+				numNeuronO = numNeuronES - (numNeuronES/2);
+				stnumNeuronO = String.valueOf(numNeuronO);
+				tfNumNeuronO.setText(stnumNeuronO); 
+
+			} else {
+				numNeuronO = Integer.parseInt(stnumNeuronO);
+			}
+
 
 			String stCnsLearning = tfCnsLearning.getText();
 			if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
 				tfCnsLearning.setText("0.001");
-				learningCnt = 0.001;
+				learningCnt = new BigDecimal(0.001);
 
 			} else {
-				learningCnt = Double.parseDouble(stCnsLearning);
+				learningCnt = new BigDecimal (stCnsLearning);
 			}
 
 			String stItMax = tfIteractionMax.getText();
@@ -401,18 +459,26 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
 			bias = cbBias.isSelected();
 
-			System.out.print("Creando NN con id empresa: " + idCompany
-					+ " cota de error " + cotaError + " tamaño de neurona: "
-					+ numNeuronES + " factor de aprendizaje " + learningCnt
-					+ " bias: " + bias + "numero de patrones " + numPatrones
-					+ "máximo número de iteraciones: " + iteractionMax
-					+ "Inicio de los patrones: " + inicio);
+//			System.out.print("Creando NN con id empresa: " + idCompany
+//					+ " cota de error " + cotaError + " N: "
+//					+ numNeuronES + " factor de aprendizaje " + learningCnt
+//					+ " bias: " + bias + "numero de patrones " + numPatrones
+//					+ "máximo número de iteraciones: " + iteractionMax
+//					+ "Inicio de los patrones: " + inicio);
 
 		}
 
 		//Creamos la red con todos los datos
+		
+		PatronData manejador = new PatronData(idCompany);
+		ArrayList<BigDecimal[]> inputs = manejador.createSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+		ArrayList<BigDecimal[]> desiredOutputs = manejador.createSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+		NetworkManager ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, iteractionMax, cotaError, learningCnt, inputs, desiredOutputs);
+		ne.training();
+		
+		
+		
 
-		ReadExcel excel;
 //		try {
 //			excel = new ReadExcel();
 //			Company p = excel.readCompanyById(idCompany);

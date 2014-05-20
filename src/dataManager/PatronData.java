@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.apache.log4j.PropertyConfigurator;
+
 import jxl.read.biff.BiffException;
 import architecture.Network;
+import architecture.NetworkManager;
 import architecture.Neuron;
 
 
@@ -25,6 +28,7 @@ public class PatronData {
 	
 	public PatronData (String idCompany) {
 		super();
+		PropertyConfigurator.configure("files\\log4j.properties");
 		this.idCompany = idCompany;
 		try {
 			ReadExcel file = new ReadExcel();
@@ -194,7 +198,7 @@ public class PatronData {
 			while(it.hasNext() && cont < numDays){
 				BigDecimal b = it.next();
 				BigDecimal aux = b.multiply(new BigDecimal (cnt));
-				aux = aux.setScale (Network.PRECISION, RoundingMode.HALF_UP);
+				aux = aux.setScale (NetworkManager.PRECISION, RoundingMode.HALF_UP);
 				dataVector[i] = aux;
 				i++;
 				cont++;

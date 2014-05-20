@@ -315,18 +315,15 @@ public Matrix multEscalar (double esc){
 */
 public void printMatrix ()
 {
-	log.trace("La matriz en el log está impresa de arriba a abajo");
-	log.trace("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
-	System.out.println("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
-	log.trace("Imprimiendo matrix");
+	log.debug ("Imprimiendo matriz de dimensiones: Filas:" + row +"Columnas: "+ column );
+	//System.out.println("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
 	 for (int i = 0; i < row; i++){
-		 System.out.print("(");
-		 log.trace("(");
+		// System.out.print("(");
 		 for (int j= 0; j < column; j++){
-			 System.out.print(this.getValuePos(i, j) +  " ");
+			// System.out.print(this.getValuePos(i, j) +  " ");
 			 log.trace(this.getValuePos(i, j) +  " ");
 		 }
-		 System.out.print(") \n");
+		 //System.out.print(") \n");
 		 log.trace(") \n");
 	}
 }
