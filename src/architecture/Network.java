@@ -156,6 +156,12 @@ public class Network {
 		
         feedForward();
         log.trace("Ejecutando módulo train() after feedForward \n");
+
+    	log.trace("Just for make sure, we are showing the inputs that we are training:  \n");
+        for (Neuron i: inputLayer){
+        	log.trace(i.getOutValue());
+        }
+        
         //This is what backpropagation starts
         
       //Calculo los deltas de error de la capa de salida
@@ -227,8 +233,14 @@ public class Network {
         mDeltaOutput = Matrix.transponer(mDeltaOutput);
 
         Matrix deltaV = Matrix.product(mDeltaOutput, mHiddenOuts);
-        deltaV = deltaV.multEscalar(learningCNT);
         
+        
+        log.debug("Muestro deltaV antes de multiplicarla por learningCNT");
+        deltaV.printMatrix();
+        
+        deltaV = deltaV.multEscalar(learningCNT);
+        log.debug("Coeficiente de aprendizaje: "+ learningCNT);
+        log.debug("Muestro deltaV trás multiplicarla por el coeficiente de aprendizaje");
         deltaV.printMatrix();
         
         
@@ -245,7 +257,17 @@ public class Network {
        mDeltaHidden = Matrix.transponer(mDeltaHidden);
        mDeltaHidden.printMatrix();
        Matrix deltaW = Matrix.product(mDeltaHidden,mInputOuts);
+       
+       log.debug("Muestro deltaW antes de multiplicarla por learningCNT");
+       deltaW.printMatrix();
+       
        deltaW = deltaW.multEscalar(learningCNT);
+       log.debug("Coeficiente de aprendizaje: "+ learningCNT);
+       log.debug("Muestro deltaW trás multiplicarla por el coeficiente de aprendizaje");
+       deltaW.printMatrix();
+      
+       
+       
        
        deltaW.printMatrix();
 

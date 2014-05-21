@@ -153,9 +153,10 @@ public class NetworkManager {
 		int iteration = 0;
 		
 		WriteOutcomes writer = new WriteOutcomes("C:\\repositoryGit\\Salidas\\training.txt", this); //Outcomes file
+		writer.closeFile();
 		WriteExcel writerByIteration = new WriteExcel ("C:\\repositoryGit\\Salidas\\resultsByIteration.csv"); //Outcomes file
 		writer.writeBasicInformation();
-		writer.closeFile();
+	
 		
 		while (!end){
 			
@@ -173,7 +174,7 @@ public class NetworkManager {
 				W.printMatrix();
 				V.printMatrix();
 			}
-			writer.closeFile();
+			writerByPatron.closeFile();
 
 			//Comprobado con trazas hasta aquí, everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
