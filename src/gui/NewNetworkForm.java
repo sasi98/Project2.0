@@ -9,6 +9,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -36,8 +37,8 @@ import javax.swing.JRadioButton;
 public class NewNetworkForm extends javax.swing.JFrame {
 
 	private String idCompany;
-	private BigDecimal cotaError, 
-						learningCnt;
+	private BigDecimal cotaError; 
+	private double learningCnt;
 	private int numNeuronES, numNeuronO, numPatrones, iteractionMax, inicio;
 	private boolean bias;
 
@@ -167,8 +168,6 @@ public class NewNetworkForm extends javax.swing.JFrame {
 		
 		JLabel lblNDeNeuronas = new JLabel("N\u00BA de neuronas ocultas");
 		
-		tfNumNeuronO = new JTextField();
-		tfNumNeuronO.setColumns(10);
 		
 		JLabel lblSeleccinDeDatos = new JLabel("Selecci\u00F3n de datos: ");
 		
@@ -210,7 +209,7 @@ public class NewNetworkForm extends javax.swing.JFrame {
 										.addComponent(lblNDeNeuronas))
 									.addGap(35)
 									.addGroup(layout.createParallelGroup(Alignment.LEADING)
-										.addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
 										.addComponent(tfNumNeuronES, GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE))))
 							.addGap(81)
 							.addComponent(jLabel8)
@@ -242,13 +241,12 @@ public class NewNetworkForm extends javax.swing.JFrame {
 												.addGroup(layout.createSequentialGroup()
 													.addGap(115)
 													.addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)))
-											.addPreferredGap(ComponentPlacement.RELATED, 322, Short.MAX_VALUE)
+											.addPreferredGap(ComponentPlacement.RELATED, 357, Short.MAX_VALUE)
 											.addComponent(bCreateNN)
 											.addGap(27))
 										.addGroup(layout.createSequentialGroup()
 											.addGap(29)
-											.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.RELATED)))))
+											.addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)))))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(layout.createParallelGroup(Alignment.LEADING)
 								.addGroup(layout.createSequentialGroup()
@@ -259,7 +257,7 @@ public class NewNetworkForm extends javax.swing.JFrame {
 									.addComponent(rdbtnNewRadioButton)
 									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addComponent(rdbtnNewRadioButton_1)))
-							.addContainerGap(75, Short.MAX_VALUE))))
+							.addContainerGap(110, Short.MAX_VALUE))))
 		);
 		layout.setVerticalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
@@ -362,7 +360,7 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
 	private void tfCnsLearningActionPerformed(ActionEvent evt) {
 		String stCnsLearning = tfCnsLearning.getText();
-		learningCnt = new BigDecimal(stCnsLearning);
+		learningCnt = Double.parseDouble(stCnsLearning);
 	}
 	
 	
@@ -405,9 +403,11 @@ public class NewNetworkForm extends javax.swing.JFrame {
 			if ((stCotaError == null) || (stCotaError.equals(""))) {
 				tfCotaError.setText("0.001");
 				cotaError = new BigDecimal(0.001);
+				cotaError.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
 
 			} else {
 				cotaError = new BigDecimal(stCotaError);
+				cotaError.setScale(NetworkManager.PRECISION);
 			}
 			String stneuronSize = tfNumNeuronES.getText();
 			if ((stneuronSize == null) || (stneuronSize.equals(""))) {
@@ -432,10 +432,10 @@ public class NewNetworkForm extends javax.swing.JFrame {
 			String stCnsLearning = tfCnsLearning.getText();
 			if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
 				tfCnsLearning.setText("0.001");
-				learningCnt = new BigDecimal(0.001);
+				learningCnt = 0.001;
 
 			} else {
-				learningCnt = new BigDecimal (stCnsLearning);
+				learningCnt = Double.parseDouble(stCnsLearning);
 			}
 
 			String stItMax = tfIteractionMax.getText();

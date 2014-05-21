@@ -228,7 +228,7 @@ Network ne = new Network();
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
 		
-		ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
+		ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W, V);
 		
 		
 		System.out.print ("Suponemos que ha entrenado con todos los patrones, y las matrices obtenidas son: ");
@@ -259,7 +259,10 @@ Network ne = new Network();
 		
 		V2.printMatrix();
 		
-		//System.out.print("Error obtenido: "+ ne.calculateError(W2, V2));
+		ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W2, V2);
+		
+		
+		System.out.print("Error obtenido: "+ ne.calculateError());
 	
 		
 		
@@ -268,6 +271,68 @@ Network ne = new Network();
 	}
 	
 	
+	
+	
+	void testingUpdateWV (){
+		
+				
+				Network ne = new Network();
+				
+				System.out.print("Creamos matrices W y V \n");
+				BigDecimal [][] auxW = new BigDecimal[2][3];
+				auxW[0][0] = new BigDecimal(1); 
+				auxW[0][1] = new BigDecimal(2);
+				auxW[0][2] = new BigDecimal(4);
+				
+				auxW[1][0] = new BigDecimal(7); 
+				auxW[1][1] = new BigDecimal(3);
+				auxW[1][2] = new BigDecimal(1);
+				
+				Matrix W = new Matrix(auxW);
+				
+				W.printMatrix();
+
+				BigDecimal [][] auxV = new BigDecimal[3][2];
+				auxV[0][0] = new BigDecimal(5); 
+				auxV[0][1] = new BigDecimal(8);
+				
+				auxV[1][0] = new BigDecimal(1);
+				auxV[1][1] = new BigDecimal(4);
+				
+				auxV[2][0] = new BigDecimal(2);
+				auxV[2][1] = new BigDecimal(3);
+				
+				Matrix V = new Matrix(auxV);
+				
+				V.printMatrix();
+			
+				int numNOcultas = 2;
+				BigDecimal[] inputLayer = new BigDecimal[3];
+				BigDecimal[] desiredOutputsLayer = new BigDecimal[3];
+				System.out.print ("Establecemos los valores de las neuronas inputs y las salidas deseadas (no las usaremos en esta prueba): \n");
+				inputLayer[0] = new BigDecimal(3);
+				inputLayer[1] = new BigDecimal(7);
+				inputLayer[2] = new BigDecimal(6);
+				
+				desiredOutputsLayer[0] = new BigDecimal(300);
+				desiredOutputsLayer[1] = new BigDecimal(700);
+				desiredOutputsLayer[2] = new BigDecimal(600);
+				
+				ne.setUpPatron(numNOcultas, inputLayer, 0.001, desiredOutputsLayer, W, V);
+				
+	
+				ne.train();
+																		 //La entrenamos
+				W = ne.getW ();																				 //after training, we get the matrix W and V
+				V = ne.getV ();
+				
+			W.printMatrix();
+			V.printMatrix();
+				
+		
+		
+		
+	}
 	
 	
 	
@@ -299,8 +364,9 @@ Network ne = new Network();
 		testingNetworkClass  testN = new testingNetworkClass();
 		//testN.testUpdateConnections();
 		//testN.testCalculateError();
-		testN.testSetUpNetworkANDFeedForward();
+		//testN.testSetUpNetworkANDFeedForward();
 	
+		testN.testingUpdateWV(); //Funciona perfectamente
 	
 		
 		

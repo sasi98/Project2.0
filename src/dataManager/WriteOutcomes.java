@@ -176,7 +176,7 @@ public class WriteOutcomes {
 				  "Coeficiente de aprendizaje: "+ network.getLearningCNT()+ "\n" +
 				  "Nº de neuronas en la capa de entrada: "+ network.getNumNeuronsES()+ "\n" +
 				  "Nº de neuronas en la capa de salida: "+ network.getNumNeuronsES()+ "\n" +
-		          "Nº de neuronas en la capa oculta: "+ network.getNumNeuronsES()+ "\n" +
+		          "Nº de neuronas en la capa oculta: "+ network.getNumNeuronsO()+ "\n" +
 		          //"Bias: "+ network.getBias()+ "\n" +
 				  "Cota error: "+ network.getCuote()+ "\n"+
 				  "Máximo número de iteracciones permitidas: "+ network.getIterMax() + "\n");
