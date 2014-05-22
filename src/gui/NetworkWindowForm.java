@@ -31,7 +31,7 @@ public class NetworkWindowForm {
     private JTextField tfIteractionMax;
     private JTextField tfInicio;
     private JCheckBox cbBias;
-    private JComboBox comboBox_inputType;
+    private JComboBox<String> comboBox_inputType;
     private JSpinner sPatrones;
 
     private String idCompany;
