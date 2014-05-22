@@ -57,10 +57,11 @@ public class Network {
 	//desiredOutputLayer = contiene los valores de salida deseados
 	//W tiene que tener dimensiones: nº ocultas X nª entradas
 	//V tiene que tener dimensiones: nº salidas X nº ocultas
+	//bias: La red tiene bias (en la capa de entrada y en la oculta)
 	//post: 
 	
 	public void setUpPatron (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
+			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, boolean bias)
 	{	
 		log.debug ("Entrando en SetUpPatron. Número de neuronas E/S: "+ valuesInputLayer.length + 
 					"Número de neuronas ocultas: "+ numNeuronsO);
@@ -84,18 +85,35 @@ public class Network {
 			this.outputLayer = new OutputNeuron[numNeuronsES];
 			
 			
-			//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
-			for (int i = 0; i < valuesInputLayer.length; i++){
-				Neuron n = new Neuron(valuesInputLayer[i], false);
-				inputLayer[i] = n;
+			if (bias) { //La red tiene bias, añadimos una neurona de valor uno
+				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
+				Neuron n = new Neuron (new BigDecimal(1), true);
+				inputLayer[0] = n;
+				for (int i = 0; i < valuesInputLayer.length; i++){
+					n = new Neuron(valuesInputLayer[i], false);
+					inputLayer[i+1] = n;
+				}
+		
+				//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
+				for (int i = 0; i < numNeuronsO; i++){
+					n = new Neuron();
+					hiddenLayer[i] = n;
+				}		
 			}
-	
-			//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
-			for (int i = 0; i < numNeuronsO; i++){
-				Neuron n = new Neuron();
-				hiddenLayer[i] = n;
-			}
+			else{
 			
+				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
+				for (int i = 0; i < valuesInputLayer.length; i++){
+					Neuron n = new Neuron(valuesInputLayer[i], false);
+					inputLayer[i] = n;
+				}
+		
+				//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
+				for (int i = 0; i < numNeuronsO; i++){
+					Neuron n = new Neuron();
+					hiddenLayer[i] = n;
+				}
+			}
 			for (int i = 0; i < valuesInputLayer.length; i++){
 				OutputNeuron n = new OutputNeuron();
 				outputLayer[i] = n;
@@ -289,9 +307,9 @@ public class Network {
        mDeltaHidden.truncarMatrixUP(NetworkManager.PRECISION);
        deltaV.truncarMatrixUP(NetworkManager.PRECISION);
        deltaW.truncarMatrixUP(NetworkManager.PRECISION);
-       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
-    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
-       
+//       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
+//    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
+//       
        
        
        //Actualizamos las matrices con los deltas calculados

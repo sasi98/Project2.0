@@ -408,25 +408,23 @@ public class WriteExcel {
 				 wr.append("\n");
 			 }
 			 
+		}
 			 
-			 
-		
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+		public void writeError (BigDecimal errorIt, int iteration){
+			wr.append("Iteration: ; "+ iteration+ ";");
+			wr.append("Error: ;" + errorIt+"\n");
 			
 		}
+			
 		
-		
-		
-	
-
+		//Escribe en el fichero los dos vectores introducidos por parámetrosb
+		public void writeInputsOutputs(ArrayList<BigDecimal[]> inputs, ArrayList<BigDecimal[]> desiredOutput){
+			for (int i = 0; i<inputs.size(); i++){
+				wr.append("Patrón: "+ i+ "\n");
+				for (int j = 0; j< inputs.get(i).length; j++){
+					wr.append("Rm: " +inputs.get(i)[j]+ " Ri: " + desiredOutput.get(i)[j]+ "\n");
+				}
+				wr.append("\n");
+			}
+		}
 }

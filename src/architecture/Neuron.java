@@ -82,7 +82,7 @@ public class Neuron {
         		//output = f(bias+sum);
         	} 	
         }
-        acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         outValue = acum;
         log.debug("Valor de salida de la neurona: " + outValue+"\n");
     }

@@ -44,6 +44,8 @@ public class NetworkManager {
 	ArrayList<BigDecimal[]> 		inputs, 
 									desiredOutputs;
 	
+	private boolean 				bias; 
+	
 	
 	private static Logger log = Logger.getLogger(NetworkManager.class);
 	
@@ -54,13 +56,13 @@ public class NetworkManager {
 	//pre: inputs and desiredOutputs deben ser arrays válidos (creados por la clase PatronData, en la interfaz)
 		public NetworkManager(int numPatrones, int numNeuronsES, int numNeuronsO, int iterMax,
 				BigDecimal cuote, double learningCNT ,ArrayList<BigDecimal[]> inputs,
-				 ArrayList<BigDecimal[]> desiredOutputs) {
+				 ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 			
 			super();
 			log.debug ("Creando NetworkManager. Nº de Patrones: " + numPatrones + " Nº de neuronas de entrada "
 					+ numNeuronsES + " Nº de neuronas de salida \n"+ numNeuronsES +" Nº de neuronas ocultas: "
 				    + numNeuronsO + " Cota de error: " + cuote + "coeficiente de aprendizaje: "+ learningCNT + 
-				    "\n Número máximo de iteracciones permitidas: " + iterMax);
+				    "\n Número máximo de iteracciones permitidas: " + iterMax + "Bias: "+bias);
 			
 			this.numPatrones = numPatrones;
 			this.numNeuronsES = numNeuronsES;
@@ -70,6 +72,7 @@ public class NetworkManager {
 			this.cuote = cuote;
 			this.inputs = inputs;
 			this.desiredOutputs = desiredOutputs;
+			this.bias = bias;
 		}
 	
 
@@ -153,21 +156,23 @@ public class NetworkManager {
 		boolean end = false;
 		int iteration = 0;
 		
-		WriteOutcomes writer = new WriteOutcomes("C:\\repositoryGit\\Salidas\\training.txt", this); //Outcomes file
-		writer.closeFile();
+//		WriteOutcomes writer = new WriteOutcomes("C:\\repositoryGit\\Salidas\\training.txt", this); //Outcomes file
+//		writer.closeFile();
 		WriteExcel writerByIteration = new WriteExcel ("C:\\repositoryGit\\Salidas\\resultsByIteration.csv"); //Outcomes file
-		writer.writeBasicInformation();
+		WriteExcel writerErrorProgress = new WriteExcel ("C:\\repositoryGit\\Salidas\\ErrorProgress.csv"); //Outcomes file
+		//writer.writeBasicInformation();
 	
 		
 		while (!end){
 			
-			String fileName = new String ("C:\\repositoryGit\\Salidas\\resultsByPatronIteration");
-			String strIteration = String.valueOf(iteration);
-			fileName = fileName + strIteration + ".csv";
-			WriteExcel writerByPatron = new WriteExcel (fileName);
+//			String fileName = new String ("C:\\repositoryGit\\Salidas\\resultsByPatronIteration");
+//			String strIteration = String.valueOf(iteration);
+//			fileName = fileName + strIteration + ".csv";
+//			WriteExcel writerByPatron = new WriteExcel (fileName);
+			WriteExcel writerByPatron = new WriteExcel ("empty");
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V); //Establecemos la red con el patrón i
+				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias); //Establecemos la red con el patrón i
 				subNetwork.train(writerByPatron, i); 															 //La entrenamos
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
@@ -175,7 +180,7 @@ public class NetworkManager {
 				W.printMatrix();
 				V.printMatrix();
 			}
-			writerByPatron.closeFile();
+			//writerByPatron.closeFile();
 
 			//Comprobado con trazas hasta aquí, everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
@@ -183,7 +188,7 @@ public class NetworkManager {
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V);
+				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);
 				errorList.add (subNetwork.calculateError()); 
 			}
 		
@@ -194,7 +199,9 @@ public class NetworkManager {
 				errorIt = errorIt.add(error);
 			}
 			errorIt = errorIt.divide(new BigDecimal(errorList.size()), RoundingMode.HALF_UP);
+			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			
+			writerErrorProgress.writeError (errorIt, iteration);
 			log.debug("Error ponderado en la interacción "+ iteration + " es " + errorIt);
 		
 			if (iteration == iterMax){
@@ -206,18 +213,21 @@ public class NetworkManager {
 			}
 			else{
 				end = true; 
+				
 			}
 			//if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) ) // El error se pasa de la cota, o nº de iter = máximo
 			//	end = true;
 				
 			//Escribir matrices W y V y error obtenido
+			errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			writerByIteration.writeOneIterationInf(iteration, errorIt, W, V);
 			iteration++;
 		
 		} //fin while
 		writerByIteration.closeFile();
+		writerErrorProgress.closeFile();
 		
-		writer.closeFile();
+		//writer.closeFile();
 		
 	}
 	

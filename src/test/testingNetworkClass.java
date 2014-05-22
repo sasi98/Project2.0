@@ -321,7 +321,7 @@ Network ne = new Network();
 				ne.setUpPatron(numNOcultas, inputLayer, 0.001, desiredOutputsLayer, W, V);
 				
 	
-				ne.train();
+				//ne.train();
 																		 //La entrenamos
 				W = ne.getW ();																				 //after training, we get the matrix W and V
 				V = ne.getV ();
