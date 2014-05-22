@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import utilities.Matrix;
 import architecture.Network;
+import architecture.NetworkManager;
 import architecture.Neuron;
 import architecture.OutputNeuron;
 
@@ -316,6 +318,7 @@ public class WriteExcel {
 			
 			
 		//Escribe la información correspondiente al entrenamiento de un patrón.
+		//idPatron: identificador del patrón que estamos entrenando actualmente
 		//W y V iniciales antes de la actualización
 		//inputLayer: Vector que contiene las neuronas de la capa de entrada del patrón
 		//hiddenLayer: Vector que contiene las neuronas de capa oculta del patrón
@@ -325,15 +328,16 @@ public class WriteExcel {
 		//mDeltaHidden: Matriz que representa a los delta de la capa oculta
 		//deltaW: Matriz que representa el incremento a añadir a la matriz W (multiplicado ya por el coeficiente de aprendizaje)
 		//deltaV: Matriz que representa el incremento a añadir a la matriz V 
-		public void writeInfPatron(Matrix W, Matrix V, Neuron[] inputLayer, BigDecimal[] desiredOutputLayer, 
+		public void writeInfPatron(int idPatron, Matrix W, Matrix V, Neuron[] inputLayer, BigDecimal[] desiredOutputLayer, 
 				Neuron[] hiddenLayer, OutputNeuron[] outputLayer, 
 	    		   Matrix mDeltaOutput, Matrix mDeltaHidden, Matrix deltaW, Matrix deltaV){
 			
+			wr.append("\nPatrón número :" + idPatron +"\n");
 			wr.append("\nInputs: \n");
 			for (Neuron i: inputLayer){
 				wr.append(i.getOutValue()+ ";");
 			}
-			wr.append("\nMatriz W: \n");
+			wr.append("\n Matriz W: \n");
 			 for (int i = 0; i < W.getRow(); i++){
 				 for (int j= 0; j < W.getColumn(); j++){
 					 String valueStr = W.getValuePos(i, j).toString();
@@ -343,7 +347,7 @@ public class WriteExcel {
 				 
 				 wr.append("\n"); //Salto de fila en excel
 			 }
-			 wr.append("\nMatriz V: \n");
+			 wr.append("Matriz V: \n");
 			 for (int i = 0; i < V.getRow(); i++){
 				 for (int j= 0; j < V.getColumn(); j++){
 					 String valueStr = V.getValuePos(i, j).toString();
@@ -352,19 +356,18 @@ public class WriteExcel {
 				 }
 				 wr.append("\n");
 			 }
-			 wr.append("\nValores ocultas: \n");
+			 wr.append("\n Valores ocultas: \n");
 			 for (Neuron i: hiddenLayer){
-				wr.append(i.getOutValue()+ ";");
+				wr.append(i.getOutValue().setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP)+ ";");
 			 }
-			 wr.append("\nValores salidas: \n");
+			 wr.append("\n Valores salidas: \n");
 			 for (Neuron i: outputLayer){
-				wr.append(i.getOutValue()+ ";");
+				wr.append(i.getOutValue().setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP)+ ";");
 			} 
-			 wr.append("\nSalidas deseadas: \n");
+			 wr.append("\n Salidas deseadas: \n");
 			 for (BigDecimal b: desiredOutputLayer){
 				wr.append(b + ";");
 			}
-			 
 			 wr.append("\n DeltaE capa de salida: \n");
 			 for (int i = 0; i < mDeltaOutput.getRow(); i++){
 				 for (int j= 0; j < mDeltaOutput.getColumn(); j++){
@@ -375,7 +378,7 @@ public class WriteExcel {
 				 
 				 wr.append("\n"); //Salto de fila en excel
 			 }
-			 wr.append("\nDeltaE capa oculta: ");
+			 wr.append("DeltaE capa oculta: ");
 			 for (int i = 0; i < mDeltaHidden.getRow(); i++){
 				 for (int j= 0; j < mDeltaHidden.getColumn(); j++){
 					 String valueStr = mDeltaHidden.getValuePos(i, j).toString();
@@ -385,7 +388,7 @@ public class WriteExcel {
 				 wr.append("\n");
 			 }
 			 
-			 wr.append("\nDelta W: \n");
+			 wr.append("Delta W: \n");
 			 for (int i = 0; i < deltaW.getRow(); i++){
 				 for (int j= 0; j < deltaW.getColumn(); j++){
 					 String valueStr = deltaW.getValuePos(i, j).toString();
@@ -395,7 +398,7 @@ public class WriteExcel {
 				 
 				 wr.append("\n"); //Salto de fila en excel
 			 }
-			 wr.append("\nDelta V:  ");
+			 wr.append("Delta V:  ");
 			 for (int i = 0; i < deltaV.getRow(); i++){
 				 for (int j= 0; j < deltaV.getColumn(); j++){
 					 String valueStr = deltaV.getValuePos(i, j).toString();

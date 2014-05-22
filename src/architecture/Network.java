@@ -2,6 +2,7 @@ package architecture;
 
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
@@ -152,7 +153,7 @@ public class Network {
 	
 	//pre: Realizar el setup antes
 	//
-	public void train (WriteExcel writer) {
+	public void train (WriteExcel writer, int idPatron) {
 		
         feedForward();
         log.trace("Ejecutando módulo train() after feedForward \n");
@@ -168,7 +169,8 @@ public class Network {
         BigDecimal[] deltaOutput = new BigDecimal[desiredOutputLayer.length];
         for (int i = 0; i<outputLayer.length; i++){
         	BigDecimal deltaE = desiredOutputLayer[i];
-        	deltaE = deltaE.subtract(outputLayer[i].getOutValue()); 
+        	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
+        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	
         	outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
         	deltaOutput[i] = deltaE;
@@ -197,6 +199,7 @@ public class Network {
         			deltaE =  deltaE.add(aux);   			
         		}
         	}
+        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	deltaHidden[i] = deltaE;   	
         }
         
@@ -232,6 +235,14 @@ public class Network {
         Matrix mDeltaOutput = new Matrix(deltaOutput);
         mDeltaOutput = Matrix.transponer(mDeltaOutput);
 
+        
+        log.debug("Showing mDeltaOut");
+        mDeltaOutput.printMatrix();
+
+        
+        log.debug("Showing mHiddenOuts");
+        mHiddenOuts.printMatrix();
+        
         Matrix deltaV = Matrix.product(mDeltaOutput, mHiddenOuts);
         
         
@@ -256,6 +267,9 @@ public class Network {
        Matrix mDeltaHidden = new Matrix(deltaHidden);
        mDeltaHidden = Matrix.transponer(mDeltaHidden);
        mDeltaHidden.printMatrix();
+
+  
+       
        Matrix deltaW = Matrix.product(mDeltaHidden,mInputOuts);
        
        log.debug("Muestro deltaW antes de multiplicarla por learningCNT");
@@ -271,8 +285,11 @@ public class Network {
        
        deltaW.printMatrix();
 
-       
-       writer.writeInfPatron(W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
+       mDeltaOutput.truncarMatrixUP(NetworkManager.PRECISION);
+       mDeltaHidden.truncarMatrixUP(NetworkManager.PRECISION);
+       deltaV.truncarMatrixUP(NetworkManager.PRECISION);
+       deltaW.truncarMatrixUP(NetworkManager.PRECISION);
+       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
     		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
        
        

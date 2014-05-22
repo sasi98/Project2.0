@@ -431,8 +431,8 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
 			String stCnsLearning = tfCnsLearning.getText();
 			if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-				tfCnsLearning.setText("0.001");
-				learningCnt = 0.001;
+				tfCnsLearning.setText("0.0001");
+				learningCnt = 0.0001;
 
 			} else {
 				learningCnt = Double.parseDouble(stCnsLearning);
