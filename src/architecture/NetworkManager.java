@@ -14,14 +14,7 @@ import utilities.Matrix;
 
 public class NetworkManager {
 	
-	
-	public double getLearningCNT() {
-		return learningCNT;
-	}
 
-	public void setLearningCNT(double learningCNT) {
-		this.learningCNT = learningCNT;
-	}
 
 
 
@@ -81,6 +74,14 @@ public class NetworkManager {
 	
 
 	//GETTERS
+		
+		public double getLearningCNT() {
+			return learningCNT;
+		}
+
+		public void setLearningCNT(double learningCNT) {
+			this.learningCNT = learningCNT;
+		}
 		
 	public int getNumPatrones() {
 		return numPatrones;
@@ -167,7 +168,7 @@ public class NetworkManager {
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
 				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V); //Establecemos la red con el patrón i
-				subNetwork.train(writerByPatron); 															 //La entrenamos
+				subNetwork.train(writerByPatron, i); 															 //La entrenamos
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
 				log.debug("Valores de W y V tras actualización de matriz");

@@ -360,10 +360,10 @@ public class NewNetworkForm extends javax.swing.JFrame {
         idCompany = tfIdCompany.getText();
         System.out.print("ide" + idCompany);
 
-        //si id company no estï¿½ entre 0 o 500, y ademï¿½s tiene q tener el formato "000"
+        //si id company no estï¿entre 0 o 500, y ademï¿½s tiene q tener el formato "000"
 
         if ((idCompany == null) || (idCompany.equals(""))) {
-            JOptionPane.showMessageDialog(this, "Error, el campo identificador de empresa estï¿½ vacio", "Campo requerido", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error, el campo identificador de empresa estï¿vacio", "Campo requerido", JOptionPane.ERROR_MESSAGE);
         } else {
 
             final int auxInt = Integer.parseInt(idCompany);
@@ -413,8 +413,8 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
             final String stCnsLearning = tfCnsLearning.getText();
             if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-                tfCnsLearning.setText("0.001");
-                learningCnt = 0.001;
+				tfCnsLearning.setText("0.001");
+				learningCnt = 0.001;
 
             } else {
                 learningCnt = Double.parseDouble(stCnsLearning);

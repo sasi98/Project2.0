@@ -76,13 +76,13 @@ public class Neuron {
         	if (to == this) { //CONEXIONES HACIA DELANTE, "TO" is our neuron
         		BigDecimal aux = c.getWeight();
         		aux = aux.multiply(from.getOutValue());  //value neuron * connexion weight
-        		aux.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         		acum = acum.add(aux);
                      //sum = sum + input_from*weight
         		// Output is result of sigmoid function o la que sea
         		//output = f(bias+sum);
         	} 	
         }
+        acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         outValue = acum;
         log.debug("Valor de salida de la neurona: " + outValue+"\n");
     }
