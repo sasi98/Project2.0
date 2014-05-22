@@ -182,133 +182,208 @@ public class NewNetworkForm extends javax.swing.JFrame {
         setupComboBox();
 
         final javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
+        layout.setHorizontalGroup(layout
+                .createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        layout.createSequentialGroup()
                         .addGap(150)
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addContainerGap())
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(
+                                layout.createParallelGroup(Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup().addComponent(jLabel7).addContainerGap())
+                                .addGroup(
+                                        layout.createSequentialGroup()
+                                        .addGroup(
+                                                layout.createParallelGroup(Alignment.LEADING)
+                                                .addGroup(
+                                                        layout.createSequentialGroup()
+                                                        .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE,
+                                                                128, GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(30)
-                                                                .addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(147)
-                                                                .addComponent(lblSeleccinDeDatos))
-                                                                .addGroup(layout.createSequentialGroup()
-                                                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                .addComponent(jLabel5)
-                                                                                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                                                                                        .addComponent(cbBias)
-                                                                                        .addComponent(jLabel6)))
-                                                                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                        .addGap(29)
-                                                                                                        .addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE))
-                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                                .addGap(46)
-                                                                                                                                .addComponent(rbLineal)
-                                                                                                                                .addGap(26)
-                                                                                                                                .addComponent(rbTangencial))
-                                                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                                                        .addGap(115)
-                                                                                                                                        .addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                        .addGap(117)
-                                                                                                                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                                                                        .addComponent(jLabel8)
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                                                                                        .addComponent(tfInicio, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                        .addComponent(comboBox_inputType, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)))
-                                                                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                .addGap(226)
-                                                                                                                                                                .addComponent(bCreateNN)))
-                                                                                                                                                                .addGap(27)))
-                                                                                                                                                                .addGap(287))
-                                                                                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                                        .addComponent(jLabel4)
-                                                                                                                                                                                        .addGap(27)
-                                                                                                                                                                                        .addComponent(sPatrones, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                        .addComponent(jLabel2)
-                                                                                                                                                                                                        .addComponent(jLabel3)
-                                                                                                                                                                                                        .addComponent(lblNDeNeuronas))
-                                                                                                                                                                                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                                .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                                                                        .addGap(18)
-                                                                                                                                                                                                                        .addComponent(tfNumNeuronES, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                                                                                                                                .addGap(5)
-                                                                                                                                                                                                                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                                                                                                                                                                                                        .addComponent(tfCnsLearning, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                                                                                                                                                                                                                                        .addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))))
-                                                                                                                                                                                                                                        .addGap(383)))
-                                                                                                                                                                                                                                        .addGap(368))))
-                );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(tfIdCompany,
+                                                                        GroupLayout.PREFERRED_SIZE, 24,
+                                                                        GroupLayout.PREFERRED_SIZE).addGap(147)
+                                                                        .addComponent(lblSeleccinDeDatos))
+                                                                        .addGroup(
+                                                                                layout.createSequentialGroup()
+                                                                                .addGroup(
+                                                                                        layout.createParallelGroup(Alignment.LEADING)
+                                                                                        .addComponent(jLabel5)
+                                                                                        .addGroup(
+                                                                                                layout.createParallelGroup(
+                                                                                                        Alignment.TRAILING)
+                                                                                                        .addComponent(cbBias)
+                                                                                                        .addComponent(jLabel6)))
+                                                                                                        .addGroup(
+                                                                                                                layout.createParallelGroup(Alignment.LEADING)
+                                                                                                                .addGroup(
+                                                                                                                        layout.createSequentialGroup()
+                                                                                                                        .addGap(29)
+                                                                                                                        .addComponent(
+                                                                                                                                tfCotaError,
+                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                58,
+                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                                .addGroup(
+                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                        .addGroup(
+                                                                                                                                                layout.createParallelGroup(
+                                                                                                                                                        Alignment.LEADING)
+                                                                                                                                                        .addGroup(
+                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                .addGap(46)
+                                                                                                                                                                .addComponent(
+                                                                                                                                                                        rbLineal)
+                                                                                                                                                                        .addGap(26)
+                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                rbTangencial))
+                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                                                                        .addGap(115)
+                                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                                tfIteractionMax,
+                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                43,
+                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                                .addGap(117)
+                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                        layout.createParallelGroup(
+                                                                                                                                                                                                                Alignment.LEADING)
+                                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                                                                jLabel8)
+                                                                                                                                                                                                                                .addPreferredGap(
+                                                                                                                                                                                                                                        ComponentPlacement.UNRELATED)
+                                                                                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                                                                                tfInicio,
+                                                                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                                                36,
+                                                                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                .addComponent(
+                                                                                                                                                                                                                                                        comboBox_inputType,
+                                                                                                                                                                                                                                                        GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                                                        112,
+                                                                                                                                                                                                                                                        GroupLayout.PREFERRED_SIZE)))
+                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                .addGap(226)
+                                                                                                                                                                                                                                                                .addComponent(
+                                                                                                                                                                                                                                                                        bCreateNN)))
+                                                                                                                                                                                                                                                                        .addGap(27))).addGap(287))
+                                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                                                                                                        layout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                .addComponent(jLabel4)
+                                                                                                                                                                                                                                                                                                .addGap(27)
+                                                                                                                                                                                                                                                                                                .addComponent(sPatrones, GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                                                                                                        45, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                                                                                                                                        layout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                        .addComponent(jLabel2)
+                                                                                                                                                                                                                                                                                                                        .addComponent(jLabel3)
+                                                                                                                                                                                                                                                                                                                        .addComponent(lblNDeNeuronas))
+                                                                                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                                                                                layout.createParallelGroup(Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                        .addGap(18)
+                                                                                                                                                                                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                                                                                                                                                                                tfNumNeuronES,
+                                                                                                                                                                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                                                                                                                                                101,
+                                                                                                                                                                                                                                                                                                                                                GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                                                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                                                                                                                                                                                                                                        .addGap(5)
+                                                                                                                                                                                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                                                                                                                                                                                layout.createParallelGroup(
+                                                                                                                                                                                                                                                                                                                                                                        Alignment.LEADING)
+                                                                                                                                                                                                                                                                                                                                                                        .addComponent(
+                                                                                                                                                                                                                                                                                                                                                                                tfCnsLearning,
+                                                                                                                                                                                                                                                                                                                                                                                GroupLayout.DEFAULT_SIZE,
+                                                                                                                                                                                                                                                                                                                                                                                114,
+                                                                                                                                                                                                                                                                                                                                                                                Short.MAX_VALUE)
+                                                                                                                                                                                                                                                                                                                                                                                .addComponent(
+                                                                                                                                                                                                                                                                                                                                                                                        tfNumNeuronO,
+                                                                                                                                                                                                                                                                                                                                                                                        GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                                                                                                                                                                                        45,
+                                                                                                                                                                                                                                                                                                                                                                                        GroupLayout.PREFERRED_SIZE))))
+                                                                                                                                                                                                                                                                                                                                                                                        .addGap(383))).addGap(368)))));
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(
+                        layout.createSequentialGroup()
                         .addGap(29)
-                        .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                        .addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblSeleccinDeDatos))
-                                        .addComponent(jLabel1))
-                                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                        .addGap(18)
-                                                        .addComponent(jLabel5))
-                                                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(
+                                layout.createParallelGroup(Alignment.TRAILING)
+                                .addGroup(
+                                        layout.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(tfIdCompany, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                GroupLayout.PREFERRED_SIZE).addComponent(lblSeleccinDeDatos))
+                                                .addComponent(jLabel1))
+                                                .addGroup(
+                                                        layout.createParallelGroup(Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup().addGap(18).addComponent(jLabel5))
+                                                        .addGroup(
+                                                                layout.createSequentialGroup()
                                                                 .addGap(7)
-                                                                .addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                        .addComponent(jLabel4)
-                                                                        .addComponent(sPatrones, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addGap(18)
-                                                                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                .addComponent(jLabel3)
-                                                                                .addComponent(tfNumNeuronES, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                .addGap(6)
-                                                                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                        .addComponent(lblNDeNeuronas)
-                                                                                        .addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                                .addComponent(tfCnsLearning, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                .addComponent(jLabel2))
-                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                        .addComponent(jLabel7)
-                                                                                                                        .addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                        .addGap(40)
-                                                                                                                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                .addComponent(jLabel6)
-                                                                                                                                .addComponent(rbLineal)
-                                                                                                                                .addComponent(rbTangencial))
-                                                                                                                                .addGap(18)
-                                                                                                                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                        .addComponent(cbBias)
-                                                                                                                                        .addComponent(bCreateNN))
-                                                                                                                                        .addContainerGap(14, Short.MAX_VALUE))
-                                                                                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                                                                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                                                                                                                                                        .addComponent(jLabel8)
-                                                                                                                                                        .addComponent(tfInicio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
-                                                                                                                                                        .addComponent(comboBox_inputType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                                                                                                        .addGap(65))))
-                );
+                                                                .addComponent(tfCotaError, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                                        GroupLayout.PREFERRED_SIZE)))
+                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                        .addGroup(
+                                                                                layout.createParallelGroup(Alignment.BASELINE)
+                                                                                .addComponent(jLabel4)
+                                                                                .addComponent(sPatrones, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                                                        GroupLayout.PREFERRED_SIZE))
+                                                                                        .addGap(18)
+                                                                                        .addGroup(
+                                                                                                layout.createParallelGroup(Alignment.BASELINE)
+                                                                                                .addComponent(jLabel3)
+                                                                                                .addComponent(tfNumNeuronES, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                                                                        GroupLayout.PREFERRED_SIZE))
+                                                                                                        .addGap(6)
+                                                                                                        .addGroup(
+                                                                                                                layout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                .addComponent(lblNDeNeuronas)
+                                                                                                                .addComponent(tfNumNeuronO, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                                                                                        GroupLayout.PREFERRED_SIZE))
+                                                                                                                        .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                                                                                        .addGroup(
+                                                                                                                                layout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                .addComponent(tfCnsLearning, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                                                                                                                        GroupLayout.PREFERRED_SIZE).addComponent(jLabel2))
+                                                                                                                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                        .addGroup(
+                                                                                                                                                layout.createParallelGroup(Alignment.TRAILING)
+                                                                                                                                                .addGroup(
+                                                                                                                                                        layout.createSequentialGroup()
+                                                                                                                                                        .addGroup(
+                                                                                                                                                                layout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                .addComponent(jLabel7)
+                                                                                                                                                                .addComponent(tfIteractionMax, GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                        .addGap(40)
+                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                layout.createParallelGroup(Alignment.BASELINE).addComponent(jLabel6)
+                                                                                                                                                                                .addComponent(rbLineal).addComponent(rbTangencial))
+                                                                                                                                                                                .addGap(18)
+                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                        layout.createParallelGroup(Alignment.BASELINE).addComponent(cbBias)
+                                                                                                                                                                                        .addComponent(bCreateNN)).addContainerGap(14, Short.MAX_VALUE))
+                                                                                                                                                                                        .addGroup(
+                                                                                                                                                                                                layout.createSequentialGroup()
+                                                                                                                                                                                                .addGroup(
+                                                                                                                                                                                                        layout.createParallelGroup(Alignment.BASELINE)
+                                                                                                                                                                                                        .addComponent(jLabel8)
+                                                                                                                                                                                                        .addComponent(tfInicio, GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                                                                                                                                                                                .addPreferredGap(ComponentPlacement.RELATED)
+                                                                                                                                                                                                                .addComponent(comboBox_inputType, GroupLayout.PREFERRED_SIZE,
+                                                                                                                                                                                                                        GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(65)))));
         getContentPane().setLayout(layout);
 
         pack();
@@ -360,10 +435,10 @@ public class NewNetworkForm extends javax.swing.JFrame {
         idCompany = tfIdCompany.getText();
         System.out.print("ide" + idCompany);
 
-        //si id company no estï¿entre 0 o 500, y ademï¿½s tiene q tener el formato "000"
+        //si id company no estï¿½entre 0 o 500, y ademï¿½s tiene q tener el formato "000"
 
         if ((idCompany == null) || (idCompany.equals(""))) {
-            JOptionPane.showMessageDialog(this, "Error, el campo identificador de empresa estï¿vacio", "Campo requerido", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error, el campo identificador de empresa estï¿½vacio", "Campo requerido", JOptionPane.ERROR_MESSAGE);
         } else {
 
             final int auxInt = Integer.parseInt(idCompany);
@@ -413,8 +488,8 @@ public class NewNetworkForm extends javax.swing.JFrame {
 
             final String stCnsLearning = tfCnsLearning.getText();
             if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-				tfCnsLearning.setText("0.001");
-				learningCnt = 0.001;
+                tfCnsLearning.setText("0.001");
+                learningCnt = 0.001;
 
             } else {
                 learningCnt = Double.parseDouble(stCnsLearning);
@@ -453,8 +528,27 @@ public class NewNetworkForm extends javax.swing.JFrame {
         //Creamos la red con todos los datos
 
         final PatronData manejador = new PatronData(idCompany);
-        final ArrayList<BigDecimal[]> inputs = manejador.createSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
-        final ArrayList<BigDecimal[]> desiredOutputs = manejador.createSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+        ArrayList<BigDecimal[]> inputs = new ArrayList<BigDecimal[]>();
+        ArrayList<BigDecimal[]> desiredOutputs = new ArrayList<BigDecimal[]>();
+
+        // solapados
+        if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.SOLAPADOS)) {
+            inputs = manejador.createSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+            desiredOutputs = manejador.createSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+        }
+
+        //no solapados
+        else if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.NOSOLAPADOS)) {
+            inputs = manejador.createNoSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+            desiredOutputs = manejador.createNoSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
+        }
+
+        //aleatorios
+        else if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.ALEATORIOS)) {
+
+        }
+
+        //manual
         final NetworkManager ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, iteractionMax, cotaError, learningCnt, inputs,
                 desiredOutputs);
         ne.training();
