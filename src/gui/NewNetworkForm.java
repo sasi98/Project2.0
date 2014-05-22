@@ -549,6 +549,10 @@ public class NewNetworkForm extends javax.swing.JFrame {
         }
 
         //manual
+        else {
+            //open a new JFrame
+        }
+
         final NetworkManager ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, iteractionMax, cotaError, learningCnt, inputs,
                 desiredOutputs);
         ne.training();
