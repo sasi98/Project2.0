@@ -87,7 +87,7 @@ public class MainWindow extends javax.swing.JFrame {
 			public void actionPerformed(ActionEvent arg0) {  //NewNetworkWindow
 				if ( (newNetworkWindow == null) ){
 					newNetworkWindow = new NewNetworkWindow(); 
-					newNetworkWindow.getFrame().setBounds(new Rectangle(200, 100, 520, 391));
+					newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 520, 391));
 					scrollPane.add(newNetworkWindow.getFrame());
 					newNetworkWindow.getFrame().show();
 				}

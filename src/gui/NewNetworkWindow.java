@@ -1,12 +1,18 @@
 package gui;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -14,13 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.PatronData;
 import dataManager.WriteExcel;
-
-import javax.swing.JCheckBox;
 
 
 public class NewNetworkWindow {
@@ -31,10 +36,12 @@ public class NewNetworkWindow {
     private JTextField tfIdCompany, tfInicio;
     private JComboBox<String> comboBox_inputType;
     private JSpinner sPatrones, spNumNeuronO, spNumNeurons;
+    private JTextPane textPane; 
 
     //Variables internas
     private String idCompany;
     private int numNeuronES, numNeuronO, numPatrones, inicio;
+    private String outFile; //Fichero en el que escribiremos los inputs/outputs 
 
    
 
@@ -53,12 +60,12 @@ public class NewNetworkWindow {
     private void initialize() {
     	
         frame = new JInternalFrame();
-        frame.setBounds(100, 100, 520, 391);
+        frame.setBounds(100, 100, 737, 493);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
         final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
-        lblNewLabel.setBounds(10, 32, 174, 14);
+        lblNewLabel.setBounds(10, 45, 174, 14);
         frame.getContentPane().add(lblNewLabel);
 
         final JLabel lblNewLabel_2 = new JLabel("N\u00BA Patrones de aprendizaje: ");
@@ -82,7 +89,7 @@ public class NewNetworkWindow {
         frame.getContentPane().add(lblNewLabel_8);
 
         bCreateNN = new JButton("Crear Red Neuronal");
-        bCreateNN.setBounds(358, 319, 136, 23);
+        bCreateNN.setBounds(336, 237, 136, 23);
         frame.getContentPane().add(bCreateNN);
 
         comboBox_inputType = new JComboBox();
@@ -94,7 +101,7 @@ public class NewNetworkWindow {
         frame.getContentPane().add(comboBox_inputType);
         
         tfIdCompany = new JTextField();
-        tfIdCompany.setBounds(214, 29, 36, 20);
+        tfIdCompany.setBounds(214, 42, 36, 20);
         frame.getContentPane().add(tfIdCompany);
         tfIdCompany.setColumns(10);
         
@@ -115,12 +122,17 @@ public class NewNetworkWindow {
         
         spNumNeurons = new JSpinner();
         spNumNeurons.setBounds(226, 139, 44, 20);
-        spNumNeuronO.setValue(0);
+        spNumNeurons.setValue(0);
         frame.getContentPane().add(spNumNeurons);
         
         JCheckBox checkBox = new JCheckBox("Bias");
         checkBox.setBounds(10, 262, 45, 23);
         frame.getContentPane().add(checkBox);
+        
+        textPane = new JTextPane();
+        //textPane.setEditable(false);
+        textPane.setBounds(10, 292, 701, 161);
+        frame.getContentPane().add(textPane);
     }
 
     
@@ -157,11 +169,10 @@ public class NewNetworkWindow {
 	        		spNumNeurons.setValue(6);
 	        		numNeuronES = 6;
 	        	}
-	        	numNeuronO = (int) spNumNeurons.getValue();
+	        	numNeuronO = (int) spNumNeuronO.getValue();
 	        	if (numNeuronO == 0){
 	        		numNeuronO = numNeuronES - (numNeuronES / 2);
-	                String stnumNeuronO = String.valueOf(numNeuronO);
-	        		spNumNeuronO.setValue(stnumNeuronO);
+	        		spNumNeuronO.setValue(numNeuronO);
 	        	}
 	        	String strInicio = tfInicio.getText();
 	            if ((strInicio == null) || (strInicio.equals(""))) {
@@ -201,10 +212,28 @@ public class NewNetworkWindow {
 		        }
 		
 		        //Testing collecting data
-		        String fileName = new String ("C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
-		        WriteExcel patrones = new WriteExcel(fileName);
+		        outFile = new String ("C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
+		        WriteExcel patrones = new WriteExcel(outFile);
 		        patrones.writeInputsOutputs(inputs, desiredOutputs);
 		        patrones.closeFile();
+		        
+		        //Display results
+		        FileReader reader;
+				try {
+					reader = new FileReader(outFile);
+					 BufferedReader br = new BufferedReader(reader);
+				        textPane.read( br, null );
+				        br.close();
+				       // textPane.requestFocus();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		       
+		        
 	        
         
         //Create and train the Network
@@ -228,9 +257,4 @@ public class NewNetworkWindow {
         });
 	
 	}
-	
-	
-	
-
-
 }
