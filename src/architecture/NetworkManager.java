@@ -13,10 +13,6 @@ import dataManager.WriteOutcomes;
 import utilities.Matrix;
 
 public class NetworkManager {
-	
-
-
-
 
 	//Constantes que representan los valores máximos y minimos con los que se crean las matrices aletorias
 	private static final int 		MATRIX_MAX = 10,

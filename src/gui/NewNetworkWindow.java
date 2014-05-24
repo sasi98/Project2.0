@@ -134,7 +134,15 @@ public class NewNetworkWindow {
         textPane.setBounds(10, 292, 701, 161);
         frame.getContentPane().add(textPane);
     }
-
+    
+    private void createEvents() {
+		bCreateNN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent arg0) {
+                bCreateNNActionPerformed();
+            }
+        });
+	} 
     
     public JInternalFrame getFrame() {
 		return frame;
@@ -143,7 +151,6 @@ public class NewNetworkWindow {
 	public void setFrame(JInternalFrame frame) {
 		this.frame = frame;
 	}
-
 	
 	private void bCreateNNActionPerformed() {
     	
@@ -248,13 +255,5 @@ public class NewNetworkWindow {
 
 
 
-	private void createEvents() {
-		bCreateNN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                bCreateNNActionPerformed();
-            }
-        });
 	
-	}
 }

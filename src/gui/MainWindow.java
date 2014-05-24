@@ -13,7 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import java.awt.SystemColor;
+import javax.swing.UIManager;
+
 
 /**
  *
@@ -35,6 +36,11 @@ public class MainWindow extends javax.swing.JFrame {
 	 * @param args the command line arguments
 	 */
 	public static void main(String args[]) {
+		try {
+	 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	 	} catch (Throwable e) {
+	 		e.printStackTrace();
+	 	}
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				final MainWindow window = new MainWindow();
