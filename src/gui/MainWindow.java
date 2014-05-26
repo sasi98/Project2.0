@@ -9,6 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -17,6 +20,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
+import architecture.Network;
+import architecture.NetworkManager;
+import javax.swing.JLabel;
+
 
 /**
  *
@@ -24,13 +31,18 @@ import javax.swing.UIManager;
  */
 public class MainWindow extends javax.swing.JFrame {
 	
+	public static NetworkManager ne;
+	
 	//Variables GUI
 	private JFrame frame;
 	private JToolBar toolBar;
 	private JDesktopPane desktopPane;
 	private JButton btnCrearNueva, btnEntrenar, btnCalcularSalidas;
 	
+	//Classes with internal frames
 	private NewNetworkWindow newNetworkWindow;
+	private TrainingWindow trainingWindow;
+
 	
 	
 	
@@ -92,18 +104,28 @@ public class MainWindow extends javax.swing.JFrame {
 	private void createEvents (){
 		
 		btnCrearNueva.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {  //NewNetworkWindow
+				if (trainingWindow != null){
+					try {
+						trainingWindow.getFrame().setClosed(true);
+					} catch (PropertyVetoException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 				if ( (newNetworkWindow == null) ){
 					newNetworkWindow = new NewNetworkWindow(); 
-					newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 520, 391));
-					desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.CENTER);
+					//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+					desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
 					
 					newNetworkWindow.getFrame().show();
 				}
 				else{
 					if (newNetworkWindow.getFrame().isClosed()){
 						newNetworkWindow = new NewNetworkWindow();
-						desktopPane.add(newNetworkWindow.getFrame());
+						//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+						desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
 						newNetworkWindow.getFrame().show();
 					}
 				}
@@ -111,9 +133,33 @@ public class MainWindow extends javax.swing.JFrame {
 		});
 		
 		btnEntrenar.addActionListener(new ActionListener() {
+			
+			//Close other internals frames before
 			public void actionPerformed(ActionEvent e) {
+				if (newNetworkWindow != null){
+					try {
+						newNetworkWindow.getFrame().setClosed(true);
+					} catch (PropertyVetoException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
 				//TrainingWindows
-				
+				if ( (trainingWindow == null) ){
+					trainingWindow = new TrainingWindow();
+					//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+					desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
+					trainingWindow.getFrame().show();
+				}
+				else{
+					if (trainingWindow.getFrame().isClosed()){
+						trainingWindow = new TrainingWindow();
+						//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+						desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
+						trainingWindow.getFrame().show();
+					}
+				}
 			}
 		});
 		

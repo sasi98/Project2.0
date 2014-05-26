@@ -9,18 +9,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import javax.swing.JTextPane;
-
 import org.apache.log4j.Logger;
 
 import utilities.Matrix;
+import utilities.WeightMatrix;
+
 
 public class ReadFile {
+
 	private String name; //Nombre archivo
 	private File file; //Archivo
 	private FileReader reader;
 	private BufferedReader br;
-	//private Matrix weightMatrix;
 	private static final Logger log = Logger.getLogger(ReadFile.class);
 	
 	
@@ -40,68 +40,81 @@ public class ReadFile {
 	}
 	
 	
-
-	
-	
-	
-
-	
-	
-//	public Matrix readWeightMatrix (){
-//		ArrayList<ArrayList<BigDecimal>> arrayMatrix = new ArrayList<>();
-//		String row;
-//		int numRow = 0, numColum = 0;
-//		try {
-//			row = br.readLine();
-//			while (row != null){
-//				StringTokenizer st = new StringTokenizer (row,";" );
-//				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
-//			//	System.out.println(row+ "\n");
-//				while(st.hasMoreTokens()){  
-//					String strValue = (String) st.nextElement();
-//					strValue = strValue.replace(",", ".");
-//					
-////					System.out.print("Element "+ StrValue+  "Token: "+ StrValue2);
-//					BigDecimal value = new BigDecimal(strValue);
-//					arrayRow.add(value);
-//				}
-//			
-//			arrayMatrix.add(arrayRow);
-//			numColum = arrayRow.size(); 
-//			row = br.readLine();
-//			}
-//			numRow = arrayMatrix.size();
-//			
-//			
-//			System.out.print("Número de filas: " + numRow+ "Número de columnas: "+ numColum+ "\n");
-//			//Pasar los valores del array de arrays a la matriz de pesos.
-//			Matrix weightMatrix = new Matrix (new BigDecimal[numRow][numColum]);
-//			for (int i = 0; i<weightMatrix.getRow(); i++){
-//				System.out.print("mostrando i: " + i);
-//				ArrayList<BigDecimal> aux = arrayMatrix.get(i);
-//				
-//				for (int j = 0; j < weightMatrix.getColumn(); j++){
-//					weightMatrix.setValuePos(i, j,aux.get(j));
-//				}
-//			}
-//			
-//			weightMatrix.printMatrix();
-//			return weightMatrix; 
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return null;
-//		}
-		
+	//pre: Fichero debe de contener el formato adecuado. Las matrices deben de ser escritas en el orden 
+	//W, V y van precededidas por una linea con el formato: "Matrix W/V:" fichero con extensión .csv
+	//Return WeightMatrix (clase que contiene las matrices de pesos de la red) leido del fichero
+	public WeightMatrix readWeightMatrix (){
+		ArrayList<ArrayList<BigDecimal>> arrayMatrix = new ArrayList<>();
+		Matrix W = null, V = null;
+		String row;
+		try {
+			row = br.readLine();
+			while (row != null){
+				if (row.equals("Matrix W:") ){
+					row = br.readLine();
+				}
+				if (row.equals("Matrix V:")){     //Guardamos Matrix W
+					W = Matrix.createMatrixFromArrays(arrayMatrix);
+					row = br.readLine(); //Inicializamos valores para leer V
+					arrayMatrix = new ArrayList<>();
+				}
+						
+				StringTokenizer st = new StringTokenizer (row,";" );
+				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
+				while(st.hasMoreTokens()){  
+					String strValue = (String) st.nextElement();
+					strValue = strValue.replace(",", ".");
+					BigDecimal value = new BigDecimal(strValue);
+					arrayRow.add(value);
+				}
+			arrayMatrix.add(arrayRow);
+			row = br.readLine();
+			}			
+			V = Matrix.createMatrixFromArrays(arrayMatrix);
+			return new WeightMatrix(W, V); 
 			
-			
-		
-		
-			
-		
-		
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	
 	}
+	
+	//Lee la matrix de pesos 
+	public Matrix readSingleWeightMatrix (){
+		ArrayList<ArrayList<BigDecimal>> arrayMatrix = new ArrayList<>();
+		String row;
+		try {
+			row = br.readLine();
+			while (row != null){
+				StringTokenizer st = new StringTokenizer (row,";" );
+				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
+				while(st.hasMoreTokens()){  
+					String strValue = (String) st.nextElement();
+					strValue = strValue.replace(",", ".");
+					BigDecimal value = new BigDecimal(strValue);
+					arrayRow.add(value);
+				}
+			arrayMatrix.add(arrayRow); 
+			row = br.readLine();
+			}
+			Matrix weightMatrix = Matrix.createMatrixFromArrays(arrayMatrix);
+			return weightMatrix; 
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+}
+		
+			
+			
+		
+		
+			
+}
+		
+	
 	
 	
 	

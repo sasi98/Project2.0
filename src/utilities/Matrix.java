@@ -5,6 +5,7 @@ package utilities;
 import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -344,6 +345,22 @@ public static Matrix createRandomMatrix (double min, double max, Dimension d, in
 		}
 	}
 	return m;
+}
+
+//Genera una matrix (filas = nº de arrays, columnas = tamaño de los arrays) a partir 
+//del array de arrays introducido por parámetros.
+public static Matrix createMatrixFromArrays (ArrayList<ArrayList<BigDecimal>> arrayMatrix){
+	int numRow = arrayMatrix.size();
+	int numColum = arrayMatrix.get(0).size();
+	Matrix newM = new Matrix (new BigDecimal[numRow][numColum]);
+	for (int i = 0; i<newM.getRow(); i++){
+		ArrayList<BigDecimal> aux = arrayMatrix.get(i);
+		for (int j = 0; j < newM.getColumn(); j++){
+			newM.setValuePos(i, j,aux.get(j));
+		}
+	}
+	return newM;
+	
 }
 
 

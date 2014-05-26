@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import utilities.Matrix;
+import utilities.WeightMatrix;
 import dataManager.ReadFile;
 import architecture.NetworkManager;
 
@@ -38,7 +40,7 @@ public class TrainingWindow {
 	private BigDecimal cotaError;
 	private double learningCnt;
 	private int iterationMax;
-	private Matrix W, V;
+	private WeightMatrix matrices;
 
     /**
      * Create the application.
@@ -177,8 +179,8 @@ public class TrainingWindow {
         
         final String stCnsLearning = tflearningCNT.getText();
         if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-            tflearningCNT.setText("0.001");
-            learningCnt = 0.001;
+            tflearningCNT.setText("0.0001");
+            learningCnt = 0.0001;
 
         } else {
             learningCnt = Double.parseDouble(stCnsLearning);
@@ -193,17 +195,23 @@ public class TrainingWindow {
             iterationMax = Integer.parseInt(stItMax);
         }
         
-        if ( (W == null) || (V == null) ){ 
+        if (matrices == null){ 
 			 //No fueron seleccionadas de archivo, deben de ser creadas aletorias
         	//Las creo y se las paso al trainnig junto con el resto de parámetros
+        	Dimension dW = new Dimension(MainWindow.ne.getNumNeuronsO(), MainWindow.ne.getNumNeuronsES());  
+    		Matrix W = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
+    		Dimension dV = new Dimension(MainWindow.ne.getNumNeuronsES(), MainWindow.ne.getNumNeuronsO());
+    		Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
+    		WeightMatrix matrices = new WeightMatrix(W, V);
+    		MainWindow.ne.training(iterationMax, cotaError, learningCnt, matrices);
+    		
 		}
 		else {
 			//se las paso al trainnig directamente junto con el resto de parámetros
-			
+			MainWindow.ne.training(iterationMax, cotaError, learningCnt, matrices);
 			
 		}
-        
-		 
+
 	 }
 	
 	private void btnNewButtonActionPerformed() {
@@ -213,9 +221,7 @@ public class TrainingWindow {
 			File filechoosen= filechooser.getSelectedFile();
 			try {
 				ReadFile readWM = new ReadFile(filechoosen);
-//				W = //weightMatrix = readWM.readWeightMatrix();
-//				V = 
-//						
+				matrices = readWM.readWeightMatrix();		
 
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -226,6 +232,16 @@ public class TrainingWindow {
 			System.out.println("Open command cancelled by user.");
 		}
 
+	}
+
+
+	public JInternalFrame getFrame() {
+		return frame;
+	}
+
+
+	public void setFrame(JInternalFrame frame) {
+		this.frame = frame;
 	}
 
 		

@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Checkbox;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -26,7 +27,9 @@ import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.PatronData;
 import dataManager.WriteExcel;
+
 import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
 
 
 public class NewNetworkWindow {
@@ -38,12 +41,14 @@ public class NewNetworkWindow {
     private JComboBox<String> comboBox_inputType;
     private JSpinner sPatrones, spNumNeuronO, spNumNeurons;
     private JTextPane textPane; 
-    JScrollPane scrollPane;
+    private JScrollPane scrollPane;
+    private JCheckBox checkBox;
 
     //Variables internas
     private String idCompany;
     private int numNeuronES, numNeuronO, numPatrones, inicio;
     private String outFile; //Fichero en el que escribiremos los inputs/outputs 
+    private boolean bias; 
 
    
 
@@ -127,20 +132,22 @@ public class NewNetworkWindow {
         spNumNeurons.setValue(0);
         frame.getContentPane().add(spNumNeurons);
         
-        JCheckBox checkBox = new JCheckBox("Bias");
+        checkBox = new JCheckBox("Bias");
         checkBox.setBounds(10, 262, 45, 23);
         frame.getContentPane().add(checkBox);
         
         textPane = new JTextPane();
-        //textPane.setEditable(false);
+        textPane.setEditable(false);
         textPane.setBounds(0,0, 701, 161);
-        //frame.getContentPane().add(textPane);
         
-        JScrollPane scrollPane = new JScrollPane();
+        scrollPane = new JScrollPane();
         scrollPane.setBounds(10, 292, 701, 161);
         //scrollPane.add(textPane);
         scrollPane.setViewportView(textPane); 
         frame.getContentPane().add(scrollPane);
+        
+        JScrollBar scrollBar = new JScrollBar();
+        scrollPane.setRowHeaderView(scrollBar);
     }
     
     private void createEvents() {
@@ -196,6 +203,9 @@ public class NewNetworkWindow {
 	            } 
 	            else 
 	                inicio = Integer.parseInt(strInicio);
+	            
+	            bias = checkBox.isSelected();
+	           
 	
 		        /** Creamos la red con todos los datos **/
 		        final PatronData manejador = new PatronData(idCompany);
@@ -248,15 +258,9 @@ public class NewNetworkWindow {
 					e.printStackTrace();
 				}
 		       
+				//Create the Network
+		        MainWindow.ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 		        
-	        
-        
-        //Create and train the Network
-//        final NetworkManager ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, iteractionMax, cotaError, 
-//        		learningCnt, inputs, desiredOutputs, bias);
-//        ne.training();
-
-	  
         	}//end else2
         }//end else1
     }
