@@ -212,7 +212,6 @@ public class Network {
         		if (c.getFrom() == hiddenLayer[i]){ 
         			OutputNeuron o =  (OutputNeuron) c.getTo();
         			BigDecimal aux = o.getDeltaError();
-        			System.out.print("Value: "+ c.getWeight()+ "X" + "Delta:" + aux+ "\n");
         			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexión
         			deltaE =  deltaE.add(aux);   			
         		}

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import utilities.Matrix;
+import utilities.WeightMatrix;
 import architecture.Network;
 import architecture.NetworkManager;
 import architecture.Neuron;
@@ -416,6 +417,31 @@ public class WriteExcel {
 			
 		}
 			
+		//it must write in the same format than readWeightMatrix from ReadFile class
+		public void writeMatrices (WeightMatrix matrices){
+			Matrix W = matrices.getW();
+			Matrix V = matrices.getV();
+			wr.append("Matrix W:\n");
+			 for (int i = 0; i < W.getRow(); i++){
+				 for (int j= 0; j < W.getColumn(); j++){
+					 String valueStr = W.getValuePos(i, j).toString();
+					 valueStr = valueStr.replace(".", ",");
+					 wr.append(valueStr+ ";"); //Siguiente celda
+				 }
+				 
+				 wr.append("\n"); //Salto de fila en excel
+			 }
+			 wr.append("Matrix V:\n");
+			 for (int i = 0; i < V.getRow(); i++){
+				 for (int j= 0; j < V.getColumn(); j++){
+					 String valueStr = V.getValuePos(i, j).toString();
+					 valueStr = valueStr.replace(".", ",");
+					 wr.append(valueStr+ ";");
+				 }
+				 wr.append("\n");
+			 }
+		}
+		
 		
 		//Escribe en el fichero los dos vectores introducidos por parámetrosb
 		public void writeInputsOutputs(ArrayList<BigDecimal[]> inputs, ArrayList<BigDecimal[]> desiredOutput){

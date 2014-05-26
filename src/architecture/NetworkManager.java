@@ -189,8 +189,9 @@ public class NetworkManager {
 		
 //		WriteOutcomes writer = new WriteOutcomes("C:\\repositoryGit\\Salidas\\training.txt", this); //Outcomes file
 //		writer.closeFile();
-		WriteExcel writerByIteration = new WriteExcel ("C:\\repositoryGit\\Salidas\\resultsByIteration.csv"); //Outcomes file
+		//WriteExcel writerByIteration = new WriteExcel ("C:\\repositoryGit\\Salidas\\resultsByIteration.csv"); //Outcomes file
 		WriteExcel writerErrorProgress = new WriteExcel ("C:\\repositoryGit\\Salidas\\ErrorProgress.csv"); //Outcomes file
+		WriteExcel writerMatrices = new WriteExcel ("C:\\repositoryGit\\Salidas\\MatricesObtenidas.csv"); //Outcomes file
 		//writer.writeBasicInformation();
 	
 		
@@ -208,7 +209,7 @@ public class NetworkManager {
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
 				log.debug("Valores de W y V tras actualización de matriz");
-				W.printMatrix();
+				W.printMatrix(); //logger prints
 				V.printMatrix();
 			}
 			//writerByPatron.closeFile();
@@ -251,11 +252,16 @@ public class NetworkManager {
 				
 			//Escribir matrices W y V y error obtenido
 			errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
-			writerByIteration.writeOneIterationInf(iteration, errorIt, W, V);
+			//writerByIteration.writeOneIterationInf(iteration, errorIt, W, V);
 			iteration++;
 		
 		} //fin while
-		writerByIteration.closeFile();
+		
+		//Escribimos las matrices obtenidas
+		writerMatrices.writeMatrices(new WeightMatrix(W, V));
+		writerMatrices.closeFile();
+		
+		//writerByIteration.closeFile();
 		writerErrorProgress.closeFile();
 		
 		//writer.closeFile();
