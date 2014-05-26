@@ -64,7 +64,7 @@ public class testingNetworkClass {
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
 		
-		ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
+		//ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
 		
 		System.out.print ("FeedForward: \n");
 		ne.feedForward();
@@ -79,7 +79,7 @@ public class testingNetworkClass {
 			System.out.print(ne.getOutputLayer()[i].getOutValue()+ "\n");
 		}	
 	
-		ne.train();
+		//ne.train();
 		
 		
 	}
@@ -128,7 +128,7 @@ public class testingNetworkClass {
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
 		
-		ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
+		//ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
 		
 		System.out.print ("FeedForward: \n");
 		ne.feedForward();
@@ -228,7 +228,7 @@ Network ne = new Network();
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
 		
-		ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W, V);
+		//ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W, V);
 		
 		
 		System.out.print ("Suponemos que ha entrenado con todos los patrones, y las matrices obtenidas son: ");
@@ -259,7 +259,7 @@ Network ne = new Network();
 		
 		V2.printMatrix();
 		
-		ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W2, V2);
+		//ne.setUpPatron(numNOcultas, inputLayer,1, desiredOutputsLayer, W2, V2);
 		
 		
 		System.out.print("Error obtenido: "+ ne.calculateError());
@@ -318,7 +318,7 @@ Network ne = new Network();
 				desiredOutputsLayer[1] = new BigDecimal(700);
 				desiredOutputsLayer[2] = new BigDecimal(600);
 				
-				ne.setUpPatron(numNOcultas, inputLayer, 0.001, desiredOutputsLayer, W, V);
+			//	ne.setUpPatron(numNOcultas, inputLayer, 0.001, desiredOutputsLayer, W, V);
 				
 	
 				//ne.train();

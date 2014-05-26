@@ -243,23 +243,7 @@ public class NewNetworkWindowq {
                 numNeuronO = Integer.parseInt(stnumNeuronO);
             }
 
-            final String stCnsLearning = tfCnsLearning.getText();
-            if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-                tfCnsLearning.setText("0.001");
-                learningCnt = 0.001;
-
-            } else {
-                learningCnt = Double.parseDouble(stCnsLearning);
-            }
-
-            final String stItMax = tfIteractionMax.getText();
-            if ((stItMax == null) || (stItMax.equals(""))) {
-                tfIteractionMax.setText("1000");
-                iteractionMax = 1000;
-
-            } else {
-                iteractionMax = Integer.parseInt(stItMax);
-            }
+            
 
             final String strInicio = tfInicio.getText();
             if ((strInicio == null) || (strInicio.equals(""))) {

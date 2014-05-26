@@ -5,11 +5,13 @@
  */
 
 package gui;
+import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -25,7 +27,7 @@ public class MainWindow extends javax.swing.JFrame {
 	//Variables GUI
 	private JFrame frame;
 	private JToolBar toolBar;
-	private JScrollPane scrollPane;
+	private JDesktopPane desktopPane;
 	private JButton btnCrearNueva, btnEntrenar, btnCalcularSalidas;
 	
 	private NewNetworkWindow newNetworkWindow;
@@ -79,10 +81,10 @@ public class MainWindow extends javax.swing.JFrame {
 	    frame.getContentPane().add(toolBar);
 	
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setOpaque(false);
-		scrollPane.setBounds(10,62,696,406);
-		frame.getContentPane().add(scrollPane);
+		desktopPane = new JDesktopPane();
+		desktopPane.setOpaque(false);
+		desktopPane.setBounds(10,60,696,406);
+		frame.getContentPane().add(desktopPane);
 	 
 	  }
 	
@@ -94,13 +96,14 @@ public class MainWindow extends javax.swing.JFrame {
 				if ( (newNetworkWindow == null) ){
 					newNetworkWindow = new NewNetworkWindow(); 
 					newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 520, 391));
-					scrollPane.add(newNetworkWindow.getFrame());
+					desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.CENTER);
+					
 					newNetworkWindow.getFrame().show();
 				}
 				else{
 					if (newNetworkWindow.getFrame().isClosed()){
 						newNetworkWindow = new NewNetworkWindow();
-						scrollPane.add(newNetworkWindow.getFrame());
+						desktopPane.add(newNetworkWindow.getFrame());
 						newNetworkWindow.getFrame().show();
 					}
 				}

@@ -4,18 +4,25 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import utilities.Matrix;
+import dataManager.ReadFile;
 import architecture.NetworkManager;
 
 public class TrainingWindow {
@@ -31,6 +38,7 @@ public class TrainingWindow {
 	private BigDecimal cotaError;
 	private double learningCnt;
 	private int iterationMax;
+	private Matrix W, V;
 
     /**
      * Create the application.
@@ -106,16 +114,21 @@ public class TrainingWindow {
     	rdbtnTangencial.setBounds(new Rectangle(333, 114, 77, 23));
     	frame.getContentPane().add(rdbtnTangencial);
     	
+    	ButtonGroup groupFuncion = new ButtonGroup(); //To get just one selected at the time
+    	groupFuncion.add(rdbtnTangencial);
+    	groupFuncion.add(rdbtnLineal);
     	
     	rdbtnSi = new JRadioButton("Si");
     	rdbtnSi.setBounds(new Rectangle(258, 144, 33, 23));
     	frame.getContentPane().add(rdbtnSi);
     	
-    	
     	rdbtnNo = new JRadioButton("No");
     	rdbtnNo.setBounds(new Rectangle(333, 144, 39, 23));
     	frame.getContentPane().add(rdbtnNo);
     	
+    	ButtonGroup groupSiNo = new ButtonGroup();
+    	groupSiNo.add(rdbtnSi);
+    	groupSiNo.add(rdbtnNo);
     	
     	tfcortaError = new JTextField();
     	tfcortaError.setColumns(10);
@@ -141,6 +154,12 @@ public class TrainingWindow {
 	                btnIniciarEntrenamientoActionPerformed();
 	            }
 	        });
+		
+		btnNewButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {
+    		    btnNewButtonActionPerformed();
+    		}
+    	});
 	 }
 	
 	private void btnIniciarEntrenamientoActionPerformed(){
@@ -173,9 +192,43 @@ public class TrainingWindow {
         } else {
             iterationMax = Integer.parseInt(stItMax);
         }
-		 
+        
+        if ( (W == null) || (V == null) ){ 
+			 //No fueron seleccionadas de archivo, deben de ser creadas aletorias
+        	//Las creo y se las paso al trainnig junto con el resto de parámetros
+		}
+		else {
+			//se las paso al trainnig directamente junto con el resto de parámetros
+			
+			
+		}
+        
 		 
 	 }
+	
+	private void btnNewButtonActionPerformed() {
+		JFileChooser filechooser = new JFileChooser("C:\\repositoryGit\\Salidas");
+		int returnValue = filechooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			File filechoosen= filechooser.getSelectedFile();
+			try {
+				ReadFile readWM = new ReadFile(filechoosen);
+//				W = //weightMatrix = readWM.readWeightMatrix();
+//				V = 
+//						
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			System.out.println("Open command cancelled by user.");
+		}
+
+	}
+
+		
 	 
 	 
 	

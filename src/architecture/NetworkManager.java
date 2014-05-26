@@ -40,7 +40,8 @@ public class NetworkManager {
 	ArrayList<BigDecimal[]> 		inputs, 
 									desiredOutputs;
 	
-	private boolean 				bias; 
+	private boolean 				bias;
+	private String 					name; //Lo usaremos para distingirla una vez creada.
 	
 	
 	private static Logger log = Logger.getLogger(NetworkManager.class);
@@ -73,6 +74,9 @@ public class NetworkManager {
 	
 
 	//GETTERS
+
+		
+		
 		
 		public double getLearningCNT() {
 			return learningCNT;
@@ -140,6 +144,15 @@ public class NetworkManager {
 		this.desiredOutputs = desiredOutputs;
 	}
 	
+	//Pre: NetworkManager no puede ser null
+	//Establece el nombre idenficativo a la red creada
+	//idComp: String identificador de la empresa a la pertenecen los datos
+	//tipoSelDat: String que indica la forma en la que seleccionaron los datos: ALE, NOSOLAP, SOL, MANUAL
+	//id: identificador que se corresponde con el orden en el q fue creada la red
+	//post: name debe contener la concatenación de las 3 cadenas entradas por parámetros
+	public void setName (String idComp, String tipoSelDat, int id){
+		this.name = idComp+tipoSelDat+id;
+	}
 	
 	
 	public void training ()

@@ -26,6 +26,7 @@ import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.PatronData;
 import dataManager.WriteExcel;
+import javax.swing.JScrollPane;
 
 
 public class NewNetworkWindow {
@@ -37,6 +38,7 @@ public class NewNetworkWindow {
     private JComboBox<String> comboBox_inputType;
     private JSpinner sPatrones, spNumNeuronO, spNumNeurons;
     private JTextPane textPane; 
+    JScrollPane scrollPane;
 
     //Variables internas
     private String idCompany;
@@ -131,8 +133,14 @@ public class NewNetworkWindow {
         
         textPane = new JTextPane();
         //textPane.setEditable(false);
-        textPane.setBounds(10, 292, 701, 161);
-        frame.getContentPane().add(textPane);
+        textPane.setBounds(0,0, 701, 161);
+        //frame.getContentPane().add(textPane);
+        
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 292, 701, 161);
+        //scrollPane.add(textPane);
+        scrollPane.setViewportView(textPane); 
+        frame.getContentPane().add(scrollPane);
     }
     
     private void createEvents() {
@@ -252,8 +260,4 @@ public class NewNetworkWindow {
         	}//end else2
         }//end else1
     }
-
-
-
-	
 }
