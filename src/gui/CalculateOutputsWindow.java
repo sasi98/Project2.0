@@ -11,6 +11,7 @@ import javax.swing.JButton;
 
 import utilities.WeightMatrix;
 import dataManager.ReadFile;
+import dataManager.WriteExcel;
 import architecture.NetworkManager;
 
 import java.awt.event.ActionListener;
@@ -121,8 +122,8 @@ public class CalculateOutputsWindow {
 		ArrayList<BigDecimal[]> salidas = ne.calculateOutputs(matrices); //Salidas obtenidas
 		//Escribir salidas en fichero y en pantalla
 		//Grafico con las deseadas y las obtenidas o la variación delta
-		
-		
+		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
+		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
 	}
 	
 }

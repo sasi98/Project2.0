@@ -190,8 +190,8 @@ public class TrainingWindow {
         
         final String stCnsLearning = tflearningCNT.getText();
         if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-            tflearningCNT.setText("0.0001");
-            learningCnt = 0.0001;
+            tflearningCNT.setText("0.00001");
+            learningCnt = 0.00001;
 
         } else {
             learningCnt = Double.parseDouble(stCnsLearning);

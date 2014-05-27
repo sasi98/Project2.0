@@ -28,7 +28,7 @@ public class PatronData {
 	
 	public PatronData (String idCompany) {
 		super();
-		PropertyConfigurator.configure("files\\log4j.properties");
+		//PropertyConfigurator.configure("files\\log4j.properties");
 		this.idCompany = idCompany;
 		try {
 			ReadExcel file = new ReadExcel();

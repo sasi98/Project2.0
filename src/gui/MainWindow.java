@@ -9,8 +9,11 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import javax.swing.JButton;
@@ -22,7 +25,14 @@ import javax.swing.UIManager;
 
 import architecture.Network;
 import architecture.NetworkManager;
+
 import javax.swing.JLabel;
+import javax.swing.JToggleButton;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 
 /**
@@ -40,6 +50,7 @@ public class MainWindow extends JFrame {
 	private JToolBar toolBar;
 	private JDesktopPane desktopPane;
 	private JButton btnCrearNueva, btnEntrenar, btnCalcularSalidas;
+	private JToggleButton tglbtnTrazas;
 	
 	//Classes with internal frames
 	private NewNetworkWindow newNetworkWindow;
@@ -67,6 +78,7 @@ public class MainWindow extends JFrame {
 	
 	/** Creates new form MainWindow */
 	public MainWindow() {
+		PropertyConfigurator.configure("files\\log4j.properties");
 		initialize();
 		createEvents();
 	}
@@ -99,6 +111,10 @@ public class MainWindow extends JFrame {
 		desktopPane.setOpaque(false);
 		desktopPane.setBounds(10,60,696,406);
 		frame.getContentPane().add(desktopPane);
+		
+		tglbtnTrazas = new JToggleButton("Activar trazas");
+		tglbtnTrazas.setBounds(583, 30, 123, 21);
+		frame.getContentPane().add(tglbtnTrazas);
 	 
 	  }
 	
@@ -106,73 +122,103 @@ public class MainWindow extends JFrame {
 	private void createEvents (){
 		
 		btnCrearNueva.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent arg0) {  //NewNetworkWindow
-				if (trainingWindow != null){
-					try {
-						trainingWindow.getFrame().setClosed(true);
-					} catch (PropertyVetoException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
-			
-				if ( (newNetworkWindow == null) ){
-					newNetworkWindow = new NewNetworkWindow(); 
-					//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
-					desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
-					
-					newNetworkWindow.getFrame().show();
-				}
-				else{
-					if (newNetworkWindow.getFrame().isClosed()){
-						newNetworkWindow = new NewNetworkWindow();
-						//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
-						desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
-						newNetworkWindow.getFrame().show();
-					}
-				}
+				btnCrearNuevaActionPerformed();
 			}
 		});
 		
 		btnEntrenar.addActionListener(new ActionListener() {
-			
-			//Close other internals frames before
-			public void actionPerformed(ActionEvent e) {
-				if (newNetworkWindow != null){
-					try {
-						newNetworkWindow.getFrame().setClosed(true);
-					} catch (PropertyVetoException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-				}
-				//TrainingWindows
-				if ( (trainingWindow == null) ){
-					trainingWindow = new TrainingWindow();
-					//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
-					desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
-					trainingWindow.getFrame().show();
-				}
-				else{
-					if (trainingWindow.getFrame().isClosed()){
-						trainingWindow = new TrainingWindow();
-						//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
-						desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
-						trainingWindow.getFrame().show();
-					}
-				}
+			public void actionPerformed(ActionEvent e) {  
+				btnEntrenarActionPerformed();
 			}
 		});
 		
 		btnCalcularSalidas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				btnCalcularSalidasActionPerformed();
 			}
 		});
 		
 		
+		tglbtnTrazas.addItemListener(new ItemListener() {
+			public void itemStateChanged (ItemEvent ev) {
+				if (ev.getStateChange() == ItemEvent.SELECTED){
+					tglbtnTrazas.setText("Desactivar trazas");
+					
+					
+				        
+				}else if(ev.getStateChange() == ItemEvent.DESELECTED){
+					tglbtnTrazas.setText("Activar trazas");
+					ArrayList<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+					loggers.add(LogManager.getRootLogger());
+					for ( Logger logger : loggers ) {
+					    logger.setLevel(Level.OFF);
+					}
+				}
+			}
+		});
 	}
+	
+	
+	private void btnCrearNuevaActionPerformed() {
+		if (trainingWindow != null){ 
+			try {
+				trainingWindow.getFrame().setClosed(true); 	//Close other internals frames before
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	
+		if ( (newNetworkWindow == null) ){
+			newNetworkWindow = new NewNetworkWindow(); 
+			//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+			desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
+			
+			newNetworkWindow.getFrame().show();
+		}
+		else{
+			if (newNetworkWindow.getFrame().isClosed()){
+				newNetworkWindow = new NewNetworkWindow();
+				//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+				desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
+				newNetworkWindow.getFrame().show();
+			}
+		}
+		
+	}
+	
+	private void btnEntrenarActionPerformed() {
+		if (newNetworkWindow != null){
+			try {
+				newNetworkWindow.getFrame().setClosed(true);
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		}
+		//TrainingWindows
+		if ( (trainingWindow == null) ){
+			trainingWindow = new TrainingWindow();
+			//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+			desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
+			trainingWindow.getFrame().show();
+		}
+		else{
+			if (trainingWindow.getFrame().isClosed()){
+				trainingWindow = new TrainingWindow();
+				//trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
+				desktopPane.add(trainingWindow.getFrame(), BorderLayout.WEST);
+				trainingWindow.getFrame().show();
+			}
+		}
+
+	}
+	private void btnCalcularSalidasActionPerformed() {
+	}
+
+	
+	
 }
 

@@ -453,4 +453,17 @@ public class WriteExcel {
 				wr.append("\n");
 			}
 		}
+		
+		public void writeOuDesiredOuObtained(ArrayList<BigDecimal[]> outputs, ArrayList<BigDecimal[]> desiredOutput){
+			for (int i = 0; i<outputs.size(); i++){
+				wr.append("Patrón: "+ i+ "\n");
+				for (int j = 0; j< outputs.get(i).length; j++){
+					wr.append("Obtenida:  " +outputs.get(i)[j]+ " Deseada  " + desiredOutput.get(i)[j]+ "\n");
+				}
+				wr.append("\n");
+			}
+		}
+		
+		
+		
 }
