@@ -26,6 +26,9 @@ import utilities.Matrix;
 import utilities.WeightMatrix;
 import dataManager.ReadFile;
 import architecture.NetworkManager;
+import javax.swing.SwingConstants;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 
 public class TrainingWindow {
 	
@@ -36,6 +39,7 @@ public class TrainingWindow {
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
+	private JLabel lblNewLabel;
 	
 	private BigDecimal cotaError;
 	private double learningCnt;
@@ -55,20 +59,22 @@ public class TrainingWindow {
 		
     	
     	frame = new JInternalFrame();
+    	frame.getContentPane().setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         frame.setBounds(100, 100, 732, 517);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
     	
     	txtrUtilizarMatricesDe = new JTextArea();
+    	txtrUtilizarMatricesDe.setLineWrap(true);
     	txtrUtilizarMatricesDe.setFont(new Font("Tahoma", Font.PLAIN, 11));
     	txtrUtilizarMatricesDe.setOpaque(false);
-    	txtrUtilizarMatricesDe.setText("Utilizar matrices de pesos procedentes de entrenamientos anteriores");
-    	txtrUtilizarMatricesDe.setBounds(new Rectangle(483, 103, 186, 34));
+    	txtrUtilizarMatricesDe.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
+    	txtrUtilizarMatricesDe.setBounds(new Rectangle(483, 103, 203, 34));
   
     	frame.getContentPane().add(txtrUtilizarMatricesDe);
     
     	
-    	btnNewButton = new JButton("Seleccionar archivo: ");
+    	btnNewButton = new JButton("Seleccionar archivo");
     	btnNewButton.setBounds(new Rectangle(528, 153, 141, 34));
     	frame.getContentPane().add(btnNewButton);
     	
@@ -101,8 +107,14 @@ public class TrainingWindow {
     	lblMaxIt.setBounds(48, 251, 149, 14);
     	frame.getContentPane().add(lblMaxIt);
     	
+    	lblNewLabel = new JLabel("");
+    	lblNewLabel.setBounds(537, 212, 132, 34);
+    	frame.getContentPane().add(lblNewLabel);
     	
     	comboBox = new JComboBox();
+    	for (NetworkManager ne: MainWindow.neList){ //Añadimos las instancias creadas al ComBox
+    		comboBox.addItem(ne.getName());
+    	}
     	comboBox.setBounds(new Rectangle(261, 71, 125, 20));
     	frame.getContentPane().add(comboBox);
     	
@@ -146,7 +158,6 @@ public class TrainingWindow {
     	tfmaxIt.setColumns(10);
     	tfmaxIt.setBounds(new Rectangle(261, 247, 86, 20));
     	frame.getContentPane().add(tfmaxIt);
-    	
     	
     }
 	
@@ -195,20 +206,29 @@ public class TrainingWindow {
             iterationMax = Integer.parseInt(stItMax);
         }
         
+        
+        NetworkManager ne = null;
+        for (NetworkManager aux: MainWindow.neList){
+        	if (aux.getName().equals(comboBox.getSelectedItem())){
+        		ne = aux; //Controlar que se halla elegido alguna, de lo contrario tendremos null exceptions
+        	}
+        }
+        
+        
         if (matrices == null){ 
 			 //No fueron seleccionadas de archivo, deben de ser creadas aletorias
         	//Las creo y se las paso al trainnig junto con el resto de parámetros
-        	Dimension dW = new Dimension(MainWindow.ne.getNumNeuronsO(), MainWindow.ne.getNumNeuronsES());  
+        	Dimension dW = new Dimension(ne.getNumNeuronsO(), ne.getNumNeuronsES());  
     		Matrix W = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
-    		Dimension dV = new Dimension(MainWindow.ne.getNumNeuronsES(), MainWindow.ne.getNumNeuronsO());
+    		Dimension dV = new Dimension(ne.getNumNeuronsES(), ne.getNumNeuronsO());
     		Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
     		WeightMatrix matrices = new WeightMatrix(W, V);
-    		MainWindow.ne.training(iterationMax, cotaError, learningCnt, matrices);
+    		ne.training(iterationMax, cotaError, learningCnt, matrices);
     		
 		}
 		else {
 			//se las paso al trainnig directamente junto con el resto de parámetros
-			MainWindow.ne.training(iterationMax, cotaError, learningCnt, matrices);
+			ne.training(iterationMax, cotaError, learningCnt, matrices);
 			
 		}
 
@@ -221,7 +241,8 @@ public class TrainingWindow {
 			File filechoosen= filechooser.getSelectedFile();
 			try {
 				ReadFile readWM = new ReadFile(filechoosen);
-				matrices = readWM.readWeightMatrix();		
+				matrices = readWM.readWeightMatrix();
+				lblNewLabel.setText(filechoosen.getName());
 
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -243,9 +264,4 @@ public class TrainingWindow {
 	public void setFrame(JInternalFrame frame) {
 		this.frame = frame;
 	}
-
-		
-	 
-	 
-	
 }

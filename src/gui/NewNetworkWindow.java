@@ -49,6 +49,7 @@ public class NewNetworkWindow {
     private int numNeuronES, numNeuronO, numPatrones, inicio;
     private String outFile; //Fichero en el que escribiremos los inputs/outputs 
     private boolean bias; 
+    
 
    
 
@@ -258,8 +259,12 @@ public class NewNetworkWindow {
 					e.printStackTrace();
 				}
 		       
-				//Create the Network
-		        MainWindow.ne = new NetworkManager(numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				//Create the Network, give it an identificator.
+				MainWindow.numInstances++;
+				String name = idCompany+"_"+this.comboBox_inputType.getSelectedItem()+ MainWindow.numInstances;
+		        NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+		        MainWindow.neList.add(aux);
+		        System.out.print ("Current number of instances: "+ MainWindow.neList.size());
 		        
         	}//end else2
         }//end else1

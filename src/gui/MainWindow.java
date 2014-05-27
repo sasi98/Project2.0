@@ -29,9 +29,11 @@ import javax.swing.JLabel;
  *
  * @author  __USER__
  */
-public class MainWindow extends javax.swing.JFrame {
+public class MainWindow extends JFrame {
 	
-	public static NetworkManager ne;
+	//Lista con las actuales instancias de la clase NetworkManager 
+	public static ArrayList<NetworkManager> neList = new ArrayList<>();
+	public static int numInstances = 0; //Número de instancias creadas
 	
 	//Variables GUI
 	private JFrame frame;
@@ -114,6 +116,7 @@ public class MainWindow extends javax.swing.JFrame {
 						e1.printStackTrace();
 					}
 				}
+			
 				if ( (newNetworkWindow == null) ){
 					newNetworkWindow = new NewNetworkWindow(); 
 					//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
