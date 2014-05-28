@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFileChooser;
@@ -125,6 +126,15 @@ public class CalculateOutputsWindow {
 		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
 		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
 	}
+
+	public JInternalFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JInternalFrame frame) {
+		this.frame = frame;
+	}
+
 	
 }
 

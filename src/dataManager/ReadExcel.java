@@ -25,7 +25,6 @@ public class ReadExcel {
 	
 	 public ReadExcel() throws BiffException, IOException {
 			super();
-			//PropertyConfigurator.configure("files\\log4j.properties");
 			dataBase = Workbook.getWorkbook(new File(DATA_BASE_NAME));
 		}
 	

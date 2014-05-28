@@ -1,10 +1,13 @@
 package architecture;
 
+import gui.MainWindow;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
 
 //import dataManager.WriteOutcomes;
 import utilities.Matrix;
@@ -139,6 +142,12 @@ public class NetworkManager {
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
 			WriteExcel writerByPatron = new WriteExcel ("empty");
+			if(MainWindow.cancelTraining){ //Se cancela el entrenamiento, rompemos el bucle y cerramos ficheros
+				writerMatrices.writeMatrices(new WeightMatrix(W, V));
+				writerMatrices.closeFile();
+				writerErrorProgress.closeFile();
+				break;
+			} 
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
 				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias); //Establecemos la red con el patrón i
@@ -209,21 +218,32 @@ public class NetworkManager {
 	//Calcula los outputs resultantes con las entradas de la red (inputs)
 	//returns: Array con los vectores los cuales se corresponden con los valores de la neuronas de salida de un patrón
 	public ArrayList<BigDecimal[]> calculateOutputs (WeightMatrix matrices){
-		ArrayList<BigDecimal[]> outputs = new ArrayList<>();
-		for (int i = 0; i<inputs.size(); i++){
-			Network subNetwork = new Network();
-			//We are not using learning constant, we ignore his value
-			subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
-					matrices.getW(), matrices.getV(), bias);
-			subNetwork.feedForward(); //Propagación hacia delante, se calculan las salidas
-			OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
-			BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
-			for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
-					aux[j] = auxNeurons[j].getOutValue();
+		log.info("Calculate Outputs");
+		if ( (matrices.getW().getColumn() == numNeuronsES) && (matrices.getW().getColumn() == numNeuronsES) && 
+				(matrices.getW().getRow() == numNeuronsO) && (matrices.getV().getColumn() == numNeuronsO) ) {
+			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
+			for (int i = 0; i<inputs.size(); i++){
+				Network subNetwork = new Network();
+				//We are not using learning constant, we ignore his value
+				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
+						matrices.getW(), matrices.getV(), bias);
+				subNetwork.feedForward(); //Propagación hacia delante, se calculan las salidas
+				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
+				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
+						aux[j] = auxNeurons[j].getOutValue();
+				}
+				outputs.add(aux);
 			}
-			outputs.add(aux);
+			return outputs;
 		}
-		return outputs;
+		else{
+			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
+					+ " No es posible calcular las salidas");
+			return null;
+		}
+	
+		
 	}
 	
 	

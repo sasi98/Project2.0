@@ -6,6 +6,8 @@
 
 package gui;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +22,9 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
@@ -44,6 +49,7 @@ public class MainWindow extends JFrame {
 	//Lista con las actuales instancias de la clase NetworkManager 
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
 	public static int numInstances = 0; //Número de instancias creadas
+	public static boolean cancelTraining = false;
 	
 	//Variables GUI
 	private JFrame frame;
@@ -55,6 +61,7 @@ public class MainWindow extends JFrame {
 	//Classes with internal frames
 	private NewNetworkWindow newNetworkWindow;
 	private TrainingWindow trainingWindow;
+	private CalculateOutputsWindow calculateOutputsWindow;
 
 	
 	
@@ -142,19 +149,7 @@ public class MainWindow extends JFrame {
 		
 		tglbtnTrazas.addItemListener(new ItemListener() {
 			public void itemStateChanged (ItemEvent ev) {
-				if (ev.getStateChange() == ItemEvent.SELECTED){
-					tglbtnTrazas.setText("Desactivar trazas");
-					
-					
-				        
-				}else if(ev.getStateChange() == ItemEvent.DESELECTED){
-					tglbtnTrazas.setText("Activar trazas");
-					ArrayList<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
-					loggers.add(LogManager.getRootLogger());
-					for ( Logger logger : loggers ) {
-					    logger.setLevel(Level.OFF);
-					}
-				}
+				tglbtnTrazasActionPerformed (ev);
 			}
 		});
 	}
@@ -169,7 +164,6 @@ public class MainWindow extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-	
 		if ( (newNetworkWindow == null) ){
 			newNetworkWindow = new NewNetworkWindow(); 
 			//newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000, 700, 450));
@@ -184,6 +178,11 @@ public class MainWindow extends JFrame {
 				desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
 				newNetworkWindow.getFrame().show();
 			}
+			else{ //El panel no está cerrado pero he vuelto a hacer click, borro todo pero no creo una instancia nueva
+				//clearTextFields(newNetworkWindow.getFrame());
+				
+				
+			}
 		}
 		
 	}
@@ -196,7 +195,14 @@ public class MainWindow extends JFrame {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+		}
+		if (calculateOutputsWindow != null){
+			try {
+				calculateOutputsWindow.getFrame().setClosed(true);
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		//TrainingWindows
 		if ( (trainingWindow == null) ){
@@ -216,8 +222,81 @@ public class MainWindow extends JFrame {
 
 	}
 	private void btnCalcularSalidasActionPerformed() {
+		if (newNetworkWindow != null){
+			try {
+				newNetworkWindow.getFrame().setClosed(true);
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if (newNetworkWindow != null){
+			try {
+				newNetworkWindow.getFrame().setClosed(true);
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if (trainingWindow != null){
+			try {
+				trainingWindow.getFrame().setClosed(true);
+			} catch (PropertyVetoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		//Calculate Outputs
+		if ( (calculateOutputsWindow == null) ){
+			calculateOutputsWindow = new CalculateOutputsWindow();
+			desktopPane.add(calculateOutputsWindow.getFrame(), BorderLayout.WEST);
+			calculateOutputsWindow.getFrame().show();
+		}
+		else{
+			if (calculateOutputsWindow.getFrame().isClosed()){
+				calculateOutputsWindow = new CalculateOutputsWindow();
+				desktopPane.add(calculateOutputsWindow.getFrame(), BorderLayout.WEST);
+				calculateOutputsWindow.getFrame().show();
+			}
+		}
+		
 	}
 
+	
+	
+	public void tglbtnTrazasActionPerformed (ItemEvent ev){
+		if (ev.getStateChange() == ItemEvent.SELECTED){
+			tglbtnTrazas.setText("Desactivar trazas");
+		}else if(ev.getStateChange() == ItemEvent.DESELECTED){
+			tglbtnTrazas.setText("Activar trazas");
+			ArrayList<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+			loggers.add(LogManager.getRootLogger());
+			for ( Logger logger : loggers ) {
+			    logger.setLevel(Level.OFF);
+			}
+		}
+	}
+	
+	
+	
+	public void clearTextFields (Container container){
+		for(Component c : container.getComponents()){
+			if ( (c instanceof JTextField)&& !(c instanceof JSpinner) ){
+				System.out.print("Tipo de componente: " + c.getName()+"\n");
+				JTextField f = (JTextField) c;
+				f.setText("");
+//				if (c instanceof JSpinner){
+//					JSpinner f1 = (JSpinner) c;
+//				    f1.setValue(0);
+//				    System.out.print("Entra aquí");
+//				}
+			} 
+			else if (c instanceof Container)
+				clearTextFields((Container)c);
+		}
+	}
+	
+	
 	
 	
 }
