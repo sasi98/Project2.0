@@ -25,8 +25,11 @@ import javax.swing.JTextField;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import dataManager.ReadFile;
+import architecture.Network;
 import architecture.NetworkManager;
+
 import javax.swing.SwingConstants;
+
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 
@@ -35,7 +38,7 @@ public class TrainingWindow {
 	
 	private JInternalFrame frame;
 	private JTextField tfcortaError, tflearningCNT, tfmaxIt;
-	private JButton btnNewButton, btnIniciarEntrenamiento;
+	private JButton btnSelecMatrices, btnIniciarEntrenamiento, btnCancelarEntrenamiento;
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
@@ -59,7 +62,6 @@ public class TrainingWindow {
 		
     	
     	frame = new JInternalFrame();
-    	frame.getContentPane().setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         frame.setBounds(100, 100, 732, 517);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
@@ -74,13 +76,13 @@ public class TrainingWindow {
     	frame.getContentPane().add(txtrUtilizarMatricesDe);
     
     	
-    	btnNewButton = new JButton("Seleccionar archivo");
-    	btnNewButton.setBounds(new Rectangle(528, 153, 141, 34));
-    	frame.getContentPane().add(btnNewButton);
+    	btnSelecMatrices = new JButton("Seleccionar archivo");
+    	btnSelecMatrices.setBounds(new Rectangle(528, 153, 141, 34));
+    	frame.getContentPane().add(btnSelecMatrices);
     	
     	
     	btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-    	btnIniciarEntrenamiento.setBounds(new Rectangle(528, 380, 144, 34));
+    	btnIniciarEntrenamiento.setBounds(new Rectangle(368, 379, 144, 34));
     	frame.getContentPane().add(btnIniciarEntrenamiento);
     	
     	JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -159,6 +161,10 @@ public class TrainingWindow {
     	tfmaxIt.setBounds(new Rectangle(261, 247, 86, 20));
     	frame.getContentPane().add(tfmaxIt);
     	
+    	btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
+    	btnCancelarEntrenamiento.setBounds(547, 379, 141, 34);
+    	frame.getContentPane().add(btnCancelarEntrenamiento);
+    	
     }
 	
 	 private void createEvents() {
@@ -168,11 +174,18 @@ public class TrainingWindow {
 	            }
 	        });
 		
-		btnNewButton.addActionListener(new ActionListener() {
+		btnSelecMatrices.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent arg0) {
     		    btnNewButtonActionPerformed();
     		}
     	});
+		
+		btnCancelarEntrenamiento.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent arg0) {
+    			 btnCancelarEntrenamientoActionPerformed();
+    		}
+    	});
+		
 	 }
 	
 	private void btnIniciarEntrenamientoActionPerformed(){
@@ -190,8 +203,8 @@ public class TrainingWindow {
         
         final String stCnsLearning = tflearningCNT.getText();
         if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
-            tflearningCNT.setText("0.0001");
-            learningCnt = 0.0001;
+            tflearningCNT.setText("0.00001");
+            learningCnt = 0.00001;
 
         } else {
             learningCnt = Double.parseDouble(stCnsLearning);
@@ -207,12 +220,13 @@ public class TrainingWindow {
         }
         
         
-        NetworkManager ne = null;
+       NetworkManager aux2 = null;
         for (NetworkManager aux: MainWindow.neList){
         	if (aux.getName().equals(comboBox.getSelectedItem())){
-        		ne = aux; //Controlar que se halla elegido alguna, de lo contrario tendremos null exceptions
+        		 aux2 = aux; //Controlar que se halla elegido alguna, de lo contrario tendremos null exceptions
         	}
         }
+        final NetworkManager ne = aux2; 
         
         
         if (matrices == null){ 
@@ -228,7 +242,15 @@ public class TrainingWindow {
 		}
 		else {
 			//se las paso al trainnig directamente junto con el resto de parámetros
-			ne.training(iterationMax, cotaError, learningCnt, matrices);
+			Thread trainingThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ne.training(iterationMax, cotaError, learningCnt, matrices);
+                    
+                }
+
+            });
+			trainingThread.run();
 			
 		}
 
@@ -255,7 +277,10 @@ public class TrainingWindow {
 
 	}
 
-
+	private void btnCancelarEntrenamientoActionPerformed() {
+		MainWindow.cancelTraining = true; 
+	}
+	
 	public JInternalFrame getFrame() {
 		return frame;
 	}
