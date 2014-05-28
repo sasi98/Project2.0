@@ -126,6 +126,7 @@ public class CalculateOutputsWindow {
 		//Grafico con las deseadas y las obtenidas o la variación delta
 		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
 		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
+		writer.closeFile();
 	}
 
 	public JInternalFrame getFrame() {
