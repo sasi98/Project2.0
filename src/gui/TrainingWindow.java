@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import utilities.Matrix;
 import utilities.WeightMatrix;
@@ -49,6 +50,7 @@ public class TrainingWindow {
 	private int iterationMax;
 	private boolean momentB;
 	private WeightMatrix matrices;
+	
 
     /**
      * Create the application.
@@ -115,7 +117,7 @@ public class TrainingWindow {
     	frame.getContentPane().add(lblNewLabel);
     	
     	comboBox = new JComboBox();
-    	for (NetworkManager ne: MainWindow.neList){ //Añadimos las instancias creadas al ComBox
+    	for (NetworkManager ne: MainWindow.neList){ //Aï¿½adimos las instancias creadas al ComBox
     		comboBox.addItem(ne.getName());
     	}
     	comboBox.setBounds(new Rectangle(261, 71, 125, 20));
@@ -221,7 +223,7 @@ public class TrainingWindow {
         } else {
             iterationMax = Integer.parseInt(stItMax);
         }
-        if (rdbtnSi.isSelected()){  //Entrenamiento con momento Beta añadido en la actualización de matriz
+        if (rdbtnSi.isSelected()){  //Entrenamiento con momento Beta aï¿½adido en la actualizaciï¿½n de matriz
         	momentB = true;
         }
         
@@ -238,26 +240,31 @@ public class TrainingWindow {
         
         if (matrices == null){ 
 			 //No fueron seleccionadas de archivo, deben de ser creadas aletorias
-        	//Las creo y se las paso al trainnig junto con el resto de parámetros
+        	//Las creo y se las paso al trainnig junto con el resto de parï¿½metros
         	Dimension dW = new Dimension(ne.getNumNeuronsO(), ne.getNumNeuronsES());  
     		Matrix W = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
     		Dimension dV = new Dimension(ne.getNumNeuronsES(), ne.getNumNeuronsO());
     		Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
-    		WeightMatrix matrices = new WeightMatrix(W, V);
-    		ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
+    		matrices = new WeightMatrix(W, V);
+
+    		final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                	ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
+                    return null;
+                }
+            };
     		
 		}
 		else {
-			//se las paso al trainnig directamente junto con el resto de parámetros
-			Thread trainingThread = new Thread(new Runnable() {
+			//se las paso al trainnig directamente junto con el resto de parï¿½metros
+			final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
                 @Override
-                public void run() {
-                    ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
-                    
+                protected Void doInBackground() throws Exception {
+                	ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
+                    return null;
                 }
-
-            });
-			trainingThread.run();
+            };
 			
 		}
 
