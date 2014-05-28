@@ -141,7 +141,7 @@ public class NetworkManager {
 //			String strIteration = String.valueOf(iteration);
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
-			WriteExcel writerByPatron = new WriteExcel ("empty");
+			//WriteExcel writerByPatron = new WriteExcel ("empty");
 			if(MainWindow.cancelTraining){ //Se cancela el entrenamiento, rompemos el bucle y cerramos ficheros
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
@@ -151,7 +151,7 @@ public class NetworkManager {
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
 				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias); //Establecemos la red con el patrón i
-				subNetwork.train(writerByPatron, i); 															 //La entrenamos
+				subNetwork.train(i); 															 //La entrenamos
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
 				log.debug("Valores de W y V tras actualización de matriz");

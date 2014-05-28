@@ -171,7 +171,7 @@ public class Network {
 	
 	//pre: Realizar el setup antes
 	//
-	public void train (WriteExcel writer, int idPatron) {
+	public void train (int idPatron) {
 		
         feedForward();
         log.trace("Ejecutando módulo train() after feedForward \n");

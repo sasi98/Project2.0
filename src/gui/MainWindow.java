@@ -119,7 +119,7 @@ public class MainWindow extends JFrame {
 		desktopPane.setBounds(10,60,696,406);
 		frame.getContentPane().add(desktopPane);
 		
-		tglbtnTrazas = new JToggleButton("Activar trazas");
+		tglbtnTrazas = new JToggleButton("Desactivar trazas"); //By default they are able by log4j.properties
 		tglbtnTrazas.setBounds(583, 30, 123, 21);
 		frame.getContentPane().add(tglbtnTrazas);
 	 
@@ -266,15 +266,14 @@ public class MainWindow extends JFrame {
 	
 	public void tglbtnTrazasActionPerformed (ItemEvent ev){
 		if (ev.getStateChange() == ItemEvent.SELECTED){
-			tglbtnTrazas.setText("Desactivar trazas");
-		}else if(ev.getStateChange() == ItemEvent.DESELECTED){
 			tglbtnTrazas.setText("Activar trazas");
 			ArrayList<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
 			loggers.add(LogManager.getRootLogger());
 			for ( Logger logger : loggers ) {
 			    logger.setLevel(Level.OFF);
 			}
-		}
+		}else if(ev.getStateChange() == ItemEvent.DESELECTED)
+			tglbtnTrazas.setText("Desactivar trazas");
 	}
 	
 	
