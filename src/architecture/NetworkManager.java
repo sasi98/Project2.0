@@ -40,6 +40,7 @@ public class NetworkManager {
 	
 	private boolean 				bias;
 	private String 					name; //Lo usaremos para distingirla una vez creada.
+
 	
 	
 	private static Logger log = Logger.getLogger(NetworkManager.class);
@@ -120,10 +121,12 @@ public class NetworkManager {
 	}
 	
 	
-	public void training (int iterMax, BigDecimal cuote, double learningCNT, WeightMatrix matrices)
+	public void training (int iterMax, BigDecimal cuote, double learningCNT, WeightMatrix matrices, boolean momentoB)
 	{
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
+		Matrix previousW = matrices.getW();
+		Matrix previousV = matrices.getV();
 		boolean end = false;
 		int iteration = 0;
 		
@@ -137,11 +140,12 @@ public class NetworkManager {
 		
 		while (!end){
 			
-//			String fileName = new String ("C:\\repositoryGit\\Salidas\\resultsByPatronIteration");
+			String fileName = new String ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
 //			String strIteration = String.valueOf(iteration);
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
 			//WriteExcel writerByPatron = new WriteExcel ("empty");
+			WriteExcel writer = new WriteExcel (fileName);
 			if(MainWindow.cancelTraining){ //Se cancela el entrenamiento, rompemos el bucle y cerramos ficheros
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
@@ -150,8 +154,16 @@ public class NetworkManager {
 			} 
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias); //Establecemos la red con el patrón i
-				subNetwork.train(i); 															 //La entrenamos
+				//Las actuales W y V serán utilizadas en el momento beta de la SIGUIENTE iteración en el for,
+				//las debo guardar antes, para poder ser utilizadas en la it siguiente
+				
+				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);//Establecemos la red con el patrón i
+				
+				if (momentoB) 
+					subNetwork.trainWithMomentB(i, previousW, previousV, writer); 															 //La entrenamos
+				else
+					subNetwork.train (i);
+				
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
 				log.debug("Valores de W y V tras actualización de matriz");
@@ -159,6 +171,7 @@ public class NetworkManager {
 				V.printMatrix();
 			}
 			//writerByPatron.closeFile();
+			writer.closeFile();
 
 			//Comprobado con trazas hasta aquí, everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");

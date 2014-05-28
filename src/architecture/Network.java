@@ -20,7 +20,8 @@ public class Network {
 									numPatrones;  /*Número de patrones utilizados en el entrenamiento*/ 
 	
 	
-	private double				learningCNT;
+	private double				learningCNT, 
+								momentoB = 0.9; //Lo utilizaremos para evitar minimos locales
 	
 	
 	private Neuron[] 				inputLayer,
@@ -168,9 +169,8 @@ public class Network {
 		
 	}
 
-	
 	//pre: Realizar el setup antes
-	//
+	
 	public void train (int idPatron) {
 		
         feedForward();
@@ -309,20 +309,199 @@ public class Network {
 //       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
 //    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
 //       
-       
-       
+      
        //Actualizamos las matrices con los deltas calculados
        this.W = Matrix.addition(this.W, deltaW);
 	   this.V = Matrix.addition(this.V, deltaV);
-	   
+	  	   
 	   this.W.truncarMatrixUP(NetworkManager.PRECISION);
 	   this.V.truncarMatrixUP(NetworkManager.PRECISION);
 	   
 	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
        //updateConnections(W, V);
+
+       
+	}
+	
+      
+	//pre: Realizar el setup antes
+	//previousW, previousV: matrices (t - 1) utilizadas en el momento beta  
+	public void trainWithMomentB (int idPatron, Matrix previousW, Matrix previousV, WriteExcel writer) {
+		log.info("Entrenando con momento Beta");
+        feedForward();
+        log.trace("Ejecutando módulo train() after feedForward \n");
+
+    	log.trace("Just for make sure, we are showing the inputs that we are training:  \n");
+        for (Neuron i: inputLayer){
+        	log.trace(i.getOutValue());
+        }
+        
+        //This is what backpropagation starts
+        
+      //Calculo los deltas de error de la capa de salida
+        BigDecimal[] deltaOutput = new BigDecimal[desiredOutputLayer.length];
+        for (int i = 0; i<outputLayer.length; i++){
+        	BigDecimal deltaE = desiredOutputLayer[i];
+        	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
+        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	
+        	outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
+        	deltaOutput[i] = deltaE;
+        }
+        
+        log.debug("Mostrando delta de la capa de salida");
+        for (int i = 0; i< outputLayer.length; ++i){
+        	log.debug("Salida obtenida: "+ outputLayer[i].getOutValue()+ " Salida deseada: "+desiredOutputLayer[i] 
+        			+ " Delta de error "+ outputLayer[i].getDeltaError());
+        	
+        }
+        
+        //Calculo los deltas de la capa oculta
+        BigDecimal[] deltaHidden = new BigDecimal[numNeuronsO];
+        
+        for (int i = 0; i<hiddenLayer.length; i++){
+        	ArrayList <Connection> connections = hiddenLayer[i].getConnections(); //Obtenemos sus conexiones
+        	//Utilizamos solo las conexiones hacia delante (hidden with output layers)
+        	BigDecimal deltaE = new BigDecimal(0);
+        	for (Connection c: connections){
+        		if (c.getFrom() == hiddenLayer[i]){ 
+        			OutputNeuron o =  (OutputNeuron) c.getTo();
+        			BigDecimal aux = o.getDeltaError();
+        			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexión
+        			deltaE =  deltaE.add(aux);   			
+        		}
+        	}
+        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	deltaHidden[i] = deltaE;   	
+        }
+        
+        log.debug("Mostrando delta de la capa oculta");
+        for (int i = 0; i< hiddenLayer.length; ++i){
+        	log.debug("Salida obtenida: "+ hiddenLayer[i].getOutValue()
+        			+ " Delta de error "+ deltaHidden[i]);
+        	
+        }
+        
+    
+//        System.out.println ("Muestro los delta de salida: \n ");
+//        for (BigDecimal b: deltaOutput){
+//        	System.out.print(b + " ");
+//        }
+//        
+//        System.out.println ("Muestro los delta de la capa oculta: \n ");
+//        for (BigDecimal b: deltaHidden){
+//        	System.out.print(b + " ");
+//        }
+        
+        //Actualización de matrices: Cálculo de deltaV y deltaW
+        
+        
+        //Matriz V: Salidas de la oculta por delta de error de la salida
+        
+        BigDecimal aux[] = new BigDecimal[hiddenLayer.length];
+         for (int i = 0; i< hiddenLayer.length; i++){
+               aux[i] = hiddenLayer[i].getOutValue();
+        }
+
+        Matrix mHiddenOuts = new Matrix(aux);
+        Matrix mDeltaOutput = new Matrix(deltaOutput);
+        mDeltaOutput = Matrix.transponer(mDeltaOutput);
+
+        
+        log.debug("Showing mDeltaOut");
+        mDeltaOutput.printMatrix();
+
+        
+        log.debug("Showing mHiddenOuts");
+        mHiddenOuts.printMatrix();
+        
+        Matrix deltaV = Matrix.product(mDeltaOutput, mHiddenOuts);
+        
+        
+        log.debug("Muestro deltaV antes de multiplicarla por learningCNT");
+        deltaV.printMatrix();
+        
+        deltaV = deltaV.multEscalar(learningCNT);
+        log.debug("Coeficiente de aprendizaje: "+ learningCNT);
+        log.debug("Muestro deltaV trás multiplicarla por el coeficiente de aprendizaje");
+        deltaV.printMatrix();
+        
+        
+      //Matriz W: Delta de error de la oculta por salidas de la capa de entrada (inputs)
+        
+        BigDecimal aux2[] = new BigDecimal[inputLayer.length];
+        for (int i = 0; i< inputLayer.length; i++){
+              aux2[i] = inputLayer[i].getOutValue();
+       }
+        
+       Matrix mInputOuts = new Matrix(aux2);
+       mInputOuts.printMatrix();
+       Matrix mDeltaHidden = new Matrix(deltaHidden);
+       mDeltaHidden = Matrix.transponer(mDeltaHidden);
+       mDeltaHidden.printMatrix();
+
+  
+       
+       Matrix deltaW = Matrix.product(mDeltaHidden,mInputOuts);
+       
+       log.debug("Muestro deltaW antes de multiplicarla por learningCNT");
+       deltaW.printMatrix();
+       
+       deltaW = deltaW.multEscalar(learningCNT);
+       log.debug("Coeficiente de aprendizaje: "+ learningCNT);
+       log.debug("Muestro deltaW trás multiplicarla por el coeficiente de aprendizaje");
+       deltaW.printMatrix();
+      
        
        
-     
+       
+       deltaW.printMatrix();
+
+       mDeltaOutput.truncarMatrixUP(NetworkManager.PRECISION);
+       mDeltaHidden.truncarMatrixUP(NetworkManager.PRECISION);
+       deltaV.truncarMatrixUP(NetworkManager.PRECISION);
+       deltaW.truncarMatrixUP(NetworkManager.PRECISION);
+//       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
+//    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
+//       
+       //Antes de actualizar, guardamos estas matrices.  
+       Matrix auxW = this.W;
+       Matrix auxV = this.V;
+       
+       Matrix momentW = this.W;
+       Matrix momentV = this.V;
+       
+       //And for update I'll use the previous of the previous instance (the parameter's one)
+       momentW = Matrix.subtraction(momentW, previousW);
+       momentV = Matrix.subtraction(momentV, previousV);
+       
+       momentW = momentW.multEscalar(momentoB);
+       momentV = momentV.multEscalar(momentoB);
+       
+       log.trace("showing (t-1) matrices before update");
+       previousW.printMatrix();
+       previousV.printMatrix();
+       
+       previousW = this.W;
+       previousV = this.V; //We save them before update
+       
+       //Actualizamos las matrices con los deltas calculados
+       this.W = Matrix.addition(this.W, deltaW);
+	   this.V = Matrix.addition(this.V, deltaV);
+	   //Le sumamos el momento B
+	   this.W = Matrix.addition(this.W, momentW);
+	   this.V = Matrix.addition(this.V, momentV);
+	   
+	   this.W.truncarMatrixUP(NetworkManager.PRECISION);
+	   this.V.truncarMatrixUP(NetworkManager.PRECISION);
+	   
+	   
+	   writer.checkingMomentB(idPatron, previousW, previousV,  this.W, this.V);
+	   
+	   
+	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
+       //updateConnections(W, V);
+
        
 	}
 	

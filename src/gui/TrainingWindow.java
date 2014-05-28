@@ -47,6 +47,7 @@ public class TrainingWindow {
 	private BigDecimal cotaError;
 	private double learningCnt;
 	private int iterationMax;
+	private boolean momentB;
 	private WeightMatrix matrices;
 
     /**
@@ -122,6 +123,7 @@ public class TrainingWindow {
     	
     	
     	rdbtnLineal = new JRadioButton("Lineal");
+    	rdbtnLineal.setSelected(true);
     	rdbtnLineal.setBounds(new Rectangle(258, 114, 53, 23));
     	frame.getContentPane().add(rdbtnLineal);
     	
@@ -139,6 +141,8 @@ public class TrainingWindow {
     	frame.getContentPane().add(rdbtnSi);
     	
     	rdbtnNo = new JRadioButton("No");
+    	rdbtnNo.setSelected(true);
+    	momentB = false; 
     	rdbtnNo.setBounds(new Rectangle(333, 144, 39, 23));
     	frame.getContentPane().add(rdbtnNo);
     	
@@ -164,7 +168,6 @@ public class TrainingWindow {
     	btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
     	btnCancelarEntrenamiento.setBounds(547, 379, 141, 34);
     	frame.getContentPane().add(btnCancelarEntrenamiento);
-    	
     }
 	
 	 private void createEvents() {
@@ -218,6 +221,10 @@ public class TrainingWindow {
         } else {
             iterationMax = Integer.parseInt(stItMax);
         }
+        if (rdbtnSi.isSelected()){  //Entrenamiento con momento Beta añadido en la actualización de matriz
+        	momentB = true;
+        }
+        
         
         
        NetworkManager aux2 = null;
@@ -237,7 +244,7 @@ public class TrainingWindow {
     		Dimension dV = new Dimension(ne.getNumNeuronsES(), ne.getNumNeuronsO());
     		Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
     		WeightMatrix matrices = new WeightMatrix(W, V);
-    		ne.training(iterationMax, cotaError, learningCnt, matrices);
+    		ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
     		
 		}
 		else {
@@ -245,7 +252,7 @@ public class TrainingWindow {
 			Thread trainingThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ne.training(iterationMax, cotaError, learningCnt, matrices);
+                    ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
                     
                 }
 

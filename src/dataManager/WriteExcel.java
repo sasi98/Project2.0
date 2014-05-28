@@ -410,12 +410,41 @@ public class WriteExcel {
 			 }
 			 
 		}
+	
+		
+		
 			 
 		public void writeError (BigDecimal errorIt, int iteration){
 			wr.append("Iteration: ; "+ iteration+ ";");
 			wr.append("Error: ;" + errorIt+"\n");
 			
 		}
+		
+		public void printMatrixIntoCSV (PrintWriter wr, Matrix matrix){
+			for (int i = 0; i < matrix.getRow(); i++){
+				 for (int j= 0; j < matrix.getColumn(); j++){
+					 String valueStr = matrix.getValuePos(i, j).toString();
+					 valueStr = valueStr.replace(".", ",");
+					 wr.append(valueStr+ ";"); //Siguiente celda
+				 }
+				 wr.append("\n"); //Salto de fila en excel
+			 }
+		}
+		
+		public void checkingMomentB (int idPatron, Matrix W, Matrix V, Matrix newW, Matrix newV){
+			wr.append("Id Patrón: "+ idPatron+"\n");
+			wr.append("W before update: \n");
+			printMatrixIntoCSV(wr, W);
+			wr.append("V before update V: \n");
+			printMatrixIntoCSV(wr,V);
+			wr.append("New W: \n");
+			printMatrixIntoCSV(wr, newW);
+			wr.append("New V \n");
+			printMatrixIntoCSV(wr, newV);
+			wr.append("\n");
+		}
+		
+		
 			
 		//it must write in the same format than readWeightMatrix from ReadFile class
 		public void writeMatrices (WeightMatrix matrices){
