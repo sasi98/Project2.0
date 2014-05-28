@@ -120,6 +120,7 @@ public class CalculateOutputsWindow {
 				ne = aux;
 			}
 		}
+		//manejar excepciones
 		ArrayList<BigDecimal[]> salidas = ne.calculateOutputs(matrices); //Salidas obtenidas
 		//Escribir salidas en fichero y en pantalla
 		//Grafico con las deseadas y las obtenidas o la variación delta

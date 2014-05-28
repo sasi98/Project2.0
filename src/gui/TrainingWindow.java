@@ -25,8 +25,11 @@ import javax.swing.JTextField;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import dataManager.ReadFile;
+import architecture.Network;
 import architecture.NetworkManager;
+
 import javax.swing.SwingConstants;
+
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 
@@ -217,12 +220,13 @@ public class TrainingWindow {
         }
         
         
-        NetworkManager ne = null;
+       NetworkManager aux2 = null;
         for (NetworkManager aux: MainWindow.neList){
         	if (aux.getName().equals(comboBox.getSelectedItem())){
-        		ne = aux; //Controlar que se halla elegido alguna, de lo contrario tendremos null exceptions
+        		 aux2 = aux; //Controlar que se halla elegido alguna, de lo contrario tendremos null exceptions
         	}
         }
+        final NetworkManager ne = aux2; 
         
         
         if (matrices == null){ 
@@ -238,7 +242,15 @@ public class TrainingWindow {
 		}
 		else {
 			//se las paso al trainnig directamente junto con el resto de parámetros
-			ne.training(iterationMax, cotaError, learningCnt, matrices);
+			Thread trainingThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ne.training(iterationMax, cotaError, learningCnt, matrices);
+                    
+                }
+
+            });
+			trainingThread.run();
 			
 		}
 
