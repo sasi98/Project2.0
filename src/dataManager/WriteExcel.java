@@ -420,6 +420,19 @@ public class WriteExcel {
 			
 		}
 		
+		public void printMatrixIntoCSV (Matrix matrix){
+			for (int i = 0; i < matrix.getRow(); i++){
+				 for (int j= 0; j < matrix.getColumn(); j++){
+					 BigDecimal b = matrix.getValuePos(i, j);
+					 wr.append(b+ ";");
+					// String valueStr = matrix.getValuePos(i, j).toString();
+					// valueStr = valueStr.replace(".", ",");
+					// wr.append(valueStr+ ";"); //Siguiente celda
+				 }
+				 wr.append("\n"); //Salto de fila en excel
+			 }
+		}
+		
 		public void printMatrixIntoCSV (PrintWriter wr, Matrix matrix){
 			for (int i = 0; i < matrix.getRow(); i++){
 				 for (int j= 0; j < matrix.getColumn(); j++){

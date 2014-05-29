@@ -16,10 +16,11 @@ import dataManager.WriteExcel;
 
 public class NetworkManager {
 
-	//Constantes que representan los valores máximos y minimos con los que se crean las matrices aletorias
+	//Constantes que representan los valores mï¿½ximos y minimos con los que se crean las matrices aletorias
 	public static final int 		MATRIX_MAX = 10,
 									MATRIX_MIN = -10;  //CNT por la que multiplican los valores del excel
-
+	public static Matrix previousW, 
+						previousV;
 
 
 	public static final int PRECISION = 10;
@@ -31,8 +32,8 @@ public class NetworkManager {
 	
 	
 	private int 					numPatrones,
-									numNeuronsES,  //Debido a la tipología de nuestra red Rm ligado a Ri el nº de neuronas de entradas
-												  // siempre será el mismo que el nº de neuronas de salida.
+									numNeuronsES,  //Debido a la tipologï¿½a de nuestra red Rm ligado a Ri el nï¿½ de neuronas de entradas
+												  // siempre serï¿½ el mismo que el nï¿½ de neuronas de salida.
 									numNeuronsO;
 	
 	ArrayList<BigDecimal[]> 		inputs, 
@@ -43,19 +44,20 @@ public class NetworkManager {
 
 	
 	
+	
 	private static Logger log = Logger.getLogger(NetworkManager.class);
 	
 	public NetworkManager () {
 		
 	}
 	
-	//pre: inputs and desiredOutputs deben ser arrays válidos (creados por la clase PatronData, en la interfaz)
+	//pre: inputs and desiredOutputs deben ser arrays vï¿½lidos (creados por la clase PatronData, en la interfaz)
 	public NetworkManager(String name, int numPatrones, int numNeuronsES, int numNeuronsO,ArrayList<BigDecimal[]> inputs,
 				 ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 			
 		super();
-		log.debug ("Creando NetworkManager: "+ name +" Nº de Patrones: " + numPatrones + " Nº de neuronas de entrada "
-			+ numNeuronsES + " Nº de neuronas de salida \n"+ numNeuronsES +" Nº de neuronas ocultas: "
+		log.debug ("Creando NetworkManager: "+ name +" Nï¿½ de Patrones: " + numPatrones + " Nï¿½ de neuronas de entrada "
+			+ numNeuronsES + " Nï¿½ de neuronas de salida \n"+ numNeuronsES +" Nï¿½ de neuronas ocultas: "
 		    + numNeuronsO + "Bias: "+ bias);
 		this.name = name;
 		this.numPatrones = numPatrones;
@@ -125,8 +127,8 @@ public class NetworkManager {
 	{
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
-		Matrix previousW = matrices.getW();
-		Matrix previousV = matrices.getV();
+		previousW = matrices.getW();
+		previousV = matrices.getV();
 		boolean end = false;
 		int iteration = 0;
 		
@@ -145,7 +147,7 @@ public class NetworkManager {
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
 			//WriteExcel writerByPatron = new WriteExcel ("empty");
-			WriteExcel writer = new WriteExcel (fileName);
+			//WriteExcel writer = new WriteExcel (fileName);
 			if(MainWindow.cancelTraining){ //Se cancela el entrenamiento, rompemos el bucle y cerramos ficheros
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
@@ -154,26 +156,25 @@ public class NetworkManager {
 			} 
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
-				//Las actuales W y V serán utilizadas en el momento beta de la SIGUIENTE iteración en el for,
+				//Las actuales W y V serï¿½n utilizadas en el momento beta de la SIGUIENTE iteraciï¿½n en el for,
 				//las debo guardar antes, para poder ser utilizadas en la it siguiente
 				
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);//Establecemos la red con el patrón i
-				
+				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);//Establecemos la red con el patrï¿½n i		
 				if (momentoB) 
-					subNetwork.trainWithMomentB(i, previousW, previousV, writer); 															 //La entrenamos
+					subNetwork.trainWithMomentB(i); 															 //La entrenamos
 				else
-					subNetwork.train (i, writer);
+					subNetwork.train (i);
 				
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
-				log.debug("Valores de W y V tras actualización de matriz");
+				log.debug("Valores de W y V tras actualizaciï¿½n de matriz");
 				W.printMatrix(); //logger prints
 				V.printMatrix();
 			}
-			writer.closeFile();
+			//writer.closeFile();
 			//writerByPatron.closeFile();
-			//Comprobado con trazas hasta aquí, everything is working fine
-			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
+			//Comprobado con trazas hasta aquï¿½, everything is working fine
+			log.trace("Final del training de todas los patrones. Inicio del cï¿½lculo del error");
 			
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i<inputs.size(); i++){
@@ -182,7 +183,7 @@ public class NetworkManager {
 				errorList.add (subNetwork.calculateError()); 
 			}
 		
-			//Calculamos el error medio de la iteración 
+			//Calculamos el error medio de la iteraciï¿½n 
 			BigDecimal errorIt = new BigDecimal(0);
 			for (BigDecimal error: errorList)
 			{
@@ -192,10 +193,10 @@ public class NetworkManager {
 			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			
 			writerErrorProgress.writeError (errorIt, iteration);
-			log.debug("Error ponderado en la interacción "+ iteration + " es " + errorIt);
+			log.debug("Error ponderado en la interacciï¿½n "+ iteration + " es " + errorIt);
 		
 			if (iteration == iterMax){
-				log.debug("LLegamos al límite de las iteraciones. Iteration: "+ iteration + " Máximo: "+ iterMax);
+				log.debug("LLegamos al lï¿½mite de las iteraciones. Iteration: "+ iteration + " Mï¿½ximo: "+ iterMax);
 				end = true;
 			}
 			if (errorIt.compareTo(cuote)==1){
@@ -205,7 +206,7 @@ public class NetworkManager {
 				end = true; 
 				
 			}
-			//if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) ) // El error se pasa de la cota, o nº de iter = máximo
+			//if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) ) // El error se pasa de la cota, o nï¿½ de iter = mï¿½ximo
 			//	end = true;
 				
 			//Escribir matrices W y V y error obtenido
@@ -226,9 +227,9 @@ public class NetworkManager {
 		
 	}
 	
-	//pre: this debe de ser una red válida, sus atributos no pueden ser nulos
+	//pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos
 	//Calcula los outputs resultantes con las entradas de la red (inputs)
-	//returns: Array con los vectores los cuales se corresponden con los valores de la neuronas de salida de un patrón
+	//returns: Array con los vectores los cuales se corresponden con los valores de la neuronas de salida de un patrï¿½n
 	public ArrayList<BigDecimal[]> calculateOutputs (WeightMatrix matrices){
 		log.info("Calculate Outputs");
 		if ( (matrices.getW().getColumn() == numNeuronsES) && (matrices.getW().getColumn() == numNeuronsES) && 
@@ -239,7 +240,7 @@ public class NetworkManager {
 				//We are not using learning constant, we ignore his value
 				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
 						matrices.getW(), matrices.getV(), bias);
-				subNetwork.feedForward(); //Propagación hacia delante, se calculan las salidas
+				subNetwork.feedForward(); //Propagaciï¿½n hacia delante, se calculan las salidas
 				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
 				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
 				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
