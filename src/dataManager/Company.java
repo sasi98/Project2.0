@@ -12,12 +12,14 @@ public class Company {
 
 	private String id;
 	private String name;
-	private int quoteDays; //Número de dias de cotización, no cuenta con el 11 de octubre para los que no tenemos rm ni ri
-							//nº que aparece en la hoja menos 1
+	private int quoteDays; //Nï¿½mero de dias de cotizaciï¿½n, no cuenta con el 11 de octubre para los que no tenemos rm ni ri
+							//nï¿½ que aparece en la hoja menos 1
 	private ArrayList<Date> dates;
 	private ArrayList<BigDecimal> ris;
 	private ArrayList<BigDecimal> rms;
 	private static Logger log = Logger.getLogger(Company.class);
+	
+	//Repository attemp
 	
 	
 	public Company() {
@@ -87,10 +89,10 @@ public class Company {
 	public void printCompany (){
 		log.trace("Id: " + this.id + "/n");
 		log.trace("Name: " + this.name + "/n");
-		log.trace("Nº quote days: " + this.quoteDays + "/n");
+		log.trace("Nï¿½ quote days: " + this.quoteDays + "/n");
 		System.out.println("Id: " + this.id + "/n");
 		System.out.println("Name: " + this.name + "/n");
-		System.out.println("Nº quote days: " + this.quoteDays + "/n");
+		System.out.println("Nï¿½ quote days: " + this.quoteDays + "/n");
 		for(Date d: dates)
 		{
 			System.out.println( d + " ");
