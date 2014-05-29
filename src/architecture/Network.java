@@ -5,11 +5,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
+import jxl.demo.Write;
+
 import org.apache.log4j.Logger;
 
 import dataManager.ReadExcel;
 import dataManager.WriteExcel;
 import utilities.Matrix;
+import utilities.WeightMatrix;
 
 public class Network {
 	
@@ -171,7 +174,9 @@ public class Network {
 
 	//pre: Realizar el setup antes
 	
-	public void train (int idPatron) {
+	public void train (int idPatron, WriteExcel write) {
+		
+		write.writeMatrices(new WeightMatrix(this.W, this.V));
 		
         feedForward();
         log.trace("Ejecutando módulo train() after feedForward \n");
@@ -327,6 +332,7 @@ public class Network {
 	//pre: Realizar el setup antes
 	//previousW, previousV: matrices (t - 1) utilizadas en el momento beta  
 	public void trainWithMomentB (int idPatron, Matrix previousW, Matrix previousV, WriteExcel writer) {
+		writer.checkingMomentB(idPatron, this.W, this.V, previousW, previousV);
 		log.info("Entrenando con momento Beta");
         feedForward();
         log.trace("Ejecutando módulo train() after feedForward \n");
@@ -464,12 +470,15 @@ public class Network {
 //       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
 //    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
 //       
-       //Antes de actualizar, guardamos estas matrices.  
+       //Antes de actualizar, guardamos estas matrices.
+       
+       writer.checkingMomentB (idPatron, this.W, this.V, previousW, previousV);
        Matrix auxW = this.W;
        Matrix auxV = this.V;
        
        Matrix momentW = this.W;
        Matrix momentV = this.V;
+       
        
        //And for update I'll use the previous of the previous instance (the parameter's one)
        momentW = Matrix.subtraction(momentW, previousW);
@@ -495,8 +504,9 @@ public class Network {
 	   this.W.truncarMatrixUP(NetworkManager.PRECISION);
 	   this.V.truncarMatrixUP(NetworkManager.PRECISION);
 	   
+	   writer.writeMatrices(new WeightMatrix(this.W, this.V));
 	   
-	   writer.checkingMomentB(idPatron, previousW, previousV,  this.W, this.V);
+	   
 	   
 	   
 	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)

@@ -431,16 +431,16 @@ public class WriteExcel {
 			 }
 		}
 		
-		public void checkingMomentB (int idPatron, Matrix W, Matrix V, Matrix newW, Matrix newV){
+		public void checkingMomentB (int idPatron, Matrix W, Matrix V, Matrix previousW, Matrix previousV){
 			wr.append("Id Patrón: "+ idPatron+"\n");
-			wr.append("W before update: \n");
+			wr.append("W (t) Current: \n");
 			printMatrixIntoCSV(wr, W);
-			wr.append("V before update V: \n");
+			wr.append("V (t) Current: \n");
 			printMatrixIntoCSV(wr,V);
-			wr.append("New W: \n");
-			printMatrixIntoCSV(wr, newW);
-			wr.append("New V \n");
-			printMatrixIntoCSV(wr, newV);
+			wr.append("W (t-1) Previous: \n");
+			printMatrixIntoCSV(wr, previousW);
+			wr.append("V (t-1) Previous:  \n");
+			printMatrixIntoCSV(wr, previousV);
 			wr.append("\n");
 		}
 		

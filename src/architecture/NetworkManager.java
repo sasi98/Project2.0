@@ -162,7 +162,7 @@ public class NetworkManager {
 				if (momentoB) 
 					subNetwork.trainWithMomentB(i, previousW, previousV, writer); 															 //La entrenamos
 				else
-					subNetwork.train (i);
+					subNetwork.train (i, writer);
 				
 				W = subNetwork.getW ();																				 //after training, we get the matrix W and V
 				V = subNetwork.getV ();
@@ -170,9 +170,8 @@ public class NetworkManager {
 				W.printMatrix(); //logger prints
 				V.printMatrix();
 			}
-			//writerByPatron.closeFile();
 			writer.closeFile();
-
+			//writerByPatron.closeFile();
 			//Comprobado con trazas hasta aquí, everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
 			
