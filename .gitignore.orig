@@ -1,5 +1,8 @@
 /bin
+<<<<<<< HEAD
 files/traces.log
+=======
 added .jars/log4j-1.2.17.jar
 added .jars/jxl.jar
 files/dataExcel.xls
+>>>>>>> master
