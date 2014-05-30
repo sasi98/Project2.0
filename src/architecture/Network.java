@@ -181,11 +181,11 @@ public class Network {
 		this.W.printMatrix();
 		Matrix aux1W = this.W;
 		Matrix aux2V = this.V;
-		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
-
-		writer.printMatrixIntoCSV(this.W);
-		writer.printMatrixIntoCSV(this.V);
-		writer.closeFile();
+//		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
+//
+//		writer.printMatrixIntoCSV(this.W);
+//		writer.printMatrixIntoCSV(this.V);
+//		writer.closeFile();
 
 		
         feedForward();

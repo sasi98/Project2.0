@@ -1,12 +1,14 @@
 package architecture;
 
 import gui.MainWindow;
+import gui.TrainingWindow;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
 
 
 //import dataManager.WriteOutcomes;
@@ -142,7 +144,7 @@ public class NetworkManager {
 		
 		while (!end){
 			
-			String fileName = new String ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
+		//	String fileName = new String ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
 //			String strIteration = String.valueOf(iteration);
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
@@ -152,7 +154,9 @@ public class NetworkManager {
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
 				writerErrorProgress.closeFile();
-				break;
+				TrainingWindow.worker.cancel(true);
+				//break;
+				
 			} 
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
