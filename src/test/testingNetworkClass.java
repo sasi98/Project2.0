@@ -19,17 +19,17 @@ public class testingNetworkClass {
 		auxW[0][0] = new BigDecimal(1); 
 		auxW[0][1] = new BigDecimal(2);
 		auxW[0][2] = new BigDecimal(4);
-		auxW[0][3] = new BigDecimal(4);
+		auxW[0][3] = new BigDecimal(7);
 		
 		auxW[1][0] = new BigDecimal(7); 
 		auxW[1][1] = new BigDecimal(3);
 		auxW[1][2] = new BigDecimal(1);
-		auxW[1][3] = new BigDecimal(4);
+		auxW[1][3] = new BigDecimal(5);
 		
-		auxW[2][0] = new BigDecimal(7); 
+		auxW[2][0] = new BigDecimal(9); 
 		auxW[2][1] = new BigDecimal(3);
-		auxW[2][2] = new BigDecimal(1);
-		auxW[2][3] = new BigDecimal(4);
+		auxW[2][2] = new BigDecimal(8);
+		auxW[2][3] = new BigDecimal(5);
 		
 		Matrix W = new Matrix(auxW);
 		
@@ -38,13 +38,15 @@ public class testingNetworkClass {
 		BigDecimal [][] auxV = new BigDecimal[3][3];
 		auxV[0][0] = new BigDecimal(5); 
 		auxV[0][1] = new BigDecimal(8);
+		auxV[0][2] = new BigDecimal(2);
 		
 		auxV[1][0] = new BigDecimal(1);
 		auxV[1][1] = new BigDecimal(4);
+		auxV[1][2] = new BigDecimal(9);
 		
 		auxV[2][0] = new BigDecimal(2);
 		auxV[2][1] = new BigDecimal(3);
-		
+		auxV[2][2] = new BigDecimal(6);
 		Matrix V = new Matrix(auxV);
 		
 		V.printMatrix();
