@@ -12,7 +12,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Clase Matrix
- * Clase que define objetos Matrix simples para realizar operaciones básicas sobre matrices y vectores. 
+ * Clase que define objetos Matrix simples para realizar operaciones bï¿½sicas sobre matrices y vectores. 
  * 
 */
 public class Matrix {
@@ -51,7 +51,7 @@ public Matrix(BigDecimal m[]){
 	}
 }	
 
-									/** MÉTODOS */
+									/** Mï¿½TODOS */
 
 /**Getters*/
 
@@ -88,10 +88,10 @@ public void setmValues(BigDecimal[][] mValues) {
 
 
 /**
- * Añadir valor en posicion [r][c]
- * @param r índice de fila
- * @param c índice de columna
- * @param value Valor a añadir a la matriz
+ * Aï¿½adir valor en posicion [r][c]
+ * @param r ï¿½ndice de fila
+ * @param c ï¿½ndice de columna
+ * @param value Valor a aï¿½adir a la matriz
 */
 public void setValuePos (int r,int c, BigDecimal value){
 	this.mValues[r][c] = value;
@@ -99,9 +99,9 @@ public void setValuePos (int r,int c, BigDecimal value){
 
 
 /**
- * Obtener valor en posición[f][c]
- * @param f índice fila
- * @param c índice columna
+ * Obtener valor en posiciï¿½n[f][c]
+ * @param f ï¿½ndice fila
+ * @param c ï¿½ndice columna
  * @return BigDecimal valor
  */
 public BigDecimal getValuePos (int r,int c){
@@ -110,7 +110,7 @@ public BigDecimal getValuePos (int r,int c){
 
 
 /**
- * Transponer matriz. Transpone la matriz entrada por parámetro
+ * Transponer matriz. Transpone la matriz entrada por parï¿½metro
  * @param m
  * @return m' 
 */
@@ -186,7 +186,7 @@ public static Matrix subtraction (Matrix mA, Matrix mB){
 public static Matrix product (Matrix mA, Matrix mB){
 	
 	if (mA.getColumn() != mB.getRow()){
-		log.error("El número de columnas de mA es distinto al número de filas de mB, por lo que las matrices no se pueden multiplicar");
+		log.error("El nï¿½mero de columnas de mA es distinto al nï¿½mero de filas de mB, por lo que las matrices no se pueden multiplicar");
 		log.error("Columnas de mA: "+ mA.getColumn()+ " Filas de mB: "+ mB.getRow());
 	}
 	else{
@@ -210,8 +210,8 @@ public static Matrix product (Matrix mA, Matrix mB){
 
 
 /**
- * Obtiene la matrix correspondiente al nº de columna pasado por parámetro 
- * @param index índice de la columna a obtener
+ * Obtiene la matrix correspondiente al nï¿½ de columna pasado por parï¿½metro 
+ * @param index ï¿½ndice de la columna a obtener
  * @return Matrix Columna con todos los valores de la columna indicada
 */
 public Matrix getColumn (int index){
@@ -224,8 +224,8 @@ public Matrix getColumn (int index){
 
 
 /**
- * Obtiene el vector correspondiente al nº de columna pasado por parámetro 
- * @param index índice de la columna a obtener
+ * Obtiene el vector correspondiente al nï¿½ de columna pasado por parï¿½metro 
+ * @param index ï¿½ndice de la columna a obtener
  * @return BigDecimal[] Columna con todos los valores de la columna indicada
 */
 public BigDecimal[] getColumVector (int index){
@@ -238,8 +238,8 @@ public BigDecimal[] getColumVector (int index){
 
 
 /**
- * Obtiene el vector correspondiente al nº de fila pasado por parámetro 
- * @param index índice de la fila a obtener
+ * Obtiene el vector correspondiente al nï¿½ de fila pasado por parï¿½metro 
+ * @param index ï¿½ndice de la fila a obtener
  * @return BigDecimal[] Fila con todos los valores de la columna indicada
 */
 public BigDecimal[] getRowVector (int index){
@@ -252,8 +252,8 @@ public BigDecimal[] getRowVector (int index){
 
 /**
  * Trunca todos los valores de la matrix de la clase
- * @param precision Nº máximo de decimales que puede tener nuestros valores
- * @post La matriz de la clase está ahora truncada y redondeada a la alza
+ * @param precision Nï¿½ mï¿½ximo de decimales que puede tener nuestros valores
+ * @post La matriz de la clase estï¿½ ahora truncada y redondeada a la alza
 */
 public void truncarMatrixUP (int precision)
 {
@@ -317,21 +317,21 @@ public Matrix multEscalar (double esc){
 public void printMatrix ()
 {
 	log.debug ("Imprimiendo matriz de dimensiones: Filas:" + row +"Columnas: "+ column );
-	//System.out.println("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
+	System.out.println("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
 	 for (int i = 0; i < row; i++){
-		//System.out.print("(");
+		System.out.print("(");
 		 for (int j= 0; j < column; j++){
-			// System.out.print(this.getValuePos(i, j) +  " ");
+			System.out.print(this.getValuePos(i, j) +  " ");
 			 log.trace(this.getValuePos(i, j) +  " ");
 		 }
-		 //System.out.print(") \n");
+		 System.out.print(") \n");
 		 log.trace("// \n");
 	}
 }
 
 
-//Crea una matriz de dimensiones d, con valores aleatorios situados entre min y más. 
-//precisión: nº de decimales que tendrá cada dato, los datos aletorios generados serán truncados con este valor
+//Crea una matriz de dimensiones d, con valores aleatorios situados entre min y mï¿½s. 
+//precisiï¿½n: nï¿½ de decimales que tendrï¿½ cada dato, los datos aletorios generados serï¿½n truncados con este valor
 public static Matrix createRandomMatrix (double min, double max, Dimension d, int precision)
 {
 	log.info("Creating WeightMatrix Random Values");
@@ -347,8 +347,8 @@ public static Matrix createRandomMatrix (double min, double max, Dimension d, in
 	return m;
 }
 
-//Genera una matrix (filas = nº de arrays, columnas = tamaño de los arrays) a partir 
-//del array de arrays introducido por parámetros.
+//Genera una matrix (filas = nï¿½ de arrays, columnas = tamaï¿½o de los arrays) a partir 
+//del array de arrays introducido por parï¿½metros.
 public static Matrix createMatrixFromArrays (ArrayList<ArrayList<BigDecimal>> arrayMatrix){
 	int numRow = arrayMatrix.size();
 	int numColum = arrayMatrix.get(0).size();

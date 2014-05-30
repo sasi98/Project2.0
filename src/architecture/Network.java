@@ -19,8 +19,8 @@ public class Network {
 
 	
 	private int 					numNeuronsES, /*N�mero de neuronas de entrada o salida por patr�n*/
-									numNeuronsO,  /*N�mero de neuronas en la capa oculta*/
-									numPatrones;  /*N�mero de patrones utilizados en el entrenamiento*/ 
+									numNeuronsO;  /*N�mero de neuronas en la capa oculta*/
+										
 	
 	
 	private double				learningCNT, 
@@ -28,7 +28,7 @@ public class Network {
 	
 	
 	private Neuron[] 				inputLayer,
-									hiddenLayer;
+									hiddenLayer; //Bias aquí incluido en el caso
 	private OutputNeuron[] 			outputLayer; 
 	
 	private Matrix W, V; 
@@ -50,10 +50,6 @@ public class Network {
 		super();
 	}
 
-
-	
-	
-	
 
 	//pre: W, V valuesInputLayer y desiredOutputLayer deben de estar inicializados
 	//numNeuronsO = n�mero de neuronas en la capa oculta
@@ -86,8 +82,8 @@ public class Network {
 			this.hiddenLayer = new Neuron[numNeuronsO];
 			this.outputLayer = new OutputNeuron[numNeuronsES];
 			
-			
-			if (bias) { //La red tiene bias, a�adimos una neurona de valor uno
+			//Tratamiento de la red con bias (el bias será algo propio de las capas de entrada y ocultas
+			if (bias) { //La red tiene bias,añadimos una neurona de valor uno en la capa de entrada y a la oculta
 				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por par�metros
 				Neuron n = new Neuron (new BigDecimal(1), true);
 				inputLayer[0] = n;
@@ -96,10 +92,12 @@ public class Network {
 					inputLayer[i+1] = n;
 				}
 		
-				//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
+				//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
+				Neuron nO = new Neuron (new BigDecimal(1), true);
+				hiddenLayer[0] = nO;
 				for (int i = 0; i < numNeuronsO; i++){
-					n = new Neuron();
-					hiddenLayer[i] = n;
+					nO = new Neuron();
+					hiddenLayer[i+1] = nO;
 				}		
 			}
 			else{

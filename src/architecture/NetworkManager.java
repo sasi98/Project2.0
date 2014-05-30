@@ -58,8 +58,8 @@ public class NetworkManager {
 				 ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 			
 		super();
-		log.debug ("Creando NetworkManager: "+ name +" N� de Patrones: " + numPatrones + " N� de neuronas de entrada "
-			+ numNeuronsES + " N� de neuronas de salida \n"+ numNeuronsES +" N� de neuronas ocultas: "
+		log.debug ("Creando NetworkManager: "+ name +" Nº de patrones " + numPatrones + " Nº de neuronas de entrada"
+			+ numNeuronsES + "Nº de neuronas de salida \n"+ numNeuronsES +" Nº de neuronas ocultas: "
 		    + numNeuronsO + "Bias: "+ bias);
 		this.name = name;
 		this.numPatrones = numPatrones;
