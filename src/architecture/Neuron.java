@@ -66,7 +66,7 @@ public class Neuron {
 	//Si la neurona es bias (hay bias tb en la capa oculta) ignora sus conexiones, y su valor de salida es 1
     public void calculateOutValue() {
     	//System.out.println("Looking through " + connections.size() + " connections");
-    	log.debug("N� de conexiones en la neurona: " + connections.size()+"\n");
+    	log.debug("Nº de conexiones:  " + connections.size()+"\n");
     	if (this.bias){
     		log.debug("Esta neurona es bias, su valor de salida es 1. Ignoramos sus conexiones");
     		outValue =  new BigDecimal(1);
@@ -80,6 +80,7 @@ public class Neuron {
 	        	//Is this connection moving forward to us
 	        	// Ignore connections that we send our output to
 	        	if (to == this) { //CONEXIONES HACIA DELANTE, "TO" is our neuron
+	        		log.debug ("Valor de from neuron: "+ from.getOutValue());
 	        		BigDecimal aux = c.getWeight();
 	        		aux = aux.multiply(from.getOutValue());  //value neuron * connexion weight
 	        		acum = acum.add(aux);
@@ -92,7 +93,7 @@ public class Neuron {
 	        outValue = acum;
     	}
     	
-        log.debug("Valor de salida de la neurona: " + outValue+"\n");
+        log.debug("Valor de salida de la neurona: " + outValue+" See neurons from values on above \n");
     }
 
     

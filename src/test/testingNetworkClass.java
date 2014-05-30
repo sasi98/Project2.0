@@ -1,7 +1,10 @@
 package test;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.math.BigDecimal;
+
+import org.apache.log4j.PropertyConfigurator;
 
 import architecture.Connection;
 import architecture.Network;
@@ -10,11 +13,18 @@ import architecture.Neuron;
 import utilities.Matrix;
 
 public class testingNetworkClass {
+	
+	public testingNetworkClass() {
+		PropertyConfigurator.configure("files"+File.separator+"log4j.properties");
+	}
+	
+	
 
-	public void testingCreateNetworkBias(){
+	public void testingCreateNetworkWithBias(){
+			
 		Network ne = new Network();
 		
-		System.out.print("Creamos matrices W y V  Taking into account, we have a bias \n");
+		System.out.print("Creamos matrices W y V \n");
 		BigDecimal [][] auxW = new BigDecimal[3][4];
 		auxW[0][0] = new BigDecimal(1); 
 		auxW[0][1] = new BigDecimal(2);
@@ -30,9 +40,8 @@ public class testingNetworkClass {
 		auxW[2][1] = new BigDecimal(3);
 		auxW[2][2] = new BigDecimal(8);
 		auxW[2][3] = new BigDecimal(5);
-		
+			
 		Matrix W = new Matrix(auxW);
-		
 		W.printMatrix();
 
 		BigDecimal [][] auxV = new BigDecimal[3][3];
@@ -47,14 +56,16 @@ public class testingNetworkClass {
 		auxV[2][0] = new BigDecimal(2);
 		auxV[2][1] = new BigDecimal(3);
 		auxV[2][2] = new BigDecimal(6);
+		
 		Matrix V = new Matrix(auxV);
 		
 		V.printMatrix();
-	
-		int numNOcultas = 2;
+		int numNOcultas = 3;
+		double learningCNT = 1;
 		BigDecimal[] inputLayer = new BigDecimal[3];
 		BigDecimal[] desiredOutputsLayer = new BigDecimal[3];
-		System.out.print ("Establecemos los valores de las neuronas inputs y las salidas deseadas (no las usaremos en esta prueba): \n");
+		System.out.print ("Establecemos los valores de las neuronas inputs y las salidas deseadas \n");
+		
 		inputLayer[0] = new BigDecimal(3);
 		inputLayer[1] = new BigDecimal(7);
 		inputLayer[2] = new BigDecimal(6);
@@ -63,12 +74,27 @@ public class testingNetworkClass {
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
 		
-		//ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
+		ne.setUpPatronWithBias (numNOcultas, inputLayer, learningCNT, desiredOutputsLayer, W, V);
+			
+		System.out.print("Mostrando inputs creados (it must contains bias):\n");
+		for (int i = 0; i< ne.getInputLayer().length; i++){
+			System.out.print(ne.getInputLayer()[i].getOutValue()+ " ");
+		}
 		
-		ne.setUpPatron(numNeuronsO, valuesInputLayer, learningCNT, desiredOutputLayer, W, V, true);
+		System.out.print("Feed Forward \n");
 		
+		ne.feedForward();
 		
+		System.out.print("Mostrando capa oculta.\n");
+		for (int i = 0; i< ne.getHiddenLayer().length; i++){
+			System.out.print(ne.getHiddenLayer()[i].getOutValue()+ " ");
+		}
+		System.out.print("Mostrando capa de salida.\n");
+		for (int i = 0; i< ne.getOutputLayer().length; i++){
+			System.out.print(ne.getOutputLayer()[i].getOutValue()+ " ");
+		}
 		
+
 	}
 	
 	
@@ -84,7 +110,7 @@ public class testingNetworkClass {
 	}
 	
 	
-	public void testSetUpNetworkANDFeedForward (){
+	public void testSetUpNetworkWithoutBias (){
 		
 		Network ne = new Network();
 		
@@ -116,7 +142,6 @@ public class testingNetworkClass {
 		
 		V.printMatrix();
 	
-		int numNOcultas = 2;
 		BigDecimal[] inputLayer = new BigDecimal[3];
 		BigDecimal[] desiredOutputsLayer = new BigDecimal[3];
 		System.out.print ("Establecemos los valores de las neuronas inputs y las salidas deseadas (no las usaremos en esta prueba): \n");
@@ -127,23 +152,22 @@ public class testingNetworkClass {
 		desiredOutputsLayer[0] = new BigDecimal(300);
 		desiredOutputsLayer[1] = new BigDecimal(700);
 		desiredOutputsLayer[2] = new BigDecimal(600);
+	
+		int numNOcultas = 2, learningCNT = 1;
+		ne.setUpPatronWithoutBias (numNOcultas, inputLayer, learningCNT, desiredOutputsLayer, W, V);
 		
-		//ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
-		
-		System.out.print ("FeedForward: \n");
-		ne.feedForward();
-		
-		
-		System.out.print ("Valores capa oculta: ");
+		System.out.print ("Valores de entrada: \n ");
+		for (int i = 0; i< ne.getInputLayer().length; i++){
+			System.out.print(ne.getInputLayer()[i].getOutValue()+ " ");
+		}
+		System.out.print ("\n Valores capa oculta (inicializados a 0): ");
 		for (int i = 0; i< ne.getHiddenLayer().length; i++){
 			System.out.print(ne.getHiddenLayer()[i].getOutValue()+ " ");
 		}
-		System.out.print (" \n Valores capa salida: ");
+		System.out.print (" \n Valores capa salida (inicializados a 0): ");
 		for (int i = 0; i< ne.getOutputLayer().length; i++){
 			System.out.print(ne.getOutputLayer()[i].getOutValue()+ "\n");
 		}	
-	
-		//ne.train();
 		
 		
 	}
@@ -403,12 +427,16 @@ Network ne = new Network();
 	
 	//Prueba correspondiente a los folios escaneados
 	public static void main(String[] args){
-//		testingNetworkClass  testN = new testingNetworkClass();
-//		
-//		
-//		testN.testSetUpNetworkANDFeedForward(); //works!!
-//		
 		
+		testingNetworkClass  testN = new testingNetworkClass();
+		
+		/** Probando  el SetUp sin bias*/
+		//testN.testSetUpNetworkWithoutBias();
+		
+		/** Probando el SetUp con bias*/
+		testN.testingCreateNetworkWithBias();
+		
+//		
 //		System.out.print ("Probando el funcionamiento de punteros en java: \n");
 //		
 //		Neuron a = new Neuron(new BigDecimal(56), false);
@@ -423,14 +451,13 @@ Network ne = new Network();
 //		
 //		System.out.print(prueba1[0].getOutValue() + "; "+ prueba2[0].getOutValue()); 
 //	
-		
-		
-		testingNetworkClass  testN = new testingNetworkClass();
 		//testN.testUpdateConnections();
 		//testN.testCalculateError();
 		//testN.testSetUpNetworkANDFeedForward();
+		//testN.testingUpdateWV(); //Funciona perfectamente
+		//testN.testingCreateNetworkBias();
 	
-		testN.testingUpdateWV(); //Funciona perfectamente
+	
 	
 		
 		

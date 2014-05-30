@@ -18,8 +18,9 @@ public class Network {
 	
 
 	
-	private int 					numNeuronsES, /*N�mero de neuronas de entrada o salida por patr�n*/
-									numNeuronsO;  /*N�mero de neuronas en la capa oculta*/
+	private int 					numNeuronsE, /*Número de neuronas de entrada por patrón, bias incluido en el caso*/
+									numNeuronsS, /*Número de neuronas de salida*/
+									numNeuronsO; /*Número de neuronas ocultas, bias incluido en el caso*/
 										
 	
 	
@@ -27,9 +28,9 @@ public class Network {
 								momentoB = 0.9; //Lo utilizaremos para evitar minimos locales
 	
 	
-	private Neuron[] 				inputLayer,
-									hiddenLayer; //Bias aquí incluido en el caso
-	private OutputNeuron[] 			outputLayer; 
+	private Neuron[] 				inputLayer,  //Vector que contiene las neuronas de entrada de la red (bias incluido en el caso)
+									hiddenLayer; //Vector que contiene las neuronas oculta de la red (bias incluido en el caso) 
+	private OutputNeuron[] 			outputLayer; //Vector que contiene las neuronas de salida de la red
 	
 	private Matrix W, V; 
 	
@@ -37,9 +38,7 @@ public class Network {
 
 	private static Logger log = Logger.getLogger(Network.class);
 	
-	
-	
-	
+
 	
 	//Referente al training: Con el primer patr�n las matrices ser�n aleatorias, pero con el siguiente patr�n, 
 	//ser�n las anteriores por lo que debemos parametrizarlo
@@ -51,72 +50,54 @@ public class Network {
 	}
 
 
+	
 	//pre: W, V valuesInputLayer y desiredOutputLayer deben de estar inicializados
-	//numNeuronsO = n�mero de neuronas en la capa oculta
-	//valuesInputLayer =  vector que contiene los valores de las neuronas de entrada del patr�n
+	//numNeuronsO = Número de neuronas en la capa oculta
+	//valuesInputLayer =  vector que contiene los valores de las neuronas de entrada del patrón
 	//desiredOutputLayer = contiene los valores de salida deseados
-	//W tiene que tener dimensiones: n� ocultas X n� entradas
-	//V tiene que tener dimensiones: n� salidas X n� ocultas
-	//bias: La red tiene bias (en la capa de entrada y en la oculta)
+	//W tiene que tener dimensiones: Nº ocultas X Nº de Entradas
+	//V tiene que tener dimensiones: Nº de salidas X Nº ocultas
 	//post: 
 	
-	public void setUpPatron (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, boolean bias)
+	public void setUpPatronWithoutBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
+			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
 	{	
-		log.debug ("Entrando en SetUpPatron. N�mero de neuronas E/S: "+ valuesInputLayer.length + 
-					"N�mero de neuronas ocultas: "+ numNeuronsO);
-		//log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
-		//log.debug("Dimensiones de V (Filas X Columnas): (" + V.getRow()+ " X " + V.getColumn() +" )\n");
+		log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada y de salida: "+ valuesInputLayer.length + 
+					"Número de neuronas ocultas: "+ numNeuronsO);
+		log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
+		log.debug("Dimensiones de V (Filas X Columnas): (" + V.getRow()+ " X " + V.getColumn() +" )\n");
 		
 		if ( (W.getRow()  == numNeuronsO) && (W.getColumn() == valuesInputLayer.length) &&
-			(V.getRow() == valuesInputLayer.length) && (V.getColumn() == numNeuronsO) ){
-			
+			(V.getRow() == valuesInputLayer.length) && (V.getColumn() == numNeuronsO) ) {
 			this.desiredOutputLayer = desiredOutputLayer;
-			this.numNeuronsES = valuesInputLayer.length;
+			this.numNeuronsE = valuesInputLayer.length;
+			this.numNeuronsS = valuesInputLayer.length;
 			this.learningCNT = learningCNT;
 			this.numNeuronsO = numNeuronsO;
 			this.W = W;
 			this.V = V;
+			
 			//Creamos las 3 capas
-			this.inputLayer = new Neuron[numNeuronsES];
-			this.hiddenLayer = new Neuron[numNeuronsO];
-			this.outputLayer = new OutputNeuron[numNeuronsES];
+			this.inputLayer = new Neuron[this.numNeuronsE];
+			this.hiddenLayer = new Neuron[this.numNeuronsO];
+			this.outputLayer = new OutputNeuron[this.numNeuronsS];
 			
-			//Tratamiento de la red con bias (el bias será algo propio de las capas de entrada y ocultas
-			if (bias) { //La red tiene bias,añadimos una neurona de valor uno en la capa de entrada y a la oculta
-				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por par�metros
-				Neuron n = new Neuron (new BigDecimal(1), true);
-				inputLayer[0] = n;
-				for (int i = 0; i < valuesInputLayer.length; i++){
-					n = new Neuron(valuesInputLayer[i], false);
-					inputLayer[i+1] = n;
-				}
-		
-				//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
-				Neuron nO = new Neuron (new BigDecimal(1), true);
-				hiddenLayer[0] = nO;
-				for (int i = 0; i < numNeuronsO; i++){
-					nO = new Neuron();
-					hiddenLayer[i+1] = nO;
-				}		
-			}
-			else{
 			
-				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por par�metros
-				for (int i = 0; i < valuesInputLayer.length; i++){
-					Neuron n = new Neuron(valuesInputLayer[i], false);
-					inputLayer[i] = n;
-				}
-		
-				//Creamos las neuronas de la capa oculta y de salida ( inicializadas a cero)
-				for (int i = 0; i < numNeuronsO; i++){
-					Neuron n = new Neuron();
-					hiddenLayer[i] = n;
-				}
+			//Creamos las neuronas de la capa de entrada
+			for (int i = 0; i < valuesInputLayer.length; i++){
+				Neuron n = new Neuron(valuesInputLayer[i], false);
+				this.inputLayer[i] = n;
 			}
+		
+			//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
+			for (int i = 0; i < numNeuronsO; i++){
+				Neuron n = new Neuron();
+				this.hiddenLayer[i] = n;
+			}		
+			
 			for (int i = 0; i < valuesInputLayer.length; i++){
 				OutputNeuron n = new OutputNeuron();
-				outputLayer[i] = n;
+				this.outputLayer[i] = n;
 				n.setDesiredOut(desiredOutputLayer[i]);
 			}
 	
@@ -125,9 +106,9 @@ public class Network {
 	            for (int j = 0; j < inputLayer.length; j++) {
 	                // Create the connection object and put it in both neurons, and give it the weight from the matriz W            	
 	                Connection c = new Connection(inputLayer[j],hiddenLayer[i],W.getValuePos(i, j));
-	                log.debug("Creando conexi�n: From: "+ inputLayer[j] +" to " + hiddenLayer[i] + " con peso " + W.getValuePos(i, j));
-	                hiddenLayer[i].addConnection(c);
-	                inputLayer[j].addConnection(c);
+	                log.debug("Creando conexión: From: "+ inputLayer[j] +" to " + hiddenLayer[i] + " con peso " + W.getValuePos(i, j));
+	                this.hiddenLayer[i].addConnection(c);
+	                this.inputLayer[j].addConnection(c);
 	            }
 	        }
 	        
@@ -135,20 +116,112 @@ public class Network {
 	        for (int i = 0; i < outputLayer.length; i++) {
 	        	  for (int j = 0; j < hiddenLayer.length; j++) {
 	        		  Connection c = new Connection(hiddenLayer[j],outputLayer[i], V.getValuePos(i, j));
-	        		  log.debug("Creando conexi�n: From: "+ hiddenLayer[j] + " to " + outputLayer[i] + " con peso " + V.getValuePos(i, j));
-	        		  hiddenLayer[j].addConnection(c);
-	        		  outputLayer[i].addConnection(c);
+	        		  log.debug("Creando conexión: From: "+ hiddenLayer[j] + " to " + outputLayer[i] + " con peso " + V.getValuePos(i, j));
+	        		  this.hiddenLayer[j].addConnection(c);
+	        		  this.outputLayer[i].addConnection(c);
 	        	  }	  
 	        }
 	        this.W.printMatrix();
 			this.V.printMatrix();
 		}
 		else{
-			log.error("Las dimensiones de W y/o V no coinciden con el n�mero de neuronas del patr�n \n");
-			
-			
+			log.error("Las dimensiones de W y/o V no coinciden con el número de neuronas del patrón \n");			
 		}
 	}
+	
+	
+		//La red contiene bias
+		//pre: W, V valuesInputLayer y desiredOutputLayer deben de estar inicializados
+		//numNeuronsO = Número de neuronas en la capa oculta, bias incluido
+		//valuesInputLayer =  vector que contiene los valores de las neuronas de entrada del patrón
+		//desiredOutputLayer = contiene los valores de salida deseados
+		///W tiene que tener dimensiones: Nº ocultas X Nº de Entradas
+		//V tiene que tener dimensiones: Nº de salidas X Nº ocultas
+		//post: 
+		//post: 
+		
+		public void setUpPatronWithBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
+				BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
+		{	
+			int numNeuronsE = valuesInputLayer.length+1;
+			int numNeuronsS = valuesInputLayer.length;
+			
+			log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada: "+ 
+					numNeuronsE + " Número de neuronas de salida: "+ valuesInputLayer.length + 
+					"Número de neuronas ocultas: "+ numNeuronsO);
+			log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
+			log.debug("Dimensiones de V (Filas X Columnas): (" + V.getRow()+ " X " + V.getColumn() +" )\n");
+			
+			if ( (W.getRow()  == numNeuronsO) && (W.getColumn() == numNeuronsE) &&
+				(V.getRow() == numNeuronsS) && (V.getColumn() == numNeuronsO) ){
+				
+				this.desiredOutputLayer = desiredOutputLayer;
+				this.numNeuronsE = valuesInputLayer.length + 1;
+				this.numNeuronsS = valuesInputLayer.length;
+				this.learningCNT = learningCNT;
+				this.numNeuronsO = numNeuronsO;
+				this.W = W;
+				this.V = V;
+				
+				//Tratamiento de la red con bias (el bias será algo propio de las capas de entrada y ocultas)
+				//La red tiene bias,añadimos una neurona de valor uno en la capa de entrada y a la oculta 
+		
+
+				//Creamos las 3 capas
+				this.inputLayer = new Neuron[numNeuronsE];
+				this.hiddenLayer = new Neuron[numNeuronsO];
+				this.outputLayer = new OutputNeuron[numNeuronsS];
+				
+				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
+				Neuron n = new Neuron (new BigDecimal(1), true);
+				inputLayer[0] = n;
+				for (int i = 0; i < valuesInputLayer.length; i++){
+					n = new Neuron(valuesInputLayer[i], false);
+					this.inputLayer[i+1] = n;
+				}
+			
+				//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
+				Neuron nH = new Neuron (new BigDecimal(1), true);
+				hiddenLayer[0] = nH;
+				for (int i = 1; i < numNeuronsO; i++){
+					nH = new Neuron();
+					this.hiddenLayer[i] = nH;
+				}		
+				for (int i = 0; i < valuesInputLayer.length; i++){
+					OutputNeuron nO = new OutputNeuron();
+					this.outputLayer[i] = nO;
+					nO.setDesiredOut(desiredOutputLayer[i]);
+				}
+		
+				// Connect input layer to hidden layer
+		        for (int i = 0; i < hiddenLayer.length; i++) {
+		            for (int j = 0; j < inputLayer.length; j++) {
+		                // Create the connection object and put it in both neurons, and give it the weight from the matriz W            	
+		                Connection c = new Connection(inputLayer[j],hiddenLayer[i],W.getValuePos(i, j));
+		                log.debug("Creando conexi�n: From: "+ inputLayer[j] +" to " + hiddenLayer[i] + " con peso " + W.getValuePos(i, j));
+		                this.hiddenLayer[i].addConnection(c);
+		                this.inputLayer[j].addConnection(c);
+		            }
+		        }
+		        
+		        // Connect the hidden layer to the output neuron, and give the weight from the matriz V
+		        for (int i = 0; i < outputLayer.length; i++) {
+		        	  for (int j = 0; j < hiddenLayer.length; j++) {
+		        		  Connection c = new Connection(hiddenLayer[j],outputLayer[i], V.getValuePos(i, j));
+		        		  log.debug("Creando conexi�n: From: "+ hiddenLayer[j] + " to " + outputLayer[i] + " con peso " + V.getValuePos(i, j));
+		        		  this.hiddenLayer[j].addConnection(c);
+		        		  this.outputLayer[i].addConnection(c);
+		        	  }	  
+		        }
+		        this.W.printMatrix();
+				this.V.printMatrix();
+			}
+			else{
+				log.error("Las dimensiones de W y/o V no coinciden con el número de neuronas del patrón \n");
+				
+				
+			}
+		}
 	
 	
 	//Pre: Las neuronas de entrada deben de estar inicializados con valores v�lidos
