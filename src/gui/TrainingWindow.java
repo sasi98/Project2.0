@@ -1,5 +1,7 @@
 package gui;
 
+import graph.Graph;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -79,7 +81,7 @@ public class TrainingWindow {
         frame.getContentPane().add(btnSelecMatrices);
 
         btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-        btnIniciarEntrenamiento.setBounds(new Rectangle(368, 379, 144, 34));
+        btnIniciarEntrenamiento.setBounds(new Rectangle(528, 333, 158, 34));
         frame.getContentPane().add(btnIniciarEntrenamiento);
 
         final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -160,8 +162,14 @@ public class TrainingWindow {
         frame.getContentPane().add(tfmaxIt);
 
         btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
-        btnCancelarEntrenamiento.setBounds(547, 379, 141, 34);
+        btnCancelarEntrenamiento.setBounds(528, 379, 158, 34);
         frame.getContentPane().add(btnCancelarEntrenamiento);
+        
+        JPanel panel = Graph.createPanel();
+        panel.setBounds(45, 288, 458, 175);
+        
+        panel.setVisible(true);
+        frame.getContentPane().add(panel);
     }
 
     private void createEvents() {

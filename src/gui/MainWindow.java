@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -51,6 +52,7 @@ public class MainWindow extends JFrame {
 
 	// Lista con las actuales instancias de la clase NetworkManager
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
+	public static HashMap<Integer, Double> errorProgress=new HashMap<Integer, Double>();
 	public static int numInstances = 0; // N�mero de instancias creadas
 	public static boolean cancelTraining = false;
 
