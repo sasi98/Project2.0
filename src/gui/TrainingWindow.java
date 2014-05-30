@@ -67,7 +67,7 @@ public class TrainingWindow {
     public void initialize() {
 
         frame = new JInternalFrame();
-        frame.setBounds(100, 100, 732, 517);
+        frame.setBounds(100, 100, 732, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -85,7 +85,7 @@ public class TrainingWindow {
         frame.getContentPane().add(btnSelecMatrices);
 
         btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-        btnIniciarEntrenamiento.setBounds(new Rectangle(528, 333, 158, 34));
+        btnIniciarEntrenamiento.setBounds(new Rectangle(528, 199, 158, 34));
         frame.getContentPane().add(btnIniciarEntrenamiento);
 
         final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -125,11 +125,11 @@ public class TrainingWindow {
 
         rdbtnLineal = new JRadioButton("Lineal");
         rdbtnLineal.setSelected(true);
-        rdbtnLineal.setBounds(new Rectangle(258, 114, 53, 23));
+        rdbtnLineal.setBounds(new Rectangle(258, 114, 79, 23));
         frame.getContentPane().add(rdbtnLineal);
 
         rdbtnTangencial = new JRadioButton("Tangencial");
-        rdbtnTangencial.setBounds(new Rectangle(333, 114, 77, 23));
+        rdbtnTangencial.setBounds(new Rectangle(333, 114, 100, 23));
         frame.getContentPane().add(rdbtnTangencial);
 
         final ButtonGroup groupFuncion = new ButtonGroup(); //To get just one selected at the time
@@ -166,11 +166,11 @@ public class TrainingWindow {
         frame.getContentPane().add(tfmaxIt);
 
         btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
-        btnCancelarEntrenamiento.setBounds(528, 379, 158, 34);
+        btnCancelarEntrenamiento.setBounds(528, 242, 158, 34);
         frame.getContentPane().add(btnCancelarEntrenamiento);
         
         JPanel panel = MainWindow.chart.createPanel();
-        panel.setBounds(45, 288, 458, 175);
+        panel.setBounds(45, 288, 620, 300);
         
         panel.setVisible(true);
         frame.getContentPane().add(panel);
