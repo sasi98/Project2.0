@@ -169,7 +169,7 @@ public class TrainingWindow {
         btnCancelarEntrenamiento.setBounds(528, 379, 158, 34);
         frame.getContentPane().add(btnCancelarEntrenamiento);
         
-        JPanel panel = Graph.createPanel();
+        JPanel panel = MainWindow.chart.createPanel();
         panel.setBounds(45, 288, 458, 175);
         
         panel.setVisible(true);
