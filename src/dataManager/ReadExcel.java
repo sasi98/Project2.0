@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public class ReadExcel { 
 	
 	private static final int LONG_COMPANY = 7; //Ancho de tabla de los datos de cada empresa
-	private static final String DATA_BASE_NAME = "files\\dataExcel.xls";
+	private static final String DATA_BASE_NAME = "files"+File.separator+"dataExcel.xls";
 	private static Workbook dataBase;
 	private static Logger log = Logger.getLogger(ReadExcel.class);
 	

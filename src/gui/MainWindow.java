@@ -17,6 +17,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,7 +86,7 @@ public class MainWindow extends JFrame {
 
 	/** Creates new form MainWindow */
 	public MainWindow() {
-		PropertyConfigurator.configure("files\\log4j.properties");
+		PropertyConfigurator.configure("files"+File.separator+"log4j.properties");
 		initialize();
 		createEvents();
 	}
