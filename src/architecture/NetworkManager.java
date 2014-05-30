@@ -1,12 +1,14 @@
 package architecture;
 
 import gui.MainWindow;
+import gui.TrainingWindow;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
 
 
 //import dataManager.WriteOutcomes;
@@ -56,8 +58,8 @@ public class NetworkManager {
 				 ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 			
 		super();
-		log.debug ("Creando NetworkManager: "+ name +" N� de Patrones: " + numPatrones + " N� de neuronas de entrada "
-			+ numNeuronsES + " N� de neuronas de salida \n"+ numNeuronsES +" N� de neuronas ocultas: "
+		log.debug ("Creando NetworkManager: "+ name +" Nº de patrones " + numPatrones + " Nº de neuronas de entrada"
+			+ numNeuronsES + "Nº de neuronas de salida \n"+ numNeuronsES +" Nº de neuronas ocultas: "
 		    + numNeuronsO + "Bias: "+ bias);
 		this.name = name;
 		this.numPatrones = numPatrones;
@@ -142,7 +144,7 @@ public class NetworkManager {
 		
 		while (!end){
 			
-			String fileName = new String ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
+		//	String fileName = new String ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
 //			String strIteration = String.valueOf(iteration);
 //			fileName = fileName + strIteration + ".csv";
 //			WriteExcel writerByPatron = new WriteExcel (fileName);
@@ -152,7 +154,9 @@ public class NetworkManager {
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
 				writerErrorProgress.closeFile();
-				break;
+				TrainingWindow.worker.cancel(true);
+				//break;
+				
 			} 
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();

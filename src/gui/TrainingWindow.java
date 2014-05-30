@@ -38,6 +38,9 @@ import java.awt.ComponentOrientation;
 
 public class TrainingWindow {
 
+	public static SwingWorker<Void, Void> worker;
+	private boolean isStarted = false;
+	
     private JInternalFrame frame;
     private JTextField tfcortaError, tflearningCNT, tfmaxIt;
     private JButton btnSelecMatrices, btnIniciarEntrenamiento, btnCancelarEntrenamiento;
@@ -51,6 +54,7 @@ public class TrainingWindow {
     private int iterationMax;
     private boolean momentB;
     private WeightMatrix matrices;
+    
 
     /**
      * Create the application.
@@ -247,15 +251,21 @@ public class TrainingWindow {
             final Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
             matrices = new WeightMatrix(W, V);
 
-            final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+           worker = new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
+                	
                     ne.training(iterationMax, cotaError, learningCnt, matrices, momentB);
                     return null;
                 }
             };
 
-            worker.execute();
+            if(!isStarted) { 
+                worker.execute();
+                isStarted = false;
+            }
+            
+            //worker.execute();
 
         } else {
             //se las paso al trainnig directamente junto con el resto de par�metros

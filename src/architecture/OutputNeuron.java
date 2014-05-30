@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 
 public class OutputNeuron extends Neuron {
 	
-	BigDecimal deltaError; 
+	BigDecimal deltaError; //Representa el delta de error de esta neurona de salida. 
+						   // Salida deseada - salida obtenida
 	BigDecimal desiredOut;
 	
 

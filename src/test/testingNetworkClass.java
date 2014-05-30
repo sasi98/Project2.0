@@ -11,6 +11,68 @@ import utilities.Matrix;
 
 public class testingNetworkClass {
 
+	public void testingCreateNetworkBias(){
+		Network ne = new Network();
+		
+		System.out.print("Creamos matrices W y V  Taking into account, we have a bias \n");
+		BigDecimal [][] auxW = new BigDecimal[3][4];
+		auxW[0][0] = new BigDecimal(1); 
+		auxW[0][1] = new BigDecimal(2);
+		auxW[0][2] = new BigDecimal(4);
+		auxW[0][3] = new BigDecimal(4);
+		
+		auxW[1][0] = new BigDecimal(7); 
+		auxW[1][1] = new BigDecimal(3);
+		auxW[1][2] = new BigDecimal(1);
+		auxW[1][3] = new BigDecimal(4);
+		
+		auxW[2][0] = new BigDecimal(7); 
+		auxW[2][1] = new BigDecimal(3);
+		auxW[2][2] = new BigDecimal(1);
+		auxW[2][3] = new BigDecimal(4);
+		
+		Matrix W = new Matrix(auxW);
+		
+		W.printMatrix();
+
+		BigDecimal [][] auxV = new BigDecimal[3][3];
+		auxV[0][0] = new BigDecimal(5); 
+		auxV[0][1] = new BigDecimal(8);
+		
+		auxV[1][0] = new BigDecimal(1);
+		auxV[1][1] = new BigDecimal(4);
+		
+		auxV[2][0] = new BigDecimal(2);
+		auxV[2][1] = new BigDecimal(3);
+		
+		Matrix V = new Matrix(auxV);
+		
+		V.printMatrix();
+	
+		int numNOcultas = 2;
+		BigDecimal[] inputLayer = new BigDecimal[3];
+		BigDecimal[] desiredOutputsLayer = new BigDecimal[3];
+		System.out.print ("Establecemos los valores de las neuronas inputs y las salidas deseadas (no las usaremos en esta prueba): \n");
+		inputLayer[0] = new BigDecimal(3);
+		inputLayer[1] = new BigDecimal(7);
+		inputLayer[2] = new BigDecimal(6);
+		
+		desiredOutputsLayer[0] = new BigDecimal(300);
+		desiredOutputsLayer[1] = new BigDecimal(700);
+		desiredOutputsLayer[2] = new BigDecimal(600);
+		
+		//ne.setUpPatron(numNOcultas, inputLayer, desiredOutputsLayer, W, V);
+		
+		ne.setUpPatron(numNeuronsO, valuesInputLayer, learningCNT, desiredOutputLayer, W, V, true);
+		
+		
+		
+	}
+	
+	
+	
+	
+	
 	
 	public void testCreateRandomMatrix (){
 		int row = 2, column = 3;
