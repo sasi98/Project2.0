@@ -196,6 +196,8 @@ public class NetworkManager {
 			errorIt = errorIt.divide(new BigDecimal(errorList.size()), RoundingMode.HALF_UP);
 			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			
+			//Add error in memory
+			MainWindow.chart.put(iteration, errorIt);
 			writerErrorProgress.writeError (errorIt, iteration);
 			log.debug("Error ponderado en la interacci�n "+ iteration + " es " + errorIt);
 		

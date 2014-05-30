@@ -6,6 +6,8 @@
 
 package gui;
 
+import graph.Graph;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -18,6 +20,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +55,7 @@ public class MainWindow extends JFrame {
 
 	// Lista con las actuales instancias de la clase NetworkManager
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
-	public static HashMap<Integer, Double> errorProgress=new HashMap<Integer, Double>();
+	public static Graph chart=new Graph();
 	public static int numInstances = 0; // N�mero de instancias creadas
 	public static boolean cancelTraining = false;
 
