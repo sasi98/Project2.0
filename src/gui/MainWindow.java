@@ -313,6 +313,10 @@ public class MainWindow extends JFrame {
 
 	}
 
+	
+	//Switch button: Si las trazas estaban activas, las desactiva (delete all the loggers)
+	//				 Si las trazas estaban desactivadas, las activa SOBREESCRIBIENDO el fichero de traces.log
+	
 	public void tglbtnTrazasActionPerformed(ItemEvent ev) {
 		if (ev.getStateChange() == ItemEvent.SELECTED) {
 			tglbtnTrazas.setText("Activar trazas");
@@ -320,16 +324,18 @@ public class MainWindow extends JFrame {
 			loggers.add(LogManager.getRootLogger());
 			for (Logger logger : loggers) {
 				logger.setLevel(Level.OFF);
+				//System.out.print("Logger: "+logger.getName()+"\n");
 			}
-		} else if (ev.getStateChange() == ItemEvent.DESELECTED)
+		} else if (ev.getStateChange() == ItemEvent.DESELECTED){
 			tglbtnTrazas.setText("Desactivar trazas");
-			PropertyConfigurator.configure("files"+File.separator+"log4j.properties");
-		
-//			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
-//			loggers.add(LogManager.getRootLogger());
-//			for (Logger logger : loggers) {
-//				logger.setLevel(Level.ALL); //se deberían activar de n
-//			}
+			PropertyConfigurator.configure("files"+File.separator+"log4j.properties"); //Sobreescribimos fichero
+			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
+			loggers.add(LogManager.getRootLogger());
+			for (Logger logger : loggers) {
+				logger.setLevel(Level.ALL);
+				//System.out.print("Logger: "+logger.getName()+"\n");
+			}
+		}
 		
 	}
 
