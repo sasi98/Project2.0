@@ -120,17 +120,17 @@ public class TrainingWindow {
 		frame.getContentPane().add(lblNewLabel);
 
 		comboBox = new JComboBox();
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String selectedItem = (String) comboBox.getSelectedItem();
-				Graph diagram = MainWindow.getGraph(selectedItem);
-				JPanel panel = diagram.createPanel();
-				panel.setBounds(45, 288, 620, 300);
-
-				panel.setVisible(true);
-				frame.getContentPane().add(panel);
-			}
-		});
+//		comboBox.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				String selectedItem = (String) comboBox.getSelectedItem();
+//				Graph diagram = MainWindow.getGraph(selectedItem);
+//				JPanel panel = diagram.createPanel();
+//				panel.setBounds(45, 288, 620, 300);
+//
+//				panel.setVisible(true);
+//				frame.getContentPane().add(panel);
+//			}
+//		});
 		for (final NetworkManager ne : MainWindow.neList) { // A�adimos las
 															// instancias
 															// creadas al ComBox
@@ -140,14 +140,14 @@ public class TrainingWindow {
 		frame.getContentPane().add(comboBox);
 
 		// initilaize diagram when combobox loading
-		String selectedItem = (String) comboBox.getSelectedItem();
-		if (selectedItem != null) {
-			Graph diagram = MainWindow.getGraph(selectedItem);
-			JPanel panel = diagram.createPanel();
-			panel.setBounds(45, 288, 620, 300);
-			panel.setVisible(true);
-			frame.getContentPane().add(panel);
-		}
+//		String selectedItem = (String) comboBox.getSelectedItem();
+//		if (selectedItem != null) {
+//			Graph diagram = MainWindow.getGraph(selectedItem);
+//			JPanel panel = diagram.createPanel();
+//			panel.setBounds(45, 288, 620, 300);
+//			panel.setVisible(true);
+//			frame.getContentPane().add(panel);
+//		}
 
 		rdbtnLineal = new JRadioButton("Lineal");
 		rdbtnLineal.setSelected(true);
@@ -196,6 +196,14 @@ public class TrainingWindow {
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
 		btnCancelarEntrenamiento.setBounds(528, 242, 158, 34);
 		frame.getContentPane().add(btnCancelarEntrenamiento);
+		
+		
+		Graph diagram = new Graph();
+		JPanel panel = diagram.createPanel();
+		panel.setBounds(45, 288, 620, 300);
+
+		panel.setVisible(true);
+		frame.getContentPane().add(panel);
 
 	}
 

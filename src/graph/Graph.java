@@ -24,11 +24,14 @@ public class Graph {
 
 	// public HashMap<Integer, BigDecimal> errorProgressMap=new HashMap<Integer,
 	// BigDecimal>();
+	public Graph (){
+		super();
+	}
 	public Graph(String _id) {
 		id = _id;
 	}
 
-	public void put(int iteration, BigDecimal value) {
+	public void put (int iteration, BigDecimal value) {
 		xyseries.add(iteration, value);
 		chartpanel.repaint();
 	}

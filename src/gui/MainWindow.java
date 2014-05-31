@@ -20,32 +20,26 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
-
-import architecture.Network;
-import architecture.NetworkManager;
-
-import javax.swing.JLabel;
-import javax.swing.JToggleButton;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+
+import architecture.NetworkManager;
+import java.awt.Color;
 
 /**
  * 
@@ -55,14 +49,15 @@ public class MainWindow extends JFrame {
 
 	// Lista con las actuales instancias de la clase NetworkManager
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
-	public static HashMap<String, Graph> chartMap = new HashMap<String, Graph>();
+	//public static HashMap<String, Graph> chartMap = new HashMap<String, Graph>();
 	public static int numInstances = 0; // N�mero de instancias creadas
 	public static boolean cancelTraining = false;
+	public static JDesktopPane desktopPane;
 
 	// Variables GUI
 	private JFrame frame;
 	private JToolBar toolBar;
-	private JDesktopPane desktopPane;
+	//private JDesktopPane desktopPane;
 	private JButton btnCrearNueva, btnEntrenar, btnCalcularSalidas;
 	private JToggleButton tglbtnTrazas;
 
@@ -97,13 +92,13 @@ public class MainWindow extends JFrame {
 		createEvents();
 	}
 
-	public static void addGraph(String id) {
-		chartMap.put(id, new Graph(id));
-	} 
-
-	public static Graph getGraph(String id) {
-		return chartMap.get(id);
-	}
+//	public static void addGraph(String id) {
+//		chartMap.put(id, new Graph(id));
+//	} 
+//
+//	public static Graph getGraph(String id) {
+//		return chartMap.get(id);
+//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -128,42 +123,10 @@ public class MainWindow extends JFrame {
 		frame.getContentPane().add(toolBar);
 
 		desktopPane = new JDesktopPane();
+		desktopPane.setBackground(Color.WHITE);
 		desktopPane.setOpaque(false);
 		desktopPane.setBounds(10, 60, 696, 406);
 		frame.getContentPane().add(desktopPane);
-		frame.addComponentListener(new ComponentListener() {
-
-			// get frame windows size
-			int frameWidth = frame.getWidth();
-			int frameHeight = frame.getHeight();
-
-			@Override
-			public void componentHidden(final ComponentEvent e) {
-
-			}
-
-			@Override
-			public void componentMoved(final ComponentEvent e) {
-
-			}
-
-			@Override
-			public void componentResized(final ComponentEvent e) {
-				// calculate the delta value
-				final int deltaWidth = frameWidth - desktopPane.getWidth();
-				final int deltaHeight = frameHeight - desktopPane.getHeight();
-
-				// dynamic reset desktopPane size
-				desktopPane.setBounds(10, 60, frame.getWidth() - deltaWidth,
-						frame.getHeight() - deltaHeight);
-				desktopPane.updateUI();
-			}
-
-			@Override
-			public void componentShown(final ComponentEvent e) {
-
-			}
-		});
 
 		tglbtnTrazas = new JToggleButton("Desactivar trazas"); // By default
 																// they are able
@@ -199,6 +162,34 @@ public class MainWindow extends JFrame {
 				tglbtnTrazasActionPerformed(ev);
 			}
 		});
+		
+		frame.addComponentListener(new ComponentListener() {
+
+			// get frame windows size
+			int frameWidth = frame.getWidth(),
+				frameHeight = frame.getHeight();
+
+			@Override
+			public void componentHidden(final ComponentEvent e) {}
+			
+			@Override
+			public void componentMoved(final ComponentEvent e) {}
+
+			@Override
+			public void componentResized(final ComponentEvent e) {
+				// calculate the delta value
+				final int deltaWidth = frameWidth - desktopPane.getWidth();
+				final int deltaHeight = frameHeight - desktopPane.getHeight();
+				// dynamic reset desktopPane size
+				desktopPane.setBounds(10, 60, frame.getWidth() - deltaWidth,
+				frame.getHeight() - deltaHeight);
+				desktopPane.updateUI();
+			}
+
+			@Override
+			public void componentShown(final ComponentEvent e) {}
+			
+			});
 	}
 
 	private void btnCrearNuevaActionPerformed() {
@@ -216,7 +207,7 @@ public class MainWindow extends JFrame {
 			newNetworkWindow = new NewNetworkWindow();
 			// newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000,
 			// 700, 450));
-			desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.WEST);
+			desktopPane.add(newNetworkWindow.getFrame(), BorderLayout.CENTER);
 
 			newNetworkWindow.getFrame().show();
 		} else {

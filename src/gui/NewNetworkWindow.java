@@ -68,7 +68,9 @@ public class NewNetworkWindow {
     private void initialize() {
     	
         frame = new JInternalFrame();
-        frame.setBounds(100, 100, 737, 493);
+        
+        frame.setBounds(MainWindow.desktopPane.getBounds());
+        
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -266,7 +268,7 @@ public class NewNetworkWindow {
 		        MainWindow.neList.add(aux);
 		        
 		        //Add graphic
-		        MainWindow.addGraph(name);
+		      //  MainWindow.addGraph(name);
 		        System.out.print ("Current number of instances: "+ MainWindow.neList.size());
 		        
         	}//end else2

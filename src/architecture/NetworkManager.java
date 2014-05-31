@@ -230,7 +230,7 @@ public class NetworkManager {
 			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			
 			//Add error in memory
-			MainWindow.getGraph(name).put(iteration, errorIt);
+			//MainWindow.getGraph(name).put(iteration, errorIt);
 			
 			writerErrorProgress.writeError (errorIt, iteration);
 			log.debug("Error ponderado en la interacci�n "+ iteration + " es " + errorIt);
