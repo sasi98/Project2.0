@@ -4,6 +4,7 @@ import graph.Graph;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,7 @@ public class TrainingWindow {
 	public static SwingWorker<Void, Void> worker;
 	private boolean isStarted = false;
 
-	private JInternalFrame frame;
+	private Panel panel;
 	private JTextField tfcortaError, tflearningCNT, tfmaxIt;
 	private JButton btnSelecMatrices, btnIniciarEntrenamiento,
 			btnCancelarEntrenamiento;
@@ -66,10 +67,9 @@ public class TrainingWindow {
 
 	public void initialize() {
 
-		frame = new JInternalFrame();
-		frame.setBounds(100, 100, 732, 650);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		panel = new Panel();
+		panel.setBounds(6, 0, 980, 633);
+		panel.setLayout(null);
 
 		txtrUtilizarMatricesDe = new JTextArea();
 		txtrUtilizarMatricesDe.setLineWrap(true);
@@ -77,86 +77,86 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe.setOpaque(false);
 		txtrUtilizarMatricesDe
 				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
-		txtrUtilizarMatricesDe.setBounds(new Rectangle(483, 103, 203, 34));
+		txtrUtilizarMatricesDe.setBounds(new Rectangle(6, 5, 203, 28));
 
-		frame.getContentPane().add(txtrUtilizarMatricesDe);
+		panel.add(txtrUtilizarMatricesDe);
 
 		btnSelecMatrices = new JButton("Seleccionar archivo");
-		btnSelecMatrices.setBounds(new Rectangle(528, 153, 141, 34));
-		frame.getContentPane().add(btnSelecMatrices);
+		btnSelecMatrices.setBounds(new Rectangle(214, 5, 165, 29));
+		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-		btnIniciarEntrenamiento.setBounds(new Rectangle(528, 199, 158, 34));
-		frame.getContentPane().add(btnIniciarEntrenamiento);
+		btnIniciarEntrenamiento.setBounds(new Rectangle(384, 5, 178, 29));
+		panel.add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
-		lblSeleccionaRed.setBounds(47, 74, 79, 14);
-		frame.getContentPane().add(lblSeleccionaRed);
+		lblSeleccionaRed.setBounds(567, 11, 101, 16);
+		panel.add(lblSeleccionaRed);
 
 		final JLabel lblFuncion = new JLabel("Funci\u00F3n:  ");
-		lblFuncion.setBounds(47, 118, 47, 14);
-		frame.getContentPane().add(lblFuncion);
+		lblFuncion.setBounds(673, 11, 62, 16);
+		panel.add(lblFuncion);
 
 		final JLabel lblAadirMomento = new JLabel("A\u00F1adir Momento Beta: ");
-		lblAadirMomento.setBounds(47, 148, 110, 14);
-		frame.getContentPane().add(lblAadirMomento);
+		lblAadirMomento.setBounds(740, 11, 142, 16);
+		panel.add(lblAadirMomento);
 
 		final JLabel lblCotaDeError = new JLabel("Cota de error:");
-		lblCotaDeError.setBounds(47, 194, 69, 14);
-		frame.getContentPane().add(lblCotaDeError);
+		lblCotaDeError.setBounds(887, 11, 86, 16);
+		panel.add(lblCotaDeError);
 
 		final JLabel lblCoeficienteDeAprendizaje = new JLabel(
 				"Coeficiente de aprendizaje:");
-		lblCoeficienteDeAprendizaje.setBounds(47, 222, 132, 14);
-		frame.getContentPane().add(lblCoeficienteDeAprendizaje);
+		lblCoeficienteDeAprendizaje.setBounds(62, 45, 170, 16);
+		panel.add(lblCoeficienteDeAprendizaje);
 
 		final JLabel lblMaxIt = new JLabel(
 				"M\u00E1ximo n\u00FAmero de iteraciones:");
-		lblMaxIt.setBounds(48, 251, 149, 14);
-		frame.getContentPane().add(lblMaxIt);
+		lblMaxIt.setBounds(237, 45, 198, 16);
+		panel.add(lblMaxIt);
 
 		lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(537, 212, 132, 34);
-		frame.getContentPane().add(lblNewLabel);
+		lblNewLabel.setBounds(440, 53, 0, 0);
+		panel.add(lblNewLabel);
 
 		comboBox = new JComboBox();
-//		comboBox.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				String selectedItem = (String) comboBox.getSelectedItem();
-//				Graph diagram = MainWindow.getGraph(selectedItem);
-//				JPanel panel = diagram.createPanel();
-//				panel.setBounds(45, 288, 620, 300);
-//
-//				panel.setVisible(true);
-//				frame.getContentPane().add(panel);
-//			}
-//		});
+		// comboBox.addActionListener(new ActionListener() {
+		// public void actionPerformed(ActionEvent e) {
+		// String selectedItem = (String) comboBox.getSelectedItem();
+		// Graph diagram = MainWindow.getGraph(selectedItem);
+		// JPanel panel = diagram.createPanel();
+		// panel.setBounds(45, 288, 620, 300);
+		//
+		// panel.setVisible(true);
+		// frame.getContentPane().add(panel);
+		// }
+		// });
 		for (final NetworkManager ne : MainWindow.neList) { // A�adimos las
 															// instancias
 															// creadas al ComBox
 			comboBox.addItem(ne.getName());
 		}
-		comboBox.setBounds(new Rectangle(261, 71, 125, 20));
-		frame.getContentPane().add(comboBox);
+		comboBox.setBounds(new Rectangle(445, 39, 52, 27));
+		panel.add(comboBox);
 
 		// initilaize diagram when combobox loading
-//		String selectedItem = (String) comboBox.getSelectedItem();
-//		if (selectedItem != null) {
-//			Graph diagram = MainWindow.getGraph(selectedItem);
-//			JPanel panel = diagram.createPanel();
-//			panel.setBounds(45, 288, 620, 300);
-//			panel.setVisible(true);
-//			frame.getContentPane().add(panel);
-//		}
+		// String selectedItem = (String) comboBox.getSelectedItem();
+		// if (selectedItem != null) {
+		// Graph diagram = MainWindow.getGraph(selectedItem);
+		// JPanel panel = diagram.createPanel();
+		// panel.setBounds(45, 288, 620, 300);
+		// panel.setVisible(true);
+		// frame.getContentPane().add(panel);
+		// }
 
 		rdbtnLineal = new JRadioButton("Lineal");
 		rdbtnLineal.setSelected(true);
-		rdbtnLineal.setBounds(new Rectangle(258, 114, 79, 23));
-		frame.getContentPane().add(rdbtnLineal);
+		rdbtnLineal.setBounds(new Rectangle(502, 41, 69, 23));
+		panel.add(rdbtnLineal);
 
 		rdbtnTangencial = new JRadioButton("Tangencial");
-		rdbtnTangencial.setBounds(new Rectangle(333, 114, 100, 23));
-		frame.getContentPane().add(rdbtnTangencial);
+		rdbtnTangencial.setBounds(new Rectangle(576, 41, 100, 23));
+		panel.add(rdbtnTangencial);
 
 		final ButtonGroup groupFuncion = new ButtonGroup(); // To get just one
 															// selected at the
@@ -165,14 +165,14 @@ public class TrainingWindow {
 		groupFuncion.add(rdbtnLineal);
 
 		rdbtnSi = new JRadioButton("Si");
-		rdbtnSi.setBounds(new Rectangle(258, 144, 33, 23));
-		frame.getContentPane().add(rdbtnSi);
+		rdbtnSi.setBounds(new Rectangle(681, 41, 43, 23));
+		panel.add(rdbtnSi);
 
 		rdbtnNo = new JRadioButton("No");
 		rdbtnNo.setSelected(true);
 		momentB = false;
-		rdbtnNo.setBounds(new Rectangle(333, 144, 39, 23));
-		frame.getContentPane().add(rdbtnNo);
+		rdbtnNo.setBounds(new Rectangle(729, 41, 50, 23));
+		panel.add(rdbtnNo);
 
 		final ButtonGroup groupSiNo = new ButtonGroup();
 		groupSiNo.add(rdbtnSi);
@@ -180,30 +180,29 @@ public class TrainingWindow {
 
 		tfcortaError = new JTextField();
 		tfcortaError.setColumns(10);
-		tfcortaError.setBounds(new Rectangle(261, 191, 86, 20));
-		frame.getContentPane().add(tfcortaError);
+		tfcortaError.setBounds(new Rectangle(784, 39, 134, 28));
+		panel.add(tfcortaError);
 
 		tflearningCNT = new JTextField();
 		tflearningCNT.setColumns(10);
-		tflearningCNT.setBounds(new Rectangle(261, 219, 86, 20));
-		frame.getContentPane().add(tflearningCNT);
+		tflearningCNT.setBounds(new Rectangle(254, 72, 134, 28));
+		panel.add(tflearningCNT);
 
 		tfmaxIt = new JTextField();
 		tfmaxIt.setColumns(10);
-		tfmaxIt.setBounds(new Rectangle(261, 247, 86, 20));
-		frame.getContentPane().add(tfmaxIt);
+		tfmaxIt.setBounds(new Rectangle(393, 72, 134, 28));
+		panel.add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
-		btnCancelarEntrenamiento.setBounds(528, 242, 158, 34);
-		frame.getContentPane().add(btnCancelarEntrenamiento);
-		
-		
-		Graph diagram = new Graph();
-		JPanel panel = diagram.createPanel();
-		panel.setBounds(45, 288, 620, 300);
+		btnCancelarEntrenamiento.setBounds(532, 72, 193, 29);
+		panel.add(btnCancelarEntrenamiento);
 
-		panel.setVisible(true);
-		frame.getContentPane().add(panel);
+		Graph diagram = new Graph();
+		JPanel diagrampanel = diagram.createPanel();
+		diagrampanel.setBounds(0, 300, 300, 150);
+
+		diagrampanel.setVisible(true);
+		panel.add(diagrampanel);
 
 	}
 
@@ -353,11 +352,11 @@ public class TrainingWindow {
 		MainWindow.cancelTraining = true;
 	}
 
-	public JInternalFrame getFrame() {
-		return frame;
+	public Panel getPanel() {
+		return panel;
 	}
 
-	public void setFrame(final JInternalFrame frame) {
-		this.frame = frame;
+	public void setPanel(final Panel panel) {
+		this.panel = panel;
 	}
 }

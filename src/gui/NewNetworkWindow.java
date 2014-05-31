@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Checkbox;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -31,228 +32,253 @@ import dataManager.WriteExcel;
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
 
-
 public class NewNetworkWindow {
 
-	//Variables GUI
-    private JInternalFrame frame;
-    private JButton bCreateNN;
-    private JTextField tfIdCompany, tfInicio;
-    private JComboBox<String> comboBox_inputType;
-    private JSpinner sPatrones, spNumNeuronO, spNumNeurons;
-    private JTextPane textPane; 
-    private JScrollPane scrollPane;
-    private JCheckBox checkBox;
+	// Variables GUI
+	private Panel panel;
+	private JButton bCreateNN;
+	private JTextField tfIdCompany, tfInicio;
+	private JComboBox<String> comboBox_inputType;
+	private JSpinner sPatrones, spNumNeuronO, spNumNeurons;
+	private JTextPane textPane;
+	private JScrollPane scrollPane;
+	private JCheckBox checkBox;
 
-    //Variables internas
-    private String idCompany;
-    private int numNeuronES, numNeuronO, numPatrones, inicio;
-    private String outFile; //Fichero en el que escribiremos los inputs/outputs 
-    private boolean bias; 
-    
-
-   
-
-    /**
-     * Create the application.
-     */
-    public NewNetworkWindow() {
-        initialize();
-        createEvents();
-    }
-
+	// Variables internas
+	private String idCompany;
+	private int numNeuronES, numNeuronO, numPatrones, inicio;
+	private String outFile; // Fichero en el que escribiremos los inputs/outputs
+	private boolean bias;
 
 	/**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-    	
-        frame = new JInternalFrame();
-        
-        frame.setBounds(MainWindow.desktopPane.getBounds());
-        
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+	 * Create the application.
+	 */
+	public NewNetworkWindow() {
+		initialize();
+		createEvents();
+	}
 
-        final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
-        lblNewLabel.setBounds(10, 45, 174, 14);
-        frame.getContentPane().add(lblNewLabel);
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
 
-        final JLabel lblNewLabel_2 = new JLabel("N\u00BA Patrones de aprendizaje: ");
-        lblNewLabel_2.setBounds(10, 229, 174, 14);
-        frame.getContentPane().add(lblNewLabel_2);
+		panel = new Panel();
 
-        final JLabel lblNewLabel_3 = new JLabel("N\u00BA de neuronas de entrada/salida:");
-        lblNewLabel_3.setBounds(10, 142, 174, 14);
-        frame.getContentPane().add(lblNewLabel_3);
+		panel.setBounds(6, 0, 980, 633);
 
-        final JLabel lblNewLabel_4 = new JLabel("N\u00BA de neuronas ocultas:");
-        lblNewLabel_4.setBounds(10, 167, 174, 14);
-        frame.getContentPane().add(lblNewLabel_4);
-        
-        final JLabel lblNewLabel_7 = new JLabel("Selecci�n de datos: ");
-        lblNewLabel_7.setBounds(10, 78, 97, 14);
-        frame.getContentPane().add(lblNewLabel_7);
+		panel.setLayout(null);
 
-        final JLabel lblNewLabel_8 = new JLabel("Inicio de los datos:");
-        lblNewLabel_8.setBounds(295, 78, 136, 14);
-        frame.getContentPane().add(lblNewLabel_8);
+		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
+		lblNewLabel.setBounds(71, 5, 145, 16);
+		panel.add(lblNewLabel);
 
-        bCreateNN = new JButton("Crear Red Neuronal");
-        bCreateNN.setBounds(336, 237, 136, 23);
-        frame.getContentPane().add(bCreateNN);
+		final JLabel lblNewLabel_2 = new JLabel(
+				"N\u00BA Patrones de aprendizaje: ");
+		lblNewLabel_2.setBounds(221, 5, 177, 16);
+		panel.add(lblNewLabel_2);
 
-        comboBox_inputType = new JComboBox();
-        comboBox_inputType.addItem(Value.ComboBox.SOLAPADOS);
-        comboBox_inputType.addItem(Value.ComboBox.NOSOLAPADOS);
-        comboBox_inputType.addItem(Value.ComboBox.ALEATORIOS);
-        comboBox_inputType.addItem(Value.ComboBox.MANUAL);
-        comboBox_inputType.setBounds(185, 75, 85, 20);
-        frame.getContentPane().add(comboBox_inputType);
-        
-        tfIdCompany = new JTextField();
-        tfIdCompany.setBounds(214, 42, 36, 20);
-        frame.getContentPane().add(tfIdCompany);
-        tfIdCompany.setColumns(10);
-        
-        tfInicio = new JTextField();
-        tfInicio.setBounds(400, 75, 23, 20);
-        frame.getContentPane().add(tfInicio);
-        tfInicio.setColumns(10);
-        
-        sPatrones = new JSpinner();
-        sPatrones.setValue(5);
-        sPatrones.setBounds(226, 226, 44, 20);
-        frame.getContentPane().add(sPatrones);
-        
-        spNumNeuronO = new JSpinner();
-        spNumNeuronO.setBounds(226, 164, 44, 20);
-        spNumNeuronO.setValue(0);
-        frame.getContentPane().add(spNumNeuronO);
-        
-        spNumNeurons = new JSpinner();
-        spNumNeurons.setBounds(226, 139, 44, 20);
-        spNumNeurons.setValue(0);
-        frame.getContentPane().add(spNumNeurons);
-        
-        checkBox = new JCheckBox("Bias");
-        checkBox.setBounds(10, 262, 45, 23);
-        frame.getContentPane().add(checkBox);
-        
-        textPane = new JTextPane();
-        textPane.setEditable(false);
-        textPane.setBounds(0,0, 701, 161);
-        
-        scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 292, 701, 161);
-        //scrollPane.add(textPane);
-        scrollPane.setViewportView(textPane); 
-        frame.getContentPane().add(scrollPane);
-        
-        JScrollBar scrollBar = new JScrollBar();
-        scrollPane.setRowHeaderView(scrollBar);
-    }
-    
-    private void createEvents() {
+		final JLabel lblNewLabel_3 = new JLabel(
+				"N\u00BA de neuronas de entrada/salida:");
+		lblNewLabel_3.setBounds(403, 5, 215, 16);
+		panel.add(lblNewLabel_3);
+
+		final JLabel lblNewLabel_4 = new JLabel("N\u00BA de neuronas ocultas:");
+		lblNewLabel_4.setBounds(623, 5, 151, 16);
+		panel.add(lblNewLabel_4);
+
+		final JLabel lblNewLabel_7 = new JLabel("Selecci���n de datos: ");
+		lblNewLabel_7.setBounds(9, 32, 156, 16);
+		panel.add(lblNewLabel_7);
+
+		final JLabel lblNewLabel_8 = new JLabel("Inicio de los datos:");
+		lblNewLabel_8.setBounds(170, 32, 120, 16);
+		panel.add(lblNewLabel_8);
+
+		bCreateNN = new JButton("Crear Red Neuronal");
+		bCreateNN.setBounds(103, 183, 165, 29);
+		panel.add(bCreateNN);
+
+		comboBox_inputType = new JComboBox();
+		comboBox_inputType.setBounds(465, 27, 52, 27);
+		comboBox_inputType.addItem(Value.ComboBox.SOLAPADOS);
+		comboBox_inputType.addItem(Value.ComboBox.NOSOLAPADOS);
+		comboBox_inputType.addItem(Value.ComboBox.ALEATORIOS);
+		comboBox_inputType.addItem(Value.ComboBox.MANUAL);
+		panel.add(comboBox_inputType);
+
+		tfIdCompany = new JTextField();
+		tfIdCompany.setBounds(522, 26, 134, 28);
+		panel.add(tfIdCompany);
+		tfIdCompany.setColumns(10);
+
+		tfInicio = new JTextField();
+		tfInicio.setBounds(661, 26, 134, 28);
+		panel.add(tfInicio);
+		tfInicio.setColumns(10);
+
+		sPatrones = new JSpinner();
+		sPatrones.setBounds(800, 26, 37, 28);
+		sPatrones.setValue(5);
+		panel.add(sPatrones);
+
+		spNumNeuronO = new JSpinner();
+		spNumNeuronO.setBounds(340, 60, 37, 28);
+		spNumNeuronO.setValue(0);
+		panel.add(spNumNeuronO);
+
+		spNumNeurons = new JSpinner();
+		spNumNeurons.setBounds(382, 60, 37, 28);
+		spNumNeurons.setValue(0);
+		panel.add(spNumNeurons);
+
+		checkBox = new JCheckBox("Bias");
+		checkBox.setBounds(424, 62, 57, 23);
+		panel.add(checkBox);
+
+		textPane = new JTextPane();
+		textPane.setEditable(false);
+		textPane.setBounds(0, 0, 701, 161);
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(486, 64, 188, 226);
+		// scrollPane.add(textPane);
+		scrollPane.setViewportView(textPane);
+		panel.add(scrollPane);
+
+		JScrollBar scrollBar = new JScrollBar();
+		scrollPane.setRowHeaderView(scrollBar);
+	}
+
+	private void createEvents() {
 		bCreateNN.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent arg0) {
-                bCreateNNActionPerformed();
-            }
-        });
-	} 
-    
-    public JInternalFrame getFrame() {
-		return frame;
+			@Override
+			public void actionPerformed(final ActionEvent arg0) {
+				bCreateNNActionPerformed();
+			}
+		});
 	}
 
-	public void setFrame(JInternalFrame frame) {
-		this.frame = frame;
+	public Panel getPanel() {
+		return panel;
 	}
-	
+
+	public void setPanel(Panel panel) {
+		this.panel = panel;
+	}
+
 	private void bCreateNNActionPerformed() {
-    	
-    	//ID debe estar entre 000 y 510
-        idCompany = tfIdCompany.getText();
-    
-        if ( (idCompany == null) || (idCompany.equals("")) )
-        	JOptionPane.showMessageDialog(null, "Error, el campo identificador de empresa est� vacio", 
-        			"Campo requerido", JOptionPane.ERROR_MESSAGE);
-        else {
-        	int auxInt = Integer.parseInt(idCompany);
-        	if ( (auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3)) 
-        		JOptionPane.showMessageDialog(null, "Error, el identificador debe de tener formato 000"
-        				+ " y valores entre 0 y 510.", "Identificador no v�lido", JOptionPane.ERROR_MESSAGE);
-        	else{
-	        	numPatrones = (int) sPatrones.getValue();
-	        	if (numPatrones == 0){
-	        		sPatrones.setValue(10);
-	        		numPatrones = 10;
-	        	}
-	        	numNeuronES = (int) spNumNeurons.getValue();
-	        	if (numNeuronES == 0){
-	        		spNumNeurons.setValue(6);
-	        		numNeuronES = 6;
-	        	}
-	        	numNeuronO = (int) spNumNeuronO.getValue();
-	        	if (numNeuronO == 0){
-	        		numNeuronO = numNeuronES - (numNeuronES / 2);
-	        		spNumNeuronO.setValue(numNeuronO);
-	        	}
-	        	String strInicio = tfInicio.getText();
-	            if ((strInicio == null) || (strInicio.equals(""))) {
-	                tfInicio.setText("1");
-	                inicio = 1;
-	            } 
-	            else 
-	                inicio = Integer.parseInt(strInicio);
-	            
-	            bias = checkBox.isSelected();
-	           
-	
-		        /** Creamos la red con todos los datos **/
-		        final PatronData manejador = new PatronData(idCompany);
-		        ArrayList<BigDecimal[]> inputs = new ArrayList<BigDecimal[]>();
-		        ArrayList<BigDecimal[]> desiredOutputs = new ArrayList<BigDecimal[]>();
-		       
-		        //Solapados
-		        if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.SOLAPADOS)) {
-		            inputs = manejador.createSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
-		            desiredOutputs = manejador.createSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
-		        }
-		
-		        //No solapados
-		        else if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.NOSOLAPADOS)) {
-		            inputs = manejador.createNoSolapadoArrayRm(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
-		            desiredOutputs = manejador.createNoSolapadoArrayRi(numPatrones, inicio, NetworkManager.CNT, numNeuronES);
-		        }
-		
-		        //Aleatorios
-		        else if (this.comboBox_inputType.getSelectedItem().equals(Value.ComboBox.ALEATORIOS)) {
-		        	ArrayList<ArrayList<Integer>> randomLists = manejador.generateRandomLists(numPatrones, numNeuronES); //It generates the list that contains randoms values equivalent to a positions in the company table
-		        	inputs = manejador.createRandomArrayRm(NetworkManager.CNT, randomLists);
-		        	desiredOutputs = manejador.createRandomArrayRi(NetworkManager.CNT, randomLists);
-		        }
-		
-		        //Manuales
-		        else {
-		            //open a new JFrame
-		        }
-		
-		        //Testing collecting data
-		        outFile = new String ("C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
-		        WriteExcel patrones = new WriteExcel(outFile);
-		        patrones.writeInputsOutputs(inputs, desiredOutputs);
-		        patrones.closeFile();
-		        
-		        //Display results
-		        FileReader reader;
+
+		// ID debe estar entre 000 y 510
+		idCompany = tfIdCompany.getText();
+
+		if ((idCompany == null) || (idCompany.equals("")))
+			JOptionPane.showMessageDialog(null,
+					"Error, el campo identificador de empresa est��� vacio",
+					"Campo requerido", JOptionPane.ERROR_MESSAGE);
+		else {
+			int auxInt = Integer.parseInt(idCompany);
+			if ((auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3))
+				JOptionPane.showMessageDialog(null,
+						"Error, el identificador debe de tener formato 000"
+								+ " y valores entre 0 y 510.",
+						"Identificador no v���lido", JOptionPane.ERROR_MESSAGE);
+			else {
+				numPatrones = (int) sPatrones.getValue();
+				if (numPatrones == 0) {
+					sPatrones.setValue(10);
+					numPatrones = 10;
+				}
+				numNeuronES = (int) spNumNeurons.getValue();
+				if (numNeuronES == 0) {
+					spNumNeurons.setValue(6);
+					numNeuronES = 6;
+				}
+				numNeuronO = (int) spNumNeuronO.getValue();
+				if (numNeuronO == 0) {
+					numNeuronO = numNeuronES - (numNeuronES / 2);
+					spNumNeuronO.setValue(numNeuronO);
+				}
+				String strInicio = tfInicio.getText();
+				if ((strInicio == null) || (strInicio.equals(""))) {
+					tfInicio.setText("1");
+					inicio = 1;
+				} else
+					inicio = Integer.parseInt(strInicio);
+
+				bias = checkBox.isSelected();
+
+				/** Creamos la red con todos los datos **/
+				final PatronData manejador = new PatronData(idCompany);
+				ArrayList<BigDecimal[]> inputs = new ArrayList<BigDecimal[]>();
+				ArrayList<BigDecimal[]> desiredOutputs = new ArrayList<BigDecimal[]>();
+
+				// Solapados
+				if (this.comboBox_inputType.getSelectedItem().equals(
+						Value.ComboBox.SOLAPADOS)) {
+					inputs = manejador.createSolapadoArrayRm(numPatrones,
+							inicio, NetworkManager.CNT, numNeuronES);
+					desiredOutputs = manejador.createSolapadoArrayRi(
+							numPatrones, inicio, NetworkManager.CNT,
+							numNeuronES);
+				}
+
+				// No solapados
+				else if (this.comboBox_inputType.getSelectedItem().equals(
+						Value.ComboBox.NOSOLAPADOS)) {
+					inputs = manejador.createNoSolapadoArrayRm(numPatrones,
+							inicio, NetworkManager.CNT, numNeuronES);
+					desiredOutputs = manejador.createNoSolapadoArrayRi(
+							numPatrones, inicio, NetworkManager.CNT,
+							numNeuronES);
+				}
+
+				// Aleatorios
+				else if (this.comboBox_inputType.getSelectedItem().equals(
+						Value.ComboBox.ALEATORIOS)) {
+					ArrayList<ArrayList<Integer>> randomLists = manejador
+							.generateRandomLists(numPatrones, numNeuronES); // It
+																			// generates
+																			// the
+																			// list
+																			// that
+																			// contains
+																			// randoms
+																			// values
+																			// equivalent
+																			// to
+																			// a
+																			// positions
+																			// in
+																			// the
+																			// company
+																			// table
+					inputs = manejador.createRandomArrayRm(NetworkManager.CNT,
+							randomLists);
+					desiredOutputs = manejador.createRandomArrayRi(
+							NetworkManager.CNT, randomLists);
+				}
+
+				// Manuales
+				else {
+					// open a new JFrame
+				}
+
+				// Testing collecting data
+				outFile = new String(
+						"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
+				WriteExcel patrones = new WriteExcel(outFile);
+				patrones.writeInputsOutputs(inputs, desiredOutputs);
+				patrones.closeFile();
+
+				// Display results
+				FileReader reader;
 				try {
 					reader = new FileReader(outFile);
-					 BufferedReader br = new BufferedReader(reader);
-				        textPane.read( br, null );
-				        br.close();
-				       // textPane.requestFocus();
+					BufferedReader br = new BufferedReader(reader);
+					textPane.read(br, null);
+					br.close();
+					// textPane.requestFocus();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -260,18 +286,22 @@ public class NewNetworkWindow {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		       
-				//Create the Network, give it an identificator.
+
+				// Create the Network, give it an identificator.
 				MainWindow.numInstances++;
-				String name = idCompany+"_"+this.comboBox_inputType.getSelectedItem()+ MainWindow.numInstances;
-		        NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
-		        MainWindow.neList.add(aux);
-		        
-		        //Add graphic
-		      //  MainWindow.addGraph(name);
-		        System.out.print ("Current number of instances: "+ MainWindow.neList.size());
-		        
-        	}//end else2
-        }//end else1
-    }
+				String name = idCompany + "_"
+						+ this.comboBox_inputType.getSelectedItem()
+						+ MainWindow.numInstances;
+				NetworkManager aux = new NetworkManager(name, numPatrones,
+						numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				MainWindow.neList.add(aux);
+
+				// Add graphic
+				// MainWindow.addGraph(name);
+				System.out.print("Current number of instances: "
+						+ MainWindow.neList.size());
+
+			}// end else2
+		}// end else1
+	}
 }

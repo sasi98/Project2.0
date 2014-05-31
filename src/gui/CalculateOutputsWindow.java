@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Panel;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 
 public class CalculateOutputsWindow {
 
-	private JInternalFrame frame;
+	private Panel panel;
 	private JLabel lblNewLabel;
 	private JComboBox comboBox;
 	private JButton btnNewButton, btnCalcularOutputs;
@@ -45,37 +46,36 @@ public class CalculateOutputsWindow {
      */
 	private void initialize() {
 		
-		frame = new JInternalFrame();
-        frame.setBounds(100, 100, 737, 493);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(null);
+		panel = new Panel();
+		panel.setBounds(6, 0, 980, 633);
+        panel.setLayout(null);
         
         JLabel lblSeleccionaRed = new JLabel("Sistema de datos: ");
         lblSeleccionaRed.setBounds(44, 60, 99, 14);
-        frame.getContentPane().add(lblSeleccionaRed);
+        panel.add(lblSeleccionaRed);
         
         JLabel lblSeleccionaMatricesDe = new JLabel("Matrices de pesos:\r\n");
         lblSeleccionaMatricesDe.setBounds(44, 113, 154, 14);
-        frame.getContentPane().add(lblSeleccionaMatricesDe);
+        panel.add(lblSeleccionaMatricesDe);
         
         lblNewLabel = new JLabel("");
         lblNewLabel.setBounds(272, 171, 46, 14);
-        frame.getContentPane().add(lblNewLabel);
+        panel.add(lblNewLabel);
         
         comboBox = new JComboBox();
-    	for (NetworkManager ne: MainWindow.neList){ //Añadimos las instancias creadas al ComBox
+    	for (NetworkManager ne: MainWindow.neList){ //Aï¿½adimos las instancias creadas al ComBox
     		comboBox.addItem(ne.getName());
     	}
         comboBox.setBounds(229, 57, 121, 20);
-        frame.getContentPane().add(comboBox);
+        panel.add(comboBox);
         
         btnNewButton = new JButton("Selecciona archivo");
         btnNewButton.setBounds(229, 109, 121, 23);
-        frame.getContentPane().add(btnNewButton);
+        panel.add(btnNewButton);
         
         btnCalcularOutputs = new JButton("Calcular Outputs");
         btnCalcularOutputs.setBounds(474, 167, 113, 23);
-        frame.getContentPane().add(btnCalcularOutputs);
+        panel.add(btnCalcularOutputs);
 	}
 
 	private void createEvents() {
@@ -123,18 +123,18 @@ public class CalculateOutputsWindow {
 		//manejar excepciones
 		ArrayList<BigDecimal[]> salidas = ne.calculateOutputs(matrices); //Salidas obtenidas
 		//Escribir salidas en fichero y en pantalla
-		//Grafico con las deseadas y las obtenidas o la variación delta
+		//Grafico con las deseadas y las obtenidas o la variaciï¿½n delta
 		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
 		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
 		writer.closeFile();
 	}
 
-	public JInternalFrame getFrame() {
-		return frame;
+	public Panel getPanel() {
+		return panel;
 	}
 
-	public void setFrame(JInternalFrame frame) {
-		this.frame = frame;
+	public void setPanel(Panel panel) {
+		this.panel = panel;
 	}
 
 	
