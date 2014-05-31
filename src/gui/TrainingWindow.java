@@ -245,9 +245,9 @@ public class TrainingWindow {
         if (matrices == null) {
             //No fueron seleccionadas de archivo, deben de ser creadas aletorias
             //Las creo y se las paso al trainnig junto con el resto de par�metros
-            final Dimension dW = new Dimension(ne.getNumNeuronsO(), ne.getNumNeuronsES());
+            final Dimension dW = new Dimension(ne.getNumNeuronsO(), ne.getNumNeuronsE());
             final Matrix W = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
-            final Dimension dV = new Dimension(ne.getNumNeuronsES(), ne.getNumNeuronsO());
+            final Dimension dV = new Dimension(ne.getNumNeuronsS(), ne.getNumNeuronsO());
             final Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV, NetworkManager.PRECISION);
             matrices = new WeightMatrix(W, V);
 

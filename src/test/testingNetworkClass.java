@@ -94,6 +94,12 @@ public class testingNetworkClass {
 			System.out.print(ne.getOutputLayer()[i].getOutValue()+ " ");
 		}
 		
+		ne.train(0);
+		ne.getW(); //Actualizadas
+		ne.getV();
+		Network ne2 = new Network(); 
+		ne2.setUpPatronWithBias(numNOcultas, inputLayer, learningCNT, desiredOutputsLayer, ne.getW(), ne.getV());
+		
 
 	}
 	

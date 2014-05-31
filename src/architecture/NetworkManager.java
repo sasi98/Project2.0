@@ -34,9 +34,11 @@ public class NetworkManager {
 	
 	
 	private int 					numPatrones,
-									numNeuronsES,  //Debido a la tipolog�a de nuestra red Rm ligado a Ri el n� de neuronas de entradas
-												  // siempre ser� el mismo que el n� de neuronas de salida.
-									numNeuronsO;
+									numNeuronsE,
+									numNeuronsS,  //Debido a la tipología de nuestra red Rm ligado a Ri el número de neuronas de entradas
+												  // siempre será el mismo que el nº de neuronas de salida, 
+												  //exceptuando a redes con bias
+									numNeuronsO;  /**numNeuronsO y numNeuronsE incluyen el tamaño del bias en el caso */
 	
 	ArrayList<BigDecimal[]> 		inputs, 
 									desiredOutputs;
@@ -53,21 +55,35 @@ public class NetworkManager {
 		
 	}
 	
-	//pre: inputs and desiredOutputs deben ser arrays v�lidos (creados por la clase PatronData, en la interfaz)
-	public NetworkManager(String name, int numPatrones, int numNeuronsES, int numNeuronsO,ArrayList<BigDecimal[]> inputs,
+	//pre: inputs and desiredOutputs deben ser arrays válidos (creados por la clase PatronData, en la interfaz)
+	//sizeNetwork: tamaño de la red, representa el número de neuronas de entrada o salida que tendrá la red, sin incluir
+	//neurona bias en el caso
+	//numNeuronsO: Número de neuronas en la capa oculta, de nuevo sin incluir la neurona bias en el caso
+	public NetworkManager(String name, int numPatrones, int sizeNetwork, int numNeuronsO, ArrayList<BigDecimal[]> inputs,
 				 ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 			
 		super();
-		log.debug ("Creando NetworkManager: "+ name +" Nº de patrones " + numPatrones + " Nº de neuronas de entrada"
-			+ numNeuronsES + "Nº de neuronas de salida \n"+ numNeuronsES +" Nº de neuronas ocultas: "
-		    + numNeuronsO + "Bias: "+ bias);
 		this.name = name;
 		this.numPatrones = numPatrones;
-		this.numNeuronsES = numNeuronsES;
-		this.numNeuronsO = numNeuronsO;
+		this.numNeuronsS = sizeNetwork;
+		if (bias){
+			this.numNeuronsE = sizeNetwork + 1;
+			this.numNeuronsO = numNeuronsO +1;
+		}
+		else{
+			this.numNeuronsE = sizeNetwork;
+			this.numNeuronsO = numNeuronsO;
+		}
 		this.inputs = inputs;
 		this.desiredOutputs = desiredOutputs;
 		this.bias = bias;
+		
+		log.debug ("Creando NetworkManager: "+ this.name +" Nº de patrones " + this.numPatrones + " Nº de neuronas de entrada"
+				+ this.numNeuronsE + "Nº de neuronas de salida \n"+ this.numNeuronsS +" Nº de neuronas ocultas: "
+			    + this.numNeuronsO + "Bias: "+ bias);
+		
+		
+		
 	}
 	
 	
@@ -82,9 +98,6 @@ public class NetworkManager {
 		return name;
 	}
 
-	public int getNumNeuronsES() {
-		return numNeuronsES;
-	}
 	
 	public int getNumNeuronsO() {
 		return numNeuronsO;
@@ -97,6 +110,15 @@ public class NetworkManager {
 	public ArrayList<BigDecimal[]> getDesiredOutputs() {
 		return desiredOutputs;
 	}
+	
+	public int getNumNeuronsE() {
+		return numNeuronsE;
+	}
+
+	public int getNumNeuronsS() {
+		return numNeuronsS;
+	}
+
 
 	//SETTERS
 
@@ -108,9 +130,6 @@ public class NetworkManager {
 		this.name = name;
 	}
 	
-	public void setNumNeuronsES(int numNeuronsES) {
-		this.numNeuronsES = numNeuronsES;
-	}
 
 	public void setNumNeuronsO(int numNeuronsO) {
 		this.numNeuronsO = numNeuronsO;
@@ -123,8 +142,15 @@ public class NetworkManager {
 	public void setDesiredOutputs(ArrayList<BigDecimal[]> desiredOutputs) {
 		this.desiredOutputs = desiredOutputs;
 	}
-	
-	
+
+	public void setNumNeuronsE(int numNeuronsE) {
+		this.numNeuronsE = numNeuronsE;
+	}
+
+	public void setNumNeuronsS(int numNeuronsS) {
+		this.numNeuronsS = numNeuronsS;
+	}
+
 	public void training (int iterMax, BigDecimal cuote, double learningCNT, WeightMatrix matrices, boolean momentoB)
 	{
 		Matrix W = matrices.getW();
@@ -162,8 +188,11 @@ public class NetworkManager {
 				Network subNetwork = new Network();
 				//Las actuales W y V ser�n utilizadas en el momento beta de la SIGUIENTE iteraci�n en el for,
 				//las debo guardar antes, para poder ser utilizadas en la it siguiente
-				
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);//Establecemos la red con el patr�n i		
+				if (bias)
+					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V);
+				else
+					subNetwork.setUpPatronWithoutBias(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V); //Establecemos la red con el patr�n i
+						
 				if (momentoB) 
 					subNetwork.trainWithMomentB(i); 															 //La entrenamos
 				else
@@ -183,7 +212,11 @@ public class NetworkManager {
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i<inputs.size(); i++){
 				Network subNetwork = new Network();
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V, bias);
+				if (bias)
+					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V);
+				else
+					subNetwork.setUpPatronWithoutBias(numNeuronsO, inputs.get(i),learningCNT, desiredOutputs.get(i), W, V);
+				
 				errorList.add (subNetwork.calculateError()); 
 			}
 		
@@ -237,30 +270,30 @@ public class NetworkManager {
 	//Calcula los outputs resultantes con las entradas de la red (inputs)
 	//returns: Array con los vectores los cuales se corresponden con los valores de la neuronas de salida de un patr�n
 	public ArrayList<BigDecimal[]> calculateOutputs (WeightMatrix matrices){
-		log.info("Calculate Outputs");
-		if ( (matrices.getW().getColumn() == numNeuronsES) && (matrices.getW().getColumn() == numNeuronsES) && 
-				(matrices.getW().getRow() == numNeuronsO) && (matrices.getV().getColumn() == numNeuronsO) ) {
-			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
-			for (int i = 0; i<inputs.size(); i++){
-				Network subNetwork = new Network();
-				//We are not using learning constant, we ignore his value
-				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
-						matrices.getW(), matrices.getV(), bias);
-				subNetwork.feedForward(); //Propagaci�n hacia delante, se calculan las salidas
-				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
-				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
-				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
-						aux[j] = auxNeurons[j].getOutValue();
-				}
-				outputs.add(aux);
-			}
-			return outputs;
-		}
-		else{
-			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
-					+ " No es posible calcular las salidas");
+//		log.info("Calculate Outputs");
+//		if ( (matrices.getW().getColumn() == numNeuronsES) && (matrices.getW().getColumn() == numNeuronsES) && 
+//				(matrices.getW().getRow() == numNeuronsO) && (matrices.getV().getColumn() == numNeuronsO) ) {
+//			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
+//			for (int i = 0; i<inputs.size(); i++){
+//				Network subNetwork = new Network();
+//				//We are not using learning constant, we ignore his value
+//				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
+//						matrices.getW(), matrices.getV(), bias);
+//				subNetwork.feedForward(); //Propagaci�n hacia delante, se calculan las salidas
+//				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+//				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
+//				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
+//						aux[j] = auxNeurons[j].getOutValue();
+//				}
+//				outputs.add(aux);
+//			}
+//			return outputs;
+//		}
+//		else{
+//			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
+//					+ " No es posible calcular las salidas");
 			return null;
-		}
+		//}
 	
 		
 	}
