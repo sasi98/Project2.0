@@ -17,10 +17,10 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class Graph {
-	public String id;
-	public ChartPanel chartpanel;
-	public JFreeChart jfreechart;
-	public XYSeries xyseries;
+	private String id;
+	private ChartPanel chartpanel;
+	private JFreeChart jfreechart;
+	private XYSeries xyseries;
 
 	// public HashMap<Integer, BigDecimal> errorProgressMap=new HashMap<Integer,
 	// BigDecimal>();
@@ -55,7 +55,7 @@ public class Graph {
 		// xyseries.add(8D, 8D);
 		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
 		xyseriescollection.addSeries(xyseries);
-		return xyseriescollection;
+		return xyseriescollection;	
 	}
 
 	private JFreeChart createChart(XYDataset xydataset) {

@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -39,16 +41,24 @@ import java.awt.ComponentOrientation;
 public class TrainingWindow {
 
 	public static SwingWorker<Void, Void> worker;
+	public static  Graph errorGraph; 
 	private boolean isStarted = false;
 
 	private JInternalFrame frame;
+	private JPanel panelGraph;
 	private JTextField tfcortaError, tflearningCNT, tfmaxIt;
-	private JButton btnSelecMatrices, btnIniciarEntrenamiento,
-			btnCancelarEntrenamiento;
+	private JButton btnSelecMatrices, 
+					btnIniciarEntrenamiento,		//Starts training
+					btnCancelarEntrenamiento, 		//Stops the training (break the process)
+					btnPausarReanundarEntrenamiento; //Switch button: Restart or paused training ( 
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
 	private JLabel lblNewLabel;
+	
+	
+	
+	
 
 	private BigDecimal cotaError;
 	private double learningCnt;
@@ -86,7 +96,7 @@ public class TrainingWindow {
 		frame.getContentPane().add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-		btnIniciarEntrenamiento.setBounds(new Rectangle(528, 199, 158, 34));
+		btnIniciarEntrenamiento.setBounds(new Rectangle(528, 212, 158, 27));
 		frame.getContentPane().add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -131,6 +141,9 @@ public class TrainingWindow {
 //				frame.getContentPane().add(panel);
 //			}
 //		});
+		
+	
+		
 		for (final NetworkManager ne : MainWindow.neList) { // A�adimos las
 															// instancias
 															// creadas al ComBox
@@ -194,18 +207,18 @@ public class TrainingWindow {
 		frame.getContentPane().add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
-		btnCancelarEntrenamiento.setBounds(528, 242, 158, 34);
+		btnCancelarEntrenamiento.setBounds(528, 284, 158, 27);
 		frame.getContentPane().add(btnCancelarEntrenamiento);
 		
+		btnPausarReanundarEntrenamiento = new JButton("Pausar entrenamiento");
+		btnPausarReanundarEntrenamiento.setBounds(528, 250, 158, 27);
+		frame.getContentPane().add(btnPausarReanundarEntrenamiento);
+
+		addNewGraph();
+	
 		
-		Graph diagram = new Graph();
-		JPanel panel = diagram.createPanel();
-		panel.setBounds(45, 288, 620, 300);
-
-		panel.setVisible(true);
-		frame.getContentPane().add(panel);
-
-	}
+		
+		}
 
 	private void createEvents() {
 		btnIniciarEntrenamiento.addActionListener(new ActionListener() {
@@ -228,11 +241,25 @@ public class TrainingWindow {
 				btnCancelarEntrenamientoActionPerformed();
 			}
 		});
+		
+		btnPausarReanundarEntrenamiento.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent ev) {
+				btnPausarReanundarEntrenamientoActionPerformed(ev);
+			}
+
+			
+			
+				});
+		
+
 
 	}
 
 	private void btnIniciarEntrenamientoActionPerformed() {
-
+		
+		addNewGraph(); 
+		
 		final String stCotaError = tfcortaError.getText();
 		if ((stCotaError == null) || (stCotaError.equals(""))) {
 			tfcortaError.setText("0.001");
@@ -352,7 +379,32 @@ public class TrainingWindow {
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
 	}
+	
 
+	private void btnPausarReanundarEntrenamientoActionPerformed (ItemEvent ev) {
+		if (ev.getStateChange() == ItemEvent.SELECTED) {
+			btnPausarReanundarEntrenamiento.setText("Reanudar entrenamiento");
+			//we restart training where we left it
+			
+		} else if (ev.getStateChange() == ItemEvent.DESELECTED){
+			btnPausarReanundarEntrenamiento.setText("Pausar entrenamiento");
+			//we pause the training 
+			
+		}
+		
+	}
+
+	
+	//reset graph instance and add to the frame
+	private void addNewGraph(){
+		errorGraph = new Graph();
+		panelGraph = errorGraph.createPanel();
+		panelGraph.setBounds(45, 288, 620, 300);
+		panelGraph.setVisible(true);
+		frame.getContentPane().add(panelGraph);
+		
+	}
+	
 	public JInternalFrame getFrame() {
 		return frame;
 	}
