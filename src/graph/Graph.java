@@ -17,14 +17,15 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class Graph {
-	ChartPanel chartpanel;
-	JFreeChart jfreechart;
-	XYSeries xyseries;
+	public String id;
+	public ChartPanel chartpanel;
+	public JFreeChart jfreechart;
+	public XYSeries xyseries;
 
 	// public HashMap<Integer, BigDecimal> errorProgressMap=new HashMap<Integer,
 	// BigDecimal>();
-	public Graph() {
-
+	public Graph(String _id) {
+		id = _id;
 	}
 
 	public void put(int iteration, BigDecimal value) {
@@ -55,8 +56,9 @@ public class Graph {
 	}
 
 	private JFreeChart createChart(XYDataset xydataset) {
-		jfreechart = ChartFactory.createXYLineChart("Error Progress", "Iteration", "Errors",
-				xydataset, PlotOrientation.VERTICAL, true, true, false);
+		jfreechart = ChartFactory.createXYLineChart("Error Progress",
+				"Iteration", "Errors", xydataset, PlotOrientation.VERTICAL,
+				true, true, false);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
 		xyplot.setDomainPannable(true);
 		xyplot.setRangePannable(true);

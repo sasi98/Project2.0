@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
 
 	// Lista con las actuales instancias de la clase NetworkManager
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
-	public static Graph chart=new Graph();
+	public static HashMap<String, Graph> chartMap = new HashMap<String, Graph>();
 	public static int numInstances = 0; // N�mero de instancias creadas
 	public static boolean cancelTraining = false;
 
@@ -91,9 +91,18 @@ public class MainWindow extends JFrame {
 
 	/** Creates new form MainWindow */
 	public MainWindow() {
-		PropertyConfigurator.configure("files"+File.separator+"log4j.properties");
+		PropertyConfigurator.configure("files" + File.separator
+				+ "log4j.properties");
 		initialize();
 		createEvents();
+	}
+
+	public static void addGraph(String id) {
+		chartMap.put(id, new Graph(id));
+	} 
+
+	public static Graph getGraph(String id) {
+		return chartMap.get(id);
 	}
 
 	/**

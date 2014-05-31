@@ -88,7 +88,7 @@ public class NewNetworkWindow {
         lblNewLabel_4.setBounds(10, 167, 174, 14);
         frame.getContentPane().add(lblNewLabel_4);
         
-        final JLabel lblNewLabel_7 = new JLabel("Selección de datos: ");
+        final JLabel lblNewLabel_7 = new JLabel("Selecciï¿½n de datos: ");
         lblNewLabel_7.setBounds(10, 78, 97, 14);
         frame.getContentPane().add(lblNewLabel_7);
 
@@ -174,13 +174,13 @@ public class NewNetworkWindow {
         idCompany = tfIdCompany.getText();
     
         if ( (idCompany == null) || (idCompany.equals("")) )
-        	JOptionPane.showMessageDialog(null, "Error, el campo identificador de empresa está vacio", 
+        	JOptionPane.showMessageDialog(null, "Error, el campo identificador de empresa estï¿½ vacio", 
         			"Campo requerido", JOptionPane.ERROR_MESSAGE);
         else {
         	int auxInt = Integer.parseInt(idCompany);
         	if ( (auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3)) 
         		JOptionPane.showMessageDialog(null, "Error, el identificador debe de tener formato 000"
-        				+ " y valores entre 0 y 510.", "Identificador no válido", JOptionPane.ERROR_MESSAGE);
+        				+ " y valores entre 0 y 510.", "Identificador no vï¿½lido", JOptionPane.ERROR_MESSAGE);
         	else{
 	        	numPatrones = (int) sPatrones.getValue();
 	        	if (numPatrones == 0){
@@ -264,6 +264,9 @@ public class NewNetworkWindow {
 				String name = idCompany+"_"+this.comboBox_inputType.getSelectedItem()+ MainWindow.numInstances;
 		        NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 		        MainWindow.neList.add(aux);
+		        
+		        //Add graphic
+		        MainWindow.addGraph(name);
 		        System.out.print ("Current number of instances: "+ MainWindow.neList.size());
 		        
         	}//end else2
