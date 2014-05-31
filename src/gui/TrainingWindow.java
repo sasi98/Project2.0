@@ -8,6 +8,8 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -40,12 +42,17 @@ import java.awt.ComponentOrientation;
 public class TrainingWindow {
 
 	public static SwingWorker<Void, Void> worker;
+	public static Graph errorGraph;
 	private boolean isStarted = false;
 
 	private Panel panel;
+	private JPanel panelGraph;
 	private JTextField tfcortaError, tflearningCNT, tfmaxIt;
-	private JButton btnSelecMatrices, btnIniciarEntrenamiento,
-			btnCancelarEntrenamiento;
+	private JButton btnSelecMatrices, btnIniciarEntrenamiento, // Starts
+																// training
+			btnCancelarEntrenamiento, // Stops the training (break the process)
+			btnPausarReanundarEntrenamiento; // Switch button: Restart or paused
+												// training (
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
@@ -86,7 +93,8 @@ public class TrainingWindow {
 		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
-		btnIniciarEntrenamiento.setBounds(new Rectangle(384, 5, 178, 29));
+
+		btnIniciarEntrenamiento.setBounds(new Rectangle(528, 212, 158, 27));
 		panel.add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -120,17 +128,7 @@ public class TrainingWindow {
 		panel.add(lblNewLabel);
 
 		comboBox = new JComboBox();
-		// comboBox.addActionListener(new ActionListener() {
-		// public void actionPerformed(ActionEvent e) {
-		// String selectedItem = (String) comboBox.getSelectedItem();
-		// Graph diagram = MainWindow.getGraph(selectedItem);
-		// JPanel panel = diagram.createPanel();
-		// panel.setBounds(45, 288, 620, 300);
-		//
-		// panel.setVisible(true);
-		// frame.getContentPane().add(panel);
-		// }
-		// });
+
 		for (final NetworkManager ne : MainWindow.neList) { // A�adimos las
 															// instancias
 															// creadas al ComBox
@@ -194,15 +192,25 @@ public class TrainingWindow {
 		panel.add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
+
 		btnCancelarEntrenamiento.setBounds(532, 72, 193, 29);
 		panel.add(btnCancelarEntrenamiento);
 
-		Graph diagram = new Graph();
-		JPanel diagrampanel = diagram.createPanel();
-		diagrampanel.setBounds(0, 300, 300, 150);
+		// Graph diagram = new Graph();
+		// JPanel diagrampanel = diagram.createPanel();
+		// diagrampanel.setBounds(0, 300, 300, 150);
+		//
+		// diagrampanel.setVisible(true);
+		// panel.add(diagrampanel);
 
-		diagrampanel.setVisible(true);
-		panel.add(diagrampanel);
+		btnCancelarEntrenamiento.setBounds(528, 284, 158, 27);
+		panel.add(btnCancelarEntrenamiento);
+
+		btnPausarReanundarEntrenamiento = new JButton("Pausar entrenamiento");
+		btnPausarReanundarEntrenamiento.setBounds(528, 250, 158, 27);
+		panel.add(btnPausarReanundarEntrenamiento);
+
+		addNewGraph();
 
 	}
 
@@ -228,9 +236,19 @@ public class TrainingWindow {
 			}
 		});
 
+		btnPausarReanundarEntrenamiento.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent ev) {
+				btnPausarReanundarEntrenamientoActionPerformed(ev);
+			}
+
+		});
+
 	}
 
 	private void btnIniciarEntrenamientoActionPerformed() {
+
+		addNewGraph();
 
 		final String stCotaError = tfcortaError.getText();
 		if ((stCotaError == null) || (stCotaError.equals(""))) {
@@ -352,8 +370,32 @@ public class TrainingWindow {
 		MainWindow.cancelTraining = true;
 	}
 
+	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
+		if (ev.getStateChange() == ItemEvent.SELECTED) {
+			btnPausarReanundarEntrenamiento.setText("Reanudar entrenamiento");
+			// we restart training where we left it
+
+		} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
+			btnPausarReanundarEntrenamiento.setText("Pausar entrenamiento");
+			// we pause the training
+
+		}
+
+	}
+
 	public Panel getPanel() {
 		return panel;
+
+	}
+
+	// reset graph instance and add to the frame
+	private void addNewGraph() {
+		errorGraph = new Graph();
+		panelGraph = errorGraph.createPanel();
+		panelGraph.setBounds(45, 288, 620, 300);
+		panelGraph.setVisible(true);
+		panel.add(panelGraph);
+
 	}
 
 	public void setPanel(final Panel panel) {
