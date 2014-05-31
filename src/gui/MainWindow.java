@@ -316,14 +316,21 @@ public class MainWindow extends JFrame {
 	public void tglbtnTrazasActionPerformed(ItemEvent ev) {
 		if (ev.getStateChange() == ItemEvent.SELECTED) {
 			tglbtnTrazas.setText("Activar trazas");
-			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager
-					.getCurrentLoggers());
+			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
 			loggers.add(LogManager.getRootLogger());
 			for (Logger logger : loggers) {
 				logger.setLevel(Level.OFF);
 			}
 		} else if (ev.getStateChange() == ItemEvent.DESELECTED)
 			tglbtnTrazas.setText("Desactivar trazas");
+			PropertyConfigurator.configure("files"+File.separator+"log4j.properties");
+		
+//			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
+//			loggers.add(LogManager.getRootLogger());
+//			for (Logger logger : loggers) {
+//				logger.setLevel(Level.ALL); //se deberían activar de n
+//			}
+		
 	}
 
 	public void clearTextFields(Container container) {

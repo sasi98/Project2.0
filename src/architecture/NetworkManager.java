@@ -271,30 +271,36 @@ public class NetworkManager {
 	//Calcula los outputs resultantes con las entradas de la red (inputs)
 	//returns: Array con los vectores los cuales se corresponden con los valores de la neuronas de salida de un patr�n
 	public ArrayList<BigDecimal[]> calculateOutputs (WeightMatrix matrices){
-//		log.info("Calculate Outputs");
-//		if ( (matrices.getW().getColumn() == numNeuronsES) && (matrices.getW().getColumn() == numNeuronsES) && 
-//				(matrices.getW().getRow() == numNeuronsO) && (matrices.getV().getColumn() == numNeuronsO) ) {
-//			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
-//			for (int i = 0; i<inputs.size(); i++){
-//				Network subNetwork = new Network();
-//				//We are not using learning constant, we ignore his value
-//				subNetwork.setUpPatron(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
-//						matrices.getW(), matrices.getV(), bias);
-//				subNetwork.feedForward(); //Propagaci�n hacia delante, se calculan las salidas
-//				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
-//				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
-//				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
-//						aux[j] = auxNeurons[j].getOutValue();
-//				}
-//				outputs.add(aux);
-//			}
-//			return outputs;
-//		}
-//		else{
-//			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
-//					+ " No es posible calcular las salidas");
+		log.info("Calculate Outputs");
+		if ( (matrices.getW().getRow() == numNeuronsO) && (matrices.getW().getColumn() == numNeuronsE) && 
+				(matrices.getV().getRow() == numNeuronsS) && (matrices.getV().getColumn() == numNeuronsO) ) {
+			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
+			for (int i = 0; i<inputs.size(); i++){
+				Network subNetwork = new Network();
+				//We are not using learning constant, we ignore his value
+				if (bias){
+					subNetwork.setUpPatronWithBias (numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
+							matrices.getW(), matrices.getV());
+				}
+				else{	
+					subNetwork.setUpPatronWithoutBias(numNeuronsO, inputs.get(i),0.00001, desiredOutputs.get(i),
+							matrices.getW(), matrices.getV());
+				}
+				subNetwork.feedForward(); //Propagación hacia delante, se calculan las salidas
+				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+				BigDecimal[] aux = new BigDecimal[auxNeurons.length];  
+				for (int j = 0; j< auxNeurons.length; j++){ //Obtenemos el vector de neuronas de salida, y pasamos sus valores a un vector
+						aux[j] = auxNeurons[j].getOutValue();
+				}
+				outputs.add(aux);
+			}
+			return outputs;
+		}
+		else{
+			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
+					+ " No es posible calcular las salidas");
 			return null;
-		//}
+		}
 	
 		
 	}
