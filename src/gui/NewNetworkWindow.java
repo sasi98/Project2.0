@@ -70,37 +70,37 @@ public class NewNetworkWindow {
 		panel.setLayout(null);
 
 		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
-		lblNewLabel.setBounds(71, 5, 145, 16);
+		lblNewLabel.setBounds(40, 86, 145, 16);
 		panel.add(lblNewLabel);
 
 		final JLabel lblNewLabel_2 = new JLabel(
 				"N\u00BA Patrones de aprendizaje: ");
-		lblNewLabel_2.setBounds(221, 5, 177, 16);
+		lblNewLabel_2.setBounds(399, 168, 177, 16);
 		panel.add(lblNewLabel_2);
 
 		final JLabel lblNewLabel_3 = new JLabel(
 				"N\u00BA de neuronas de entrada/salida:");
-		lblNewLabel_3.setBounds(403, 5, 215, 16);
+		lblNewLabel_3.setBounds(398, 86, 215, 16);
 		panel.add(lblNewLabel_3);
 
 		final JLabel lblNewLabel_4 = new JLabel("N\u00BA de neuronas ocultas:");
-		lblNewLabel_4.setBounds(623, 5, 151, 16);
+		lblNewLabel_4.setBounds(400, 125, 151, 16);
 		panel.add(lblNewLabel_4);
 
 		final JLabel lblNewLabel_7 = new JLabel("Selecci���n de datos: ");
-		lblNewLabel_7.setBounds(9, 32, 156, 16);
+		lblNewLabel_7.setBounds(40, 125, 156, 16);
 		panel.add(lblNewLabel_7);
 
 		final JLabel lblNewLabel_8 = new JLabel("Inicio de los datos:");
-		lblNewLabel_8.setBounds(170, 32, 120, 16);
+		lblNewLabel_8.setBounds(40, 168, 120, 16);
 		panel.add(lblNewLabel_8);
 
 		bCreateNN = new JButton("Crear Red Neuronal");
-		bCreateNN.setBounds(103, 183, 165, 29);
+		bCreateNN.setBounds(40, 241, 165, 29);
 		panel.add(bCreateNN);
 
 		comboBox_inputType = new JComboBox();
-		comboBox_inputType.setBounds(465, 27, 52, 27);
+		comboBox_inputType.setBounds(205, 120, 110, 22);
 		comboBox_inputType.addItem(Value.ComboBox.SOLAPADOS);
 		comboBox_inputType.addItem(Value.ComboBox.NOSOLAPADOS);
 		comboBox_inputType.addItem(Value.ComboBox.ALEATORIOS);
@@ -108,46 +108,44 @@ public class NewNetworkWindow {
 		panel.add(comboBox_inputType);
 
 		tfIdCompany = new JTextField();
-		tfIdCompany.setBounds(522, 26, 134, 28);
+		tfIdCompany.setBounds(263, 83, 52, 22);
 		panel.add(tfIdCompany);
 		tfIdCompany.setColumns(10);
 
 		tfInicio = new JTextField();
-		tfInicio.setBounds(661, 26, 134, 28);
+		tfInicio.setBounds(263, 162, 52, 22);
 		panel.add(tfInicio);
 		tfInicio.setColumns(10);
 
 		sPatrones = new JSpinner();
-		sPatrones.setBounds(800, 26, 37, 28);
+		sPatrones.setBounds(623, 165, 37, 22);
 		sPatrones.setValue(5);
 		panel.add(sPatrones);
 
 		spNumNeuronO = new JSpinner();
-		spNumNeuronO.setBounds(340, 60, 37, 28);
+		spNumNeuronO.setBounds(623, 122, 37, 22);
 		spNumNeuronO.setValue(0);
 		panel.add(spNumNeuronO);
 
 		spNumNeurons = new JSpinner();
-		spNumNeurons.setBounds(382, 60, 37, 28);
+		spNumNeurons.setBounds(623, 83, 37, 22);
 		spNumNeurons.setValue(0);
 		panel.add(spNumNeurons);
 
 		checkBox = new JCheckBox("Bias");
-		checkBox.setBounds(424, 62, 57, 23);
+		checkBox.setBounds(400, 212, 57, 23);
 		panel.add(checkBox);
 
-		textPane = new JTextPane();
-		textPane.setEditable(false);
-		textPane.setBounds(0, 0, 701, 161);
-
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(486, 64, 188, 226);
-		// scrollPane.add(textPane);
-		scrollPane.setViewportView(textPane);
+		scrollPane.setBounds(40, 349, 642, 244);
 		panel.add(scrollPane);
 
 		JScrollBar scrollBar = new JScrollBar();
 		scrollPane.setRowHeaderView(scrollBar);
+				
+						textPane = new JTextPane();
+						scrollPane.setViewportView(textPane);
+						textPane.setEditable(false);
 	}
 
 	private void createEvents() {

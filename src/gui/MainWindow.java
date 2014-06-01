@@ -129,7 +129,7 @@ public class MainWindow extends JFrame {
 		frame.getContentPane().add(desktopPane);
 
 		tglbtnTrazas = new JToggleButton("Desactivar trazas");
-		tglbtnTrazas.setBounds(871, 6, 123, 21);
+		tglbtnTrazas.setBounds(851, 6, 123, 21);
 		frame.getContentPane().add(tglbtnTrazas);
 
 	}
