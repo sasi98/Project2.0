@@ -109,13 +109,16 @@ public class MainWindow extends JFrame {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1000, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		frame.getContentPane().setLayout(null);
-
+		frame.getContentPane().setBackground(Color.white);
 		btnCrearNueva = new JButton("Nueva");
 		btnEntrenar = new JButton("Entrenar");
 		btnCalcularSalidas = new JButton("Calcular salidas");
 
 		toolBar = new JToolBar();
+		toolBar.setBackground(Color.WHITE);
+		toolBar.setForeground(Color.WHITE);
 		toolBar.setBounds(6, 6, 215, 21);
 		toolBar.add(btnCrearNueva);
 		toolBar.add(btnEntrenar);
