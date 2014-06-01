@@ -19,11 +19,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -31,16 +30,8 @@ import javax.swing.SwingWorker;
 
 import utilities.Matrix;
 import utilities.WeightMatrix;
-import dataManager.ReadFile;
-import architecture.Network;
 import architecture.NetworkManager;
-
-import javax.swing.SwingConstants;
-
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-
-import javax.swing.JScrollPane;
+import dataManager.ReadFile;
 
 public class TrainingWindow {
 
@@ -67,6 +58,8 @@ public class TrainingWindow {
 	private int iterationMax;
 	private boolean momentB;
 	private WeightMatrix matrices;
+	NetworkManager ne;
+
 	private JScrollPane scrollPane;
 
 	/**
@@ -89,59 +82,64 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe.setOpaque(false);
 		txtrUtilizarMatricesDe
 				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
+
 		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 334, 203, 28));
 
 		panel.add(txtrUtilizarMatricesDe);
 
 		btnSelecMatrices = new JButton("Seleccionar archivo");
-		btnSelecMatrices.setBounds(new Rectangle(283, 352, 165, 29));
+		btnSelecMatrices.setBounds(new Rectangle(283, 212, 165, 29));
 		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
 
 		btnIniciarEntrenamiento.setBounds(new Rectangle(725, 419, 158, 27));
+
 		panel.add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
-		lblSeleccionaRed.setBounds(50, 82, 101, 16);
+		lblSeleccionaRed.setBounds(43, 36, 101, 16);
 		panel.add(lblSeleccionaRed);
 
 		final JLabel lblFuncion = new JLabel("Funci\u00F3n:  ");
-		lblFuncion.setBounds(50, 122, 62, 16);
+		lblFuncion.setBounds(43, 67, 62, 16);
 		panel.add(lblFuncion);
 
 		final JLabel lblAadirMomento = new JLabel("A\u00F1adir Momento Beta: ");
-		lblAadirMomento.setBounds(50, 169, 142, 16);
+		lblAadirMomento.setBounds(43, 98, 142, 16);
 		panel.add(lblAadirMomento);
 
 		final JLabel lblCotaDeError = new JLabel("Cota de error:");
-		lblCotaDeError.setBounds(50, 255, 86, 16);
+		lblCotaDeError.setBounds(43, 158, 86, 16);
 		panel.add(lblCotaDeError);
 
 		final JLabel lblCoeficienteDeAprendizaje = new JLabel(
 				"Coeficiente de aprendizaje:");
-		lblCoeficienteDeAprendizaje.setBounds(50, 212, 170, 16);
+		lblCoeficienteDeAprendizaje.setBounds(43, 128, 170, 16);
 		panel.add(lblCoeficienteDeAprendizaje);
 
 		final JLabel lblMaxIt = new JLabel(
 				"M\u00E1ximo n\u00FAmero de iteraciones:");
-		lblMaxIt.setBounds(50, 295, 149, 16);
+		lblMaxIt.setBounds(43, 188, 149, 16);
 		panel.add(lblMaxIt);
 
 		lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(440, 53, 0, 0);
 		panel.add(lblNewLabel);
-		
-		
 
 		comboBox = new JComboBox();
+		comboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 
 		for (final NetworkManager ne : MainWindow.neList) { // A�adimos las
 															// instancias
 															// creadas al ComBox
 			comboBox.addItem(ne.getName());
 		}
-		comboBox.setBounds(new Rectangle(230, 77, 129, 27));
+		comboBox.setBounds(new Rectangle(223, 32, 129, 27));
 		panel.add(comboBox);
 
 		// initilaize diagram when combobox loading
@@ -156,11 +154,11 @@ public class TrainingWindow {
 
 		rdbtnLineal = new JRadioButton("Lineal");
 		rdbtnLineal.setSelected(true);
-		rdbtnLineal.setBounds(new Rectangle(230, 119, 69, 23));
+		rdbtnLineal.setBounds(new Rectangle(223, 64, 69, 23));
 		panel.add(rdbtnLineal);
 
 		rdbtnTangencial = new JRadioButton("Tangencial");
-		rdbtnTangencial.setBounds(new Rectangle(301, 119, 100, 23));
+		rdbtnTangencial.setBounds(new Rectangle(294, 64, 100, 23));
 		panel.add(rdbtnTangencial);
 
 		final ButtonGroup groupFuncion = new ButtonGroup(); // To get just one
@@ -170,13 +168,13 @@ public class TrainingWindow {
 		groupFuncion.add(rdbtnLineal);
 
 		rdbtnSi = new JRadioButton("Si");
-		rdbtnSi.setBounds(new Rectangle(230, 166, 43, 23));
+		rdbtnSi.setBounds(new Rectangle(223, 95, 43, 23));
 		panel.add(rdbtnSi);
 
 		rdbtnNo = new JRadioButton("No");
 		rdbtnNo.setSelected(true);
 		momentB = false;
-		rdbtnNo.setBounds(new Rectangle(302, 166, 50, 23));
+		rdbtnNo.setBounds(new Rectangle(295, 95, 50, 23));
 		panel.add(rdbtnNo);
 
 		final ButtonGroup groupSiNo = new ButtonGroup();
@@ -185,17 +183,17 @@ public class TrainingWindow {
 
 		tfcortaError = new JTextField();
 		tfcortaError.setColumns(10);
-		tfcortaError.setBounds(new Rectangle(230, 253, 80, 20));
+		tfcortaError.setBounds(new Rectangle(223, 156, 80, 20));
 		panel.add(tfcortaError);
 
 		tflearningCNT = new JTextField();
 		tflearningCNT.setColumns(10);
-		tflearningCNT.setBounds(new Rectangle(230, 210, 80, 20));
+		tflearningCNT.setBounds(new Rectangle(223, 126, 80, 20));
 		panel.add(tflearningCNT);
 
 		tfmaxIt = new JTextField();
 		tfmaxIt.setColumns(10);
-		tfmaxIt.setBounds(new Rectangle(230, 293, 80, 20));
+		tfmaxIt.setBounds(new Rectangle(223, 186, 80, 20));
 		panel.add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
@@ -205,7 +203,7 @@ public class TrainingWindow {
 		btnPausarReanundarEntrenamiento = new JButton("Pausar entrenamiento");
 		btnPausarReanundarEntrenamiento.setBounds(725, 477, 158, 27);
 		panel.add(btnPausarReanundarEntrenamiento);
-		
+
 		textPane = new JTextPane();
 		textPane.setEditable(false);
 		scrollPane = new JScrollPane(textPane);
@@ -292,7 +290,7 @@ public class TrainingWindow {
 							// contrario tendremos null exceptions
 			}
 		}
-		final NetworkManager ne = aux2;
+		ne = aux2;
 
 		if (matrices == null) {
 			// No fueron seleccionadas de archivo, deben de ser creadas
@@ -310,19 +308,28 @@ public class TrainingWindow {
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
+			// worker = new SwingWorker<Void, Void>() {
+			// @Override
+			// protected Void doInBackground() throws Exception {
+			//
+			// ne.training(iterationMax, cotaError, learningCnt, matrices,
+			// momentB);
+			// return null;
+			// }
+			//
+			// @Override
+			// protected void done() {
+			// if (isCancelled())
+			// System.out.println("Cancelled !");
+			// else
+			// System.out.println("Done !");
+			// }
+			// };
 
-			worker = new SwingWorker<Void, Void>() {
-				@Override
-				protected Void doInBackground() throws Exception {
-
-					ne.training(iterationMax, cotaError, learningCnt, matrices,
-							momentB);
-					return null;
-				}
-			};
-
+			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
+					matrices, momentB);
 			if (!isStarted) {
-				worker.execute();
+				ne.execute();
 				isStarted = false;
 			}
 
@@ -331,16 +338,27 @@ public class TrainingWindow {
 		} else {
 			// se las paso al trainnig directamente junto con el resto de
 			// par�metros
-			final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-				@Override
-				protected Void doInBackground() throws Exception {
-					ne.training(iterationMax, cotaError, learningCnt, matrices,
-							momentB);
-					return null;
-				}
-			};
+			// final SwingWorker<Void, Void> worker = new SwingWorker<Void,
+			// Void>() {
+			// @Override
+			// protected Void doInBackground() throws Exception {
+			// ne.training(iterationMax, cotaError, learningCnt, matrices,
+			// momentB);
+			// return null;
+			// }
+			//
+			// @Override
+			// protected void done() {
+			// if (isCancelled())
+			// System.out.println("Cancelled !");
+			// else
+			// System.out.println("Done !");
+			// }
+			// };
 
-			worker.execute();
+			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
+					matrices, momentB);
+			ne.execute();
 
 		}
 
@@ -370,6 +388,9 @@ public class TrainingWindow {
 
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
+		// TrainingWindow.worker.cancel(true);
+		ne.cancel(true);
+
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
@@ -394,9 +415,11 @@ public class TrainingWindow {
 	private void addNewGraph() {
 		errorGraph = new Graph();
 		panelGraph = errorGraph.createPanel();
-		panelGraph.setBounds (550, 133, 399, 229);
+
+		panelGraph.setBounds(550, 133, 399, 229);
 		panelGraph.setVisible(true);
 		panel.add(panelGraph);
+		panel.repaint();
 
 	}
 
