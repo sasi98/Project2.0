@@ -84,12 +84,12 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe.setOpaque(false);
 		txtrUtilizarMatricesDe
 				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
-		txtrUtilizarMatricesDe.setBounds(new Rectangle(6, 5, 203, 28));
+		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 353, 203, 28));
 
 		panel.add(txtrUtilizarMatricesDe);
 
 		btnSelecMatrices = new JButton("Seleccionar archivo");
-		btnSelecMatrices.setBounds(new Rectangle(214, 5, 165, 29));
+		btnSelecMatrices.setBounds(new Rectangle(283, 352, 165, 29));
 		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
@@ -98,29 +98,29 @@ public class TrainingWindow {
 		panel.add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
-		lblSeleccionaRed.setBounds(567, 11, 101, 16);
+		lblSeleccionaRed.setBounds(50, 82, 101, 16);
 		panel.add(lblSeleccionaRed);
 
 		final JLabel lblFuncion = new JLabel("Funci\u00F3n:  ");
-		lblFuncion.setBounds(673, 11, 62, 16);
+		lblFuncion.setBounds(50, 122, 62, 16);
 		panel.add(lblFuncion);
 
 		final JLabel lblAadirMomento = new JLabel("A\u00F1adir Momento Beta: ");
-		lblAadirMomento.setBounds(740, 11, 142, 16);
+		lblAadirMomento.setBounds(50, 169, 142, 16);
 		panel.add(lblAadirMomento);
 
 		final JLabel lblCotaDeError = new JLabel("Cota de error:");
-		lblCotaDeError.setBounds(887, 11, 86, 16);
+		lblCotaDeError.setBounds(50, 255, 86, 16);
 		panel.add(lblCotaDeError);
 
 		final JLabel lblCoeficienteDeAprendizaje = new JLabel(
 				"Coeficiente de aprendizaje:");
-		lblCoeficienteDeAprendizaje.setBounds(62, 45, 170, 16);
+		lblCoeficienteDeAprendizaje.setBounds(50, 212, 170, 16);
 		panel.add(lblCoeficienteDeAprendizaje);
 
 		final JLabel lblMaxIt = new JLabel(
 				"M\u00E1ximo n\u00FAmero de iteraciones:");
-		lblMaxIt.setBounds(237, 45, 198, 16);
+		lblMaxIt.setBounds(50, 295, 149, 16);
 		panel.add(lblMaxIt);
 
 		lblNewLabel = new JLabel("");
@@ -134,7 +134,7 @@ public class TrainingWindow {
 															// creadas al ComBox
 			comboBox.addItem(ne.getName());
 		}
-		comboBox.setBounds(new Rectangle(445, 39, 52, 27));
+		comboBox.setBounds(new Rectangle(230, 77, 129, 27));
 		panel.add(comboBox);
 
 		// initilaize diagram when combobox loading
@@ -149,11 +149,11 @@ public class TrainingWindow {
 
 		rdbtnLineal = new JRadioButton("Lineal");
 		rdbtnLineal.setSelected(true);
-		rdbtnLineal.setBounds(new Rectangle(502, 41, 69, 23));
+		rdbtnLineal.setBounds(new Rectangle(230, 119, 69, 23));
 		panel.add(rdbtnLineal);
 
 		rdbtnTangencial = new JRadioButton("Tangencial");
-		rdbtnTangencial.setBounds(new Rectangle(576, 41, 100, 23));
+		rdbtnTangencial.setBounds(new Rectangle(301, 119, 100, 23));
 		panel.add(rdbtnTangencial);
 
 		final ButtonGroup groupFuncion = new ButtonGroup(); // To get just one
@@ -163,13 +163,13 @@ public class TrainingWindow {
 		groupFuncion.add(rdbtnLineal);
 
 		rdbtnSi = new JRadioButton("Si");
-		rdbtnSi.setBounds(new Rectangle(681, 41, 43, 23));
+		rdbtnSi.setBounds(new Rectangle(230, 166, 43, 23));
 		panel.add(rdbtnSi);
 
 		rdbtnNo = new JRadioButton("No");
 		rdbtnNo.setSelected(true);
 		momentB = false;
-		rdbtnNo.setBounds(new Rectangle(729, 41, 50, 23));
+		rdbtnNo.setBounds(new Rectangle(302, 166, 50, 23));
 		panel.add(rdbtnNo);
 
 		final ButtonGroup groupSiNo = new ButtonGroup();
@@ -178,17 +178,17 @@ public class TrainingWindow {
 
 		tfcortaError = new JTextField();
 		tfcortaError.setColumns(10);
-		tfcortaError.setBounds(new Rectangle(784, 39, 134, 28));
+		tfcortaError.setBounds(new Rectangle(230, 253, 80, 20));
 		panel.add(tfcortaError);
 
 		tflearningCNT = new JTextField();
 		tflearningCNT.setColumns(10);
-		tflearningCNT.setBounds(new Rectangle(254, 72, 134, 28));
+		tflearningCNT.setBounds(new Rectangle(230, 210, 80, 20));
 		panel.add(tflearningCNT);
 
 		tfmaxIt = new JTextField();
 		tfmaxIt.setColumns(10);
-		tfmaxIt.setBounds(new Rectangle(393, 72, 134, 28));
+		tfmaxIt.setBounds(new Rectangle(230, 293, 80, 20));
 		panel.add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
