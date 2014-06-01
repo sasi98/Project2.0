@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 
 import utilities.Matrix;
@@ -38,6 +39,8 @@ import javax.swing.SwingConstants;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+
+import javax.swing.JScrollPane;
 
 public class TrainingWindow {
 
@@ -57,12 +60,14 @@ public class TrainingWindow {
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
 	private JLabel lblNewLabel;
+	private JTextPane textPane;
 
 	private BigDecimal cotaError;
 	private double learningCnt;
 	private int iterationMax;
 	private boolean momentB;
 	private WeightMatrix matrices;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Create the application.
@@ -84,7 +89,7 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe.setOpaque(false);
 		txtrUtilizarMatricesDe
 				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
-		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 353, 203, 28));
+		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 334, 203, 28));
 
 		panel.add(txtrUtilizarMatricesDe);
 
@@ -94,7 +99,7 @@ public class TrainingWindow {
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
 
-		btnIniciarEntrenamiento.setBounds(new Rectangle(528, 212, 158, 27));
+		btnIniciarEntrenamiento.setBounds(new Rectangle(725, 419, 158, 27));
 		panel.add(btnIniciarEntrenamiento);
 
 		final JLabel lblSeleccionaRed = new JLabel("Selecciona Red: ");
@@ -126,6 +131,8 @@ public class TrainingWindow {
 		lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(440, 53, 0, 0);
 		panel.add(lblNewLabel);
+		
+		
 
 		comboBox = new JComboBox();
 
@@ -192,23 +199,18 @@ public class TrainingWindow {
 		panel.add(tfmaxIt);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
-
-		btnCancelarEntrenamiento.setBounds(532, 72, 193, 29);
-		panel.add(btnCancelarEntrenamiento);
-
-		// Graph diagram = new Graph();
-		// JPanel diagrampanel = diagram.createPanel();
-		// diagrampanel.setBounds(0, 300, 300, 150);
-		//
-		// diagrampanel.setVisible(true);
-		// panel.add(diagrampanel);
-
-		btnCancelarEntrenamiento.setBounds(528, 284, 158, 27);
+		btnCancelarEntrenamiento.setBounds(725, 541, 158, 27);
 		panel.add(btnCancelarEntrenamiento);
 
 		btnPausarReanundarEntrenamiento = new JButton("Pausar entrenamiento");
-		btnPausarReanundarEntrenamiento.setBounds(528, 250, 158, 27);
+		btnPausarReanundarEntrenamiento.setBounds(725, 477, 158, 27);
 		panel.add(btnPausarReanundarEntrenamiento);
+		
+		textPane = new JTextPane();
+		textPane.setEditable(false);
+		scrollPane = new JScrollPane(textPane);
+		scrollPane.setBounds(43, 392, 470, 216);
+		panel.add(scrollPane);
 
 		addNewGraph();
 
@@ -392,7 +394,7 @@ public class TrainingWindow {
 	private void addNewGraph() {
 		errorGraph = new Graph();
 		panelGraph = errorGraph.createPanel();
-		panelGraph.setBounds(45, 288, 620, 300);
+		panelGraph.setBounds (550, 133, 399, 229);
 		panelGraph.setVisible(true);
 		panel.add(panelGraph);
 
