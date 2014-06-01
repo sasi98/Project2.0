@@ -314,7 +314,7 @@ public class MainWindow extends JFrame {
 				f.setText("");
 				// if (c instanceof JSpinner){
 				// JSpinner f1 = (JSpinner) c;
-				// f1.setValue(0);
+				// f1.setValue(0);	
 				// System.out.print("Entra aqu�");
 				// }
 			} else if (c instanceof Container)

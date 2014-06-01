@@ -10,6 +10,8 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 import utilities.WeightMatrix;
 import dataManager.ReadFile;
@@ -29,6 +31,8 @@ public class CalculateOutputsWindow {
 	private JLabel lblNewLabel;
 	private JComboBox comboBox;
 	private JButton btnNewButton, btnCalcularOutputs;
+	private JTextPane textPane;
+	private	JScrollPane scrollPane;
 	
 	private WeightMatrix matrices;
 	
@@ -76,6 +80,14 @@ public class CalculateOutputsWindow {
         btnCalcularOutputs = new JButton("Calcular Outputs");
         btnCalcularOutputs.setBounds(474, 167, 113, 23);
         panel.add(btnCalcularOutputs);
+        
+        
+        JTextPane textPane = new JTextPane();
+		textPane.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		scrollPane.setBounds(43, 392, 470, 216);
+		panel.add(scrollPane);
+
 	}
 
 	private void createEvents() {

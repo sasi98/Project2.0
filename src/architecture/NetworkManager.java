@@ -1,6 +1,5 @@
 package architecture;
 
-import gui.MainWindow;
 import gui.TrainingWindow;
 
 import java.math.BigDecimal;
@@ -47,7 +46,6 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 
 	private boolean bias;
 	private String name; // Lo usaremos para distingirla una vez creada.
-
 	private static Logger log = Logger.getLogger(NetworkManager.class);
 
 	// training parameter
@@ -216,18 +214,20 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 				// SIGUIENTE iteraci�n en el for,
 				// las debo guardar antes, para poder ser utilizadas en la it
 				// siguiente
-				if (bias)
+				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
 							learningCNT, desiredOutputs.get(i), W, V);
-				else
+				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
 							inputs.get(i), learningCNT, desiredOutputs.get(i),
 							W, V); // Establecemos la red con el patr�n i
+				}
 
-				if (momentoB)
+				if (momentoB) {
 					subNetwork.trainWithMomentB(i); // La entrenamos
-				else
+				} else {
 					subNetwork.train(i);
+				}
 
 				W = subNetwork.getW(); // after training, we get the matrix W
 										// and V
@@ -244,13 +244,14 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
-				if (bias)
+				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
 							learningCNT, desiredOutputs.get(i), W, V);
-				else
+				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
 							inputs.get(i), learningCNT, desiredOutputs.get(i),
 							W, V);
+				}
 
 				errorList.add(subNetwork.calculateError());
 			}
@@ -359,10 +360,11 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 
 	@Override
 	protected void done() {
-		if (isCancelled())
+		if (isCancelled()) {
 			System.out.println("Cancelled !");
-		else
+		} else {
 			System.out.println("Done !");
+		}
 	}
 
 }

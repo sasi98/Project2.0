@@ -260,7 +260,7 @@ public void truncarMatrixUP (int precision)
 	for (int i = 0; i < row ; i++){
 		for (int j= 0; j < column; j++){
 			BigDecimal auxBD = this.getValuePos(i, j);
-			auxBD = auxBD.setScale(precision,RoundingMode.HALF_UP);
+			auxBD = auxBD.setScale(precision,RoundingMode.HALF_DOWN);
 			this.mValues[i][j] = auxBD;
 		}
 	}

@@ -136,16 +136,12 @@ public class NewNetworkWindow {
 		checkBox.setBounds(400, 212, 57, 23);
 		panel.add(checkBox);
 
-		scrollPane = new JScrollPane();
+		textPane = new JTextPane();
+		textPane.setEditable(false);
+		scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(40, 349, 642, 244);
 		panel.add(scrollPane);
 
-		JScrollBar scrollBar = new JScrollBar();
-		scrollPane.setRowHeaderView(scrollBar);
-				
-						textPane = new JTextPane();
-						scrollPane.setViewportView(textPane);
-						textPane.setEditable(false);
 	}
 
 	private void createEvents() {
