@@ -21,15 +21,15 @@ public class NetworkManager {
 	//Constantes que representan los valores m�ximos y minimos con los que se crean las matrices aletorias
 	public static final int 		MATRIX_MAX = 10,
 									MATRIX_MIN = -10;  //CNT por la que multiplican los valores del excel
-	public static Matrix previousW, 
-						previousV;
-
+	
+	public static final int CNT = 1000;
 
 	public static final int PRECISION = 10;
 
+	public static Matrix previousW, 
+	previousV;
 
-
-	public static final int CNT = 1000;
+	
 	
 	
 	
