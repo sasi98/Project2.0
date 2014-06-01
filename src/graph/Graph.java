@@ -24,14 +24,15 @@ public class Graph {
 
 	// public HashMap<Integer, BigDecimal> errorProgressMap=new HashMap<Integer,
 	// BigDecimal>();
-	public Graph (){
+	public Graph() {
 		super();
 	}
+
 	public Graph(String _id) {
 		id = _id;
 	}
 
-	public void put (int iteration, BigDecimal value) {
+	public void put(int iteration, BigDecimal value) {
 		xyseries.add(iteration, value);
 		chartpanel.repaint();
 	}
@@ -46,16 +47,9 @@ public class Graph {
 	private XYDataset createDataset() {
 		xyseries = new XYSeries("Error set");
 		// xyseries.add(1.0D, 1.0D);
-		// xyseries.add(2D, 4D);
-		// xyseries.add(3D, 3D);
-		// xyseries.add(4D, 5D);
-		// xyseries.add(5D, 5D);
-		// xyseries.add(6D, 7D);
-		// xyseries.add(7D, 7D);
-		// xyseries.add(8D, 8D);
 		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
 		xyseriescollection.addSeries(xyseries);
-		return xyseriescollection;	
+		return xyseriescollection;
 	}
 
 	private JFreeChart createChart(XYDataset xydataset) {
