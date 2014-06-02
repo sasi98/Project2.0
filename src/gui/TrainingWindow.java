@@ -326,6 +326,7 @@ public class TrainingWindow {
 		String outFile = new String ("C:\\repositoryGit\\Salidas\\previousInformationTraining.txt");
 		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 		resultados.previousInformation(ne.getName(), matrices);
+		
 		//Display results
 //		outFile = new String(
 //				"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
@@ -340,7 +341,11 @@ public class TrainingWindow {
 			BufferedReader br = new BufferedReader(reader);
 			textPane.read(br, null);
 			br.close();
-			// textPane.requestFocus();
+			//br.toString()
+			
+		//	textPane.getText();
+			
+			//textPane.requestFocus();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -379,9 +384,7 @@ public class TrainingWindow {
 
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
-		// TrainingWindow.worker.cancel(true);
 		ne.cancel(true);
-
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
