@@ -59,7 +59,7 @@ public class TrainingWindow {
 	private boolean momentB;
 	private WeightMatrix matrices;
 	NetworkManager ne;
-
+	SwingWorker<Integer, Integer> sw;
 	private JScrollPane scrollPane;
 
 	/**
@@ -248,6 +248,7 @@ public class TrainingWindow {
 
 	private void btnIniciarEntrenamientoActionPerformed() {
 
+		MainWindow.cancelTraining = false;
 		addNewGraph();
 
 		final String stCotaError = tfcortaError.getText();
@@ -308,28 +309,27 @@ public class TrainingWindow {
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
-			// worker = new SwingWorker<Void, Void>() {
-			// @Override
-			// protected Void doInBackground() throws Exception {
-			//
-			// ne.training(iterationMax, cotaError, learningCnt, matrices,
-			// momentB);
-			// return null;
-			// }
-			//
-			// @Override
-			// protected void done() {
-			// if (isCancelled())
-			// System.out.println("Cancelled !");
-			// else
-			// System.out.println("Done !");
-			// }
-			// };
 
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
-					matrices, momentB);
+			sw = new SwingWorker<Integer, Integer>() {
+
+				@Override
+				protected Integer doInBackground() throws Exception {
+					// TODO Auto-generated method stub
+					ne.training(iterationMax, cotaError, learningCnt, matrices,
+							momentB);
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					System.out.println("Thread done.");
+					super.done();
+				}
+
+			};
+
 			if (!isStarted) {
-				ne.execute();
+				sw.execute();
 				isStarted = false;
 			}
 
@@ -338,27 +338,26 @@ public class TrainingWindow {
 		} else {
 			// se las paso al trainnig directamente junto con el resto de
 			// par�metros
-			// final SwingWorker<Void, Void> worker = new SwingWorker<Void,
-			// Void>() {
-			// @Override
-			// protected Void doInBackground() throws Exception {
-			// ne.training(iterationMax, cotaError, learningCnt, matrices,
-			// momentB);
-			// return null;
-			// }
-			//
-			// @Override
-			// protected void done() {
-			// if (isCancelled())
-			// System.out.println("Cancelled !");
-			// else
-			// System.out.println("Done !");
-			// }
-			// };
 
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
-					matrices, momentB);
-			ne.execute();
+			sw = new SwingWorker<Integer, Integer>() {
+
+				@Override
+				protected Integer doInBackground() throws Exception {
+					// TODO Auto-generated method stub
+					ne.training(iterationMax, cotaError, learningCnt, matrices,
+							momentB);
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					System.out.println("Thread done.");
+					super.done();
+				}
+
+			};
+
+			sw.execute();
 
 		}
 
@@ -389,7 +388,7 @@ public class TrainingWindow {
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
 		// TrainingWindow.worker.cancel(true);
-		ne.cancel(true);
+		sw.cancel(true);
 
 	}
 
