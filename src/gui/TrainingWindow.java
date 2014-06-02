@@ -63,7 +63,7 @@ public class TrainingWindow {
 	private boolean momentB;
 	private WeightMatrix matrices;
 	NetworkManager ne;
-
+	SwingWorker<Integer, Integer> sw;
 	private JScrollPane scrollPane;
 
 	/**
@@ -252,6 +252,7 @@ public class TrainingWindow {
 
 	private void btnIniciarEntrenamientoActionPerformed() {
 
+		MainWindow.cancelTraining = false;
 		addNewGraph();
 
 		final String stCotaError = tfcortaError.getText();
@@ -312,18 +313,60 @@ public class TrainingWindow {
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
-	
 
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt, matrices, momentB);
-			ne.execute();
+			sw = new SwingWorker<Integer, Integer>() {
+
+				@Override
+				protected Integer doInBackground() throws Exception {
+					// TODO Auto-generated method stub
+					ne.training(iterationMax, cotaError, learningCnt, matrices,
+							momentB);
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					System.out.println("Thread done.");
+					super.done();
+				}
+
+			};
+
+			if (!isStarted) {
+				sw.execute();
+				isStarted = false;
+			}
 
 		} else {
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt, matrices, momentB);
-			ne.execute();
+
+			// se las paso al trainnig directamente junto con el resto de
+			// par�metros
+
+			sw = new SwingWorker<Integer, Integer>() {
+
+				@Override
+				protected Integer doInBackground() throws Exception {
+					// TODO Auto-generated method stub
+					ne.training(iterationMax, cotaError, learningCnt, matrices,
+							momentB);
+					return null;
+				}
+
+				@Override
+				protected void done() {
+					System.out.println("Thread done.");
+					super.done();
+				}
+
+			};
+
+			sw.execute();
+
 		}
-		
+
 		// Testing collecting data
-		String outFile = new String ("C:\\repositoryGit\\Salidas\\previousInformationTraining.txt");
+		String outFile = new String(
+				"C:\\repositoryGit\\Salidas\\previousInformationTraining.txt");
 		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 		resultados.previousInformation(ne.getName(), matrices);
 		
@@ -334,6 +377,7 @@ public class TrainingWindow {
 //		patrones.writeInputsOutputs(inputs, desiredOutputs);
 //		patrones.closeFile();
 //
+
 		// Display results
 		FileReader reader;
 		try {
@@ -353,10 +397,6 @@ public class TrainingWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
-
-		
 
 	}
 
@@ -384,7 +424,9 @@ public class TrainingWindow {
 
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
-		ne.cancel(true);
+
+		// TrainingWindow.worker.cancel(true);
+		sw.cancel(true);
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {

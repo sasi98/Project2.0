@@ -1,5 +1,6 @@
 package architecture;
 
+import gui.MainWindow;
 import gui.TrainingWindow;
 
 import java.math.BigDecimal;
@@ -199,15 +200,20 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 			// WriteExcel writerByPatron = new WriteExcel (fileName);
 			// WriteExcel writerByPatron = new WriteExcel ("empty");
 			// WriteExcel writer = new WriteExcel (fileName);
-			if (isCancelled()) { // Se cancela el entrenamiento,
-									// rompemos el bucle y cerramos
-									// ficheros
+
+			if (isCancelled() || MainWindow.cancelTraining == true) { // Se
+																		// cancela
+																		// el
+																		// entrenamiento,
+				// rompemos el bucle y cerramos
+				// ficheros
 				writerMatrices.writeMatrices(new WeightMatrix(W, V));
 				writerMatrices.closeFile();
 				writerErrorProgress.closeFile();
-				break;
+				return;
 
 			}
+
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
 				// Las actuales W y V ser�n utilizadas en el momento beta de la
