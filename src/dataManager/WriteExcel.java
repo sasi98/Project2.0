@@ -20,11 +20,11 @@ import architecture.Neuron;
 import architecture.OutputNeuron;
 
 public class WriteExcel {
-		private String name; //Nombre archivo
-		private File outFile; //crear un nuevo archivo, si un archivo con el mismo nombre ya existe podríamos sin querer escribir contenido sobre el mismo
-		private FileWriter write;
-		private BufferedWriter bw;
-		private PrintWriter wr;
+		protected String name; //Nombre archivo
+		protected File outFile; //crear un nuevo archivo, si un archivo con el mismo nombre ya existe podríamos sin querer escribir contenido sobre el mismo
+		protected FileWriter write;
+		protected BufferedWriter bw;
+		protected PrintWriter wr;
 		private static final Logger log = Logger.getLogger(WriteExcel.class);
 				
 		
@@ -420,7 +420,7 @@ public class WriteExcel {
 			
 		}
 		
-		public void printMatrixIntoCSV (Matrix matrix){
+		public void printMatrixIntoFile (Matrix matrix){
 			for (int i = 0; i < matrix.getRow(); i++){
 				 for (int j= 0; j < matrix.getColumn(); j++){
 					 BigDecimal b = matrix.getValuePos(i, j);

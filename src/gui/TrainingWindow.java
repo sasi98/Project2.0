@@ -10,8 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -32,6 +35,7 @@ import utilities.Matrix;
 import utilities.WeightMatrix;
 import architecture.NetworkManager;
 import dataManager.ReadFile;
+import dataManager.TrainingWindowOuts;
 
 public class TrainingWindow {
 
@@ -308,59 +312,46 @@ public class TrainingWindow {
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
-			// worker = new SwingWorker<Void, Void>() {
-			// @Override
-			// protected Void doInBackground() throws Exception {
-			//
-			// ne.training(iterationMax, cotaError, learningCnt, matrices,
-			// momentB);
-			// return null;
-			// }
-			//
-			// @Override
-			// protected void done() {
-			// if (isCancelled())
-			// System.out.println("Cancelled !");
-			// else
-			// System.out.println("Done !");
-			// }
-			// };
+	
 
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
-					matrices, momentB);
-			if (!isStarted) {
-				ne.execute();
-				isStarted = false;
-			}
-
-			// worker.execute();
-
-		} else {
-			// se las paso al trainnig directamente junto con el resto de
-			// par�metros
-			// final SwingWorker<Void, Void> worker = new SwingWorker<Void,
-			// Void>() {
-			// @Override
-			// protected Void doInBackground() throws Exception {
-			// ne.training(iterationMax, cotaError, learningCnt, matrices,
-			// momentB);
-			// return null;
-			// }
-			//
-			// @Override
-			// protected void done() {
-			// if (isCancelled())
-			// System.out.println("Cancelled !");
-			// else
-			// System.out.println("Done !");
-			// }
-			// };
-
-			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt,
-					matrices, momentB);
+			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt, matrices, momentB);
 			ne.execute();
 
+		} else {
+			ne.setupTrainingParameter(iterationMax, cotaError, learningCnt, matrices, momentB);
+			ne.execute();
 		}
+		
+		// Testing collecting data
+		String outFile = new String ("C:\\repositoryGit\\Salidas\\previousInformationTraining.txt");
+		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+		resultados.previousInformation(ne.getName(), matrices);
+		//Display results
+//		outFile = new String(
+//				"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
+//		WriteExcel patrones = new WriteExcel(outFile);
+//		patrones.writeInputsOutputs(inputs, desiredOutputs);
+//		patrones.closeFile();
+//
+		// Display results
+		FileReader reader;
+		try {
+			reader = new FileReader(outFile);
+			BufferedReader br = new BufferedReader(reader);
+			textPane.read(br, null);
+			br.close();
+			// textPane.requestFocus();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+
+		
 
 	}
 
