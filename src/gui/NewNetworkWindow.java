@@ -5,6 +5,7 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,11 +27,14 @@ import javax.swing.JTextPane;
 
 import valueset.Value;
 import architecture.NetworkManager;
+import dataManager.NewNetworkWindowOuts;
 import dataManager.PatronData;
 import dataManager.WriteExcel;
 
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
+
+import org.jfree.text.TextBox;
 
 public class NewNetworkWindow {
 
@@ -137,7 +141,7 @@ public class NewNetworkWindow {
 		panel.add(checkBox);
 
 		textPane = new JTextPane();
-		textPane.setEditable(false);
+		//textPane.setEditable(false);
 		scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(40, 349, 642, 244);
 		panel.add(scrollPane);
@@ -257,21 +261,39 @@ public class NewNetworkWindow {
 				else {
 					// open a new JFrame
 				}
+				
+				
+				// Create the Network, give it an identificator (we name the Network)
+				MainWindow.numInstances++;
+				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
+				NetworkManager aux = new NetworkManager(name, numPatrones,
+						numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				MainWindow.neList.add(aux);
+
+				System.out.print("Current number of instances: "+ MainWindow.neList.size());
 
 				// Testing collecting data
-				outFile = new String(
-						"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
-				WriteExcel patrones = new WriteExcel(outFile);
-				patrones.writeInputsOutputs(inputs, desiredOutputs);
-				patrones.closeFile();
-
+				outFile = new String ("C:\\repositoryGit\\Salidas\\NewNetworkWindowResults.txt");
+				NewNetworkWindowOuts resultados = new NewNetworkWindowOuts(outFile);
+				resultados.createNewNetworkingOut(idCompany, numNeuronES, numNeuronO, numPatrones,
+						bias,  this.comboBox_inputType.getSelectedItem().toString(), name, inputs, desiredOutputs);
+				//Display results
+//				outFile = new String(
+//						"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
+//				WriteExcel patrones = new WriteExcel(outFile);
+//				patrones.writeInputsOutputs(inputs, desiredOutputs);
+//				patrones.closeFile();
+//
 				// Display results
 				FileReader reader;
 				try {
 					reader = new FileReader(outFile);
+					
 					BufferedReader br = new BufferedReader(reader);
 					textPane.read(br, null);
 					br.close();
+					
+					
 					// textPane.requestFocus();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -281,19 +303,7 @@ public class NewNetworkWindow {
 					e.printStackTrace();
 				}
 
-				// Create the Network, give it an identificator.
-				MainWindow.numInstances++;
-				String name = idCompany + "_"
-						+ this.comboBox_inputType.getSelectedItem()
-						+ MainWindow.numInstances;
-				NetworkManager aux = new NetworkManager(name, numPatrones,
-						numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
-				MainWindow.neList.add(aux);
-
-				// Add graphic
-				// MainWindow.addGraph(name);
-				System.out.print("Current number of instances: "
-						+ MainWindow.neList.size());
+				
 
 			}// end else2
 		}// end else1
