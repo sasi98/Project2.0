@@ -56,15 +56,17 @@ public class TrainingWindow {
 	private JTextArea txtrUtilizarMatricesDe;
 	private JLabel lblNewLabel;
 	private JTextPane textPane;
+	private JScrollPane scrollPane;
 
 	private BigDecimal cotaError;
 	private double learningCnt;
 	private int iterationMax;
 	private boolean momentB;
 	private WeightMatrix matrices;
+	private boolean selectMatrixFile; //Flag para ver si hemos cogido las matrices de fichero o no
 	NetworkManager ne;
 	SwingWorker<Integer, Integer> sw;
-	private JScrollPane scrollPane;
+	
 
 	/**
 	 * Create the application.
@@ -215,6 +217,7 @@ public class TrainingWindow {
 		panel.add(scrollPane);
 
 		addNewGraph();
+		selectMatrixFile = false; 
 
 	}
 
@@ -297,72 +300,38 @@ public class TrainingWindow {
 		}
 		ne = aux2;
 
-		if (matrices == null) {
-			// No fueron seleccionadas de archivo, deben de ser creadas
-			// aletorias
-			// Las creo y se las paso al trainnig junto con el resto de
-			// par�metros
-			final Dimension dW = new Dimension(ne.getNumNeuronsO(),
-					ne.getNumNeuronsE());
-			final Matrix W = Matrix.createRandomMatrix(
-					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
+		if (!selectMatrixFile) { //Las matrices no fueron seleccionadas de archivo, se generan de forma aletoria
+			final Dimension dW = new Dimension(ne.getNumNeuronsO(),	ne.getNumNeuronsE());
+			final Matrix W = Matrix.createRandomMatrix (NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
 					NetworkManager.PRECISION);
-			final Dimension dV = new Dimension(ne.getNumNeuronsS(),
-					ne.getNumNeuronsO());
-			final Matrix V = Matrix.createRandomMatrix(
-					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
+			final Dimension dV = new Dimension(ne.getNumNeuronsS(),	ne.getNumNeuronsO());
+			final Matrix V = Matrix.createRandomMatrix (NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
-
-			sw = new SwingWorker<Integer, Integer>() {
-
-				@Override
-				protected Integer doInBackground() throws Exception {
-					// TODO Auto-generated method stub
-					ne.training(iterationMax, cotaError, learningCnt, matrices,
-							momentB);
-					return null;
-				}
-
-				@Override
-				protected void done() {
-					System.out.println("Thread done.");
-					super.done();
-				}
-
-			};
-
-			if (!isStarted) {
-				sw.execute();
-				isStarted = false;
-			}
-
-		} else {
-
-			// se las paso al trainnig directamente junto con el resto de
-			// par�metros
-
-			sw = new SwingWorker<Integer, Integer>() {
-
-				@Override
-				protected Integer doInBackground() throws Exception {
-					// TODO Auto-generated method stub
-					ne.training(iterationMax, cotaError, learningCnt, matrices,
-							momentB);
-					return null;
-				}
-
-				@Override
-				protected void done() {
-					System.out.println("Thread done.");
-					super.done();
-				}
-
-			};
-
-			sw.execute();
-
 		}
+
+		//Creamos el hilo que llama al training
+		sw = new SwingWorker<Integer, Integer>() {
+			@Override
+			protected Integer doInBackground() throws Exception {
+				ne.training(iterationMax, cotaError, learningCnt, matrices,	momentB);
+				return null;
+			}
+			@Override
+			protected void done() {
+				System.out.println("Thread done.");
+				super.done();
+			}
+		};
+		
+		sw.execute();
+
+			//if (!isStarted) {
+				
+				//sw.execute();
+				//isStarted = false;
+			//}
+
 
 		// Testing collecting data
 		String outFile = new String(
@@ -408,7 +377,11 @@ public class TrainingWindow {
 			final File filechoosen = filechooser.getSelectedFile();
 			try {
 				final ReadFile readWM = new ReadFile(filechoosen);
-				matrices = readWM.readWeightMatrix();
+				WeightMatrix aux = readWM.readWeightMatrix();
+				if (aux!= null){				//Hemos seleccionado matrices del fichero				
+					selectMatrixFile = true;	//(no quiere decir q tengas las dimensiones apropiadas
+					matrices = aux;
+				}						
 				lblNewLabel.setText(filechoosen.getName());
 
 			} catch (final FileNotFoundException e) {
@@ -426,17 +399,21 @@ public class TrainingWindow {
 		MainWindow.cancelTraining = true;
 
 		// TrainingWindow.worker.cancel(true);
-		sw.cancel(true);
+		sw.cancel(true); //Cancelamos el hilo
+		System.out.print("Estado: "+ sw.getState());
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
 		if (ev.getStateChange() == ItemEvent.SELECTED) {
 			btnPausarReanundarEntrenamiento.setText("Reanudar entrenamiento");
-			// we restart training where we left it
+			//We pause the training
+			System.out.print("Hola");
+			MainWindow.cancelTraining = true;
+			sw.cancel(true);
 
 		} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
 			btnPausarReanundarEntrenamiento.setText("Pausar entrenamiento");
-			// we pause the training
+			sw.execute();
 
 		}
 

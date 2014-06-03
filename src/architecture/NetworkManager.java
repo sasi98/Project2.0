@@ -16,7 +16,7 @@ import utilities.Matrix;
 import utilities.WeightMatrix;
 import dataManager.WriteExcel;
 
-public class NetworkManager extends SwingWorker<Integer, Integer> {
+public class NetworkManager {
 
 	// Constantes que representan los valores m�ximos y minimos con los que se
 	// crean las matrices aletorias
@@ -201,7 +201,7 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 			// WriteExcel writerByPatron = new WriteExcel ("empty");
 			// WriteExcel writer = new WriteExcel (fileName);
 
-			if (isCancelled() || MainWindow.cancelTraining == true) { // Se
+			if (MainWindow.cancelTraining == true) { // Se
 																		// cancela
 																		// el
 																		// entrenamiento,
@@ -358,19 +358,6 @@ public class NetworkManager extends SwingWorker<Integer, Integer> {
 
 	}
 
-	@Override
-	protected Integer doInBackground() throws Exception {
-		this.trainingFromSavedParameters();
-		return null;
-	}
-
-	@Override
-	protected void done() {
-		if (isCancelled()) {
-			System.out.println("Cancelled !");
-		} else {
-			System.out.println("Done !");
-		}
-	}
+	
 
 }

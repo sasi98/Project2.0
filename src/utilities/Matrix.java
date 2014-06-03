@@ -329,6 +329,17 @@ public void printMatrix ()
 	}
 }
 
+public void printMatrixConsole ()
+{
+	System.out.println("Dimensiones de la matriz: Filas:" + row +"Columnas: "+ column );
+	 for (int i = 0; i < row; i++){
+		System.out.print("(");
+		 for (int j= 0; j < column; j++){
+			System.out.print(this.getValuePos(i, j) +  " ");
+		 }
+		 System.out.print(") \n");
+	}
+}
 
 //Crea una matriz de dimensiones d, con valores aleatorios situados entre min y m�s. 
 //precisi�n: n� de decimales que tendr� cada dato, los datos aletorios generados ser�n truncados con este valor
