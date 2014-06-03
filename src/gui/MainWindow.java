@@ -196,9 +196,10 @@ public class MainWindow extends JFrame {
 
 	private void btnCrearNuevaActionPerformed() {
 		if (trainingWindow != null) {
-			trainingWindow.getPanel().hide(); // Close other
-												// internals frames
-												// before
+			trainingWindow.getPanel().hide(); // Close other internals frames before
+		}
+		if (calculateOutputsWindow != null) {
+			calculateOutputsWindow.getPanel().hide();
 		}
 		if ((newNetworkWindow == null)) {
 			newNetworkWindow = new NewNetworkWindow();

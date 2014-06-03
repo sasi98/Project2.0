@@ -2,6 +2,7 @@ package gui;
 
 import graph.Graph;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Panel;
@@ -54,7 +55,7 @@ public class TrainingWindow {
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
 	private JTextArea txtrUtilizarMatricesDe;
-	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
 
@@ -89,12 +90,12 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe
 				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
 
-		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 334, 203, 28));
+		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 242, 203, 28));
 
 		panel.add(txtrUtilizarMatricesDe);
 
 		btnSelecMatrices = new JButton("Seleccionar archivo");
-		btnSelecMatrices.setBounds(new Rectangle(283, 212, 165, 29));
+		btnSelecMatrices.setBounds(new Rectangle(281, 241, 165, 29));
 		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
@@ -128,10 +129,6 @@ public class TrainingWindow {
 				"M\u00E1ximo n\u00FAmero de iteraciones:");
 		lblMaxIt.setBounds(43, 188, 149, 16);
 		panel.add(lblMaxIt);
-
-		lblNewLabel = new JLabel("");
-		lblNewLabel.setBounds(440, 53, 0, 0);
-		panel.add(lblNewLabel);
 
 		comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
@@ -215,8 +212,12 @@ public class TrainingWindow {
 		scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(43, 392, 470, 216);
 		panel.add(scrollPane);
+		
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setBounds(281, 295, 165, 14);
+		panel.add(lblNewLabel_1);
 
-		addNewGraph();
+		//addNewGraph();
 		selectMatrixFile = false; 
 
 	}
@@ -381,8 +382,9 @@ public class TrainingWindow {
 				if (aux!= null){				//Hemos seleccionado matrices del fichero				
 					selectMatrixFile = true;	//(no quiere decir q tengas las dimensiones apropiadas
 					matrices = aux;
+					lblNewLabel_1.setText(filechoosen.getName());
 				}						
-				lblNewLabel.setText(filechoosen.getName());
+				
 
 			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -397,8 +399,6 @@ public class TrainingWindow {
 
 	private void btnCancelarEntrenamientoActionPerformed() {
 		MainWindow.cancelTraining = true;
-
-		// TrainingWindow.worker.cancel(true);
 		sw.cancel(true); //Cancelamos el hilo
 		System.out.print("Estado: "+ sw.getState());
 	}
@@ -426,13 +426,14 @@ public class TrainingWindow {
 
 	// reset graph instance and add to the frame
 	private void addNewGraph() {
+		panel.getComponents();
 		errorGraph = new Graph();
 		panelGraph = errorGraph.createPanel();
 
 		panelGraph.setBounds(550, 133, 399, 229);
 		panelGraph.setVisible(true);
 		panel.add(panelGraph);
-		panel.repaint();
+		//panel.repaint();
 
 	}
 
