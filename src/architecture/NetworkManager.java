@@ -11,9 +11,11 @@ import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 
+
 //import dataManager.WriteOutcomes;
 import utilities.Matrix;
 import utilities.WeightMatrix;
+import dataManager.TrainingWindowOuts;
 import dataManager.WriteExcel;
 
 public class NetworkManager {
@@ -201,18 +203,7 @@ public class NetworkManager {
 			// WriteExcel writerByPatron = new WriteExcel ("empty");
 			// WriteExcel writer = new WriteExcel (fileName);
 
-			if (MainWindow.cancelTraining == true) { // Se
-																		// cancela
-																		// el
-																		// entrenamiento,
-				// rompemos el bucle y cerramos
-				// ficheros
-				writerMatrices.writeMatrices(new WeightMatrix(W, V));
-				writerMatrices.closeFile();
-				writerErrorProgress.closeFile();
-				return;
-
-			}
+			
 
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
@@ -281,21 +272,48 @@ public class NetworkManager {
 			if (iteration == iterMax) {
 				log.debug("LLegamos al l�mite de las iteraciones. Iteration: "
 						+ iteration + " M�ximo: " + iterMax);
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
+				writerMatrices.writeMatrices(new WeightMatrix(W, V));
+				writerMatrices.closeFile();
+				writerErrorProgress.closeFile();
+				
 				end = true;
 			}
-			if (errorIt.compareTo(cuote) == 1) {
-				log.debug("Error se pasa de la cota.");
-			} else {
+			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
+				log.debug("El error ha alcanzado la cota.");
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, new WeightMatrix(W, V));
+				writerMatrices.writeMatrices(new WeightMatrix(W, V));
+				writerMatrices.closeFile();
+				writerErrorProgress.closeFile();
 				end = true;
-
-			}
-			// if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) )
+				
+			} 			// if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) )
 			// // El error se pasa de la cota, o n� de iter = m�ximo
 			// end = true;
 
 			// Escribir matrices W y V y error obtenido
 			errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 			// writerByIteration.writeOneIterationInf(iteration, errorIt, W, V);
+			
+			
+			
+			if (MainWindow.cancelTraining == true) { // Se cancela el  entrenamiento,
+				// rompemos el bucle y cerramos
+				// ficheros
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
+				writerMatrices.writeMatrices(new WeightMatrix(W, V));
+				writerMatrices.closeFile();
+				writerErrorProgress.closeFile();
+				end = true; 
+				return;
+			}
+			
 			iteration++;
 
 		} // fin while

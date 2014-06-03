@@ -32,6 +32,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 
+import org.apache.commons.io.FileUtils;
+
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import architecture.NetworkManager;
@@ -47,13 +49,13 @@ public class TrainingWindow {
 	private Panel panel;
 	private JPanel panelGraph;
 	private JTextField tfcortaError, tflearningCNT, tfmaxIt;
-	private JButton btnSelecMatrices, btnIniciarEntrenamiento, // Starts
+	private JButton btnIniciarEntrenamiento, // Starts
 																// training
 			btnCancelarEntrenamiento, // Stops the training (break the process)
 			btnPausarReanundarEntrenamiento; // Switch button: Restart or paused
 												// training (
 	private JComboBox comboBox;
-	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo;
+	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo, rdbtnAleatorias, rdbtnProcedentesDeArchivo;
 	private JTextArea txtrUtilizarMatricesDe;
 	private JLabel lblNewLabel_1;
 	private JTextPane textPane;
@@ -67,6 +69,7 @@ public class TrainingWindow {
 	private boolean selectMatrixFile; //Flag para ver si hemos cogido las matrices de fichero o no
 	NetworkManager ne;
 	SwingWorker<Integer, Integer> sw;
+
 	
 
 	/**
@@ -88,15 +91,11 @@ public class TrainingWindow {
 		txtrUtilizarMatricesDe.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		txtrUtilizarMatricesDe.setOpaque(false);
 		txtrUtilizarMatricesDe
-				.setText("Utilizar matrices de pesos procedentes deentrenamientos anteriores:");
+				.setText("Matrices iniciales: ");
 
-		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 242, 203, 28));
+		txtrUtilizarMatricesDe.setBounds(new Rectangle(43, 222, 142, 28));
 
 		panel.add(txtrUtilizarMatricesDe);
-
-		btnSelecMatrices = new JButton("Seleccionar archivo");
-		btnSelecMatrices.setBounds(new Rectangle(281, 241, 165, 29));
-		panel.add(btnSelecMatrices);
 
 		btnIniciarEntrenamiento = new JButton("Iniciar entrenamiento");
 
@@ -183,6 +182,20 @@ public class TrainingWindow {
 		final ButtonGroup groupSiNo = new ButtonGroup();
 		groupSiNo.add(rdbtnSi);
 		groupSiNo.add(rdbtnNo);
+		
+		rdbtnAleatorias = new JRadioButton("Aleatorias");
+		rdbtnAleatorias.setBounds(223, 220, 80, 23);
+		rdbtnAleatorias.setSelected(true);
+		panel.add(rdbtnAleatorias);
+		
+		rdbtnProcedentesDeArchivo = new JRadioButton("Procedentes de archivo");
+		rdbtnProcedentesDeArchivo.setBounds(310, 220, 149, 23);
+		panel.add(rdbtnProcedentesDeArchivo);
+		
+		final ButtonGroup groupMatrices = new ButtonGroup();
+		groupMatrices.add(rdbtnAleatorias);
+		groupMatrices.add(rdbtnProcedentesDeArchivo);
+		
 
 		tfcortaError = new JTextField();
 		tfcortaError.setColumns(10);
@@ -214,26 +227,29 @@ public class TrainingWindow {
 		panel.add(scrollPane);
 		
 		lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(281, 295, 165, 14);
+		lblNewLabel_1.setBounds(294, 250, 165, 14);
 		panel.add(lblNewLabel_1);
-
+		
+		
+		
+		
 		//addNewGraph();
-		selectMatrixFile = false; 
+		
 
 	}
 
 	private void createEvents() {
+		
+		rdbtnProcedentesDeArchivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnProcedentesDeArchivoActionPerformed();
+			}
+		});
+		
 		btnIniciarEntrenamiento.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent arg0) {
 				btnIniciarEntrenamientoActionPerformed();
-			}
-		});
-
-		btnSelecMatrices.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				btnNewButtonActionPerformed();
 			}
 		});
 
@@ -253,10 +269,35 @@ public class TrainingWindow {
 		});
 
 	}
+	
+	private void rdbtnProcedentesDeArchivoActionPerformed() {
+		final JFileChooser filechooser = new JFileChooser("C:\\repositoryGit\\Salidas");
+		final int returnValue = filechooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			final File filechoosen = filechooser.getSelectedFile();
+			try {
+				final ReadFile readWM = new ReadFile(filechoosen);
+				WeightMatrix aux = readWM.readWeightMatrix();
+				if (aux!= null){				//Hemos seleccionado matrices del fichero				
+					selectMatrixFile = true;	//(no quiere decir q tengas las dimensiones apropiadas
+					matrices = aux;
+					lblNewLabel_1.setText(filechoosen.getName());
+				}						
+			} catch (final FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else {
+			System.out.println("Open command cancelled by user.");
+		}
+	}
+	
 
 	private void btnIniciarEntrenamientoActionPerformed() {
 
 		MainWindow.cancelTraining = false;
+		selectMatrixFile = false; 
 		addNewGraph();
 
 		final String stCotaError = tfcortaError.getText();
@@ -300,8 +341,9 @@ public class TrainingWindow {
 			}
 		}
 		ne = aux2;
-
-		if (!selectMatrixFile) { //Las matrices no fueron seleccionadas de archivo, se generan de forma aletoria
+		
+		
+		if ( (!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { //Las matrices no fueron seleccionadas de archivo, se generan de forma aletoria
 			final Dimension dW = new Dimension(ne.getNumNeuronsO(),	ne.getNumNeuronsE());
 			final Matrix W = Matrix.createRandomMatrix (NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
 					NetworkManager.PRECISION);
@@ -309,6 +351,7 @@ public class TrainingWindow {
 			final Matrix V = Matrix.createRandomMatrix (NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
 			matrices = new WeightMatrix(W, V);
+			
 		}
 
 		//Creamos el hilo que llama al training
@@ -320,12 +363,25 @@ public class TrainingWindow {
 			}
 			@Override
 			protected void done() {
-				System.out.println("Thread done.");
+				// Display results
+				String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
+					try {
+						String strToAdd = FileUtils.readFileToString(new File(fileName));
+						System.out.println(strToAdd);
+						textPane.setText(textPane.getText()+ strToAdd);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 				super.done();
 			}
 		};
 		
 		sw.execute();
+		
+		if (sw.isCancelled()){
+			System.out.print("ha terminado");			
+			
+		}
 
 			//if (!isStarted) {
 				
@@ -370,44 +426,27 @@ public class TrainingWindow {
 
 	}
 
-	private void btnNewButtonActionPerformed() {
-		final JFileChooser filechooser = new JFileChooser(
-				"C:\\repositoryGit\\Salidas");
-		final int returnValue = filechooser.showOpenDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			final File filechoosen = filechooser.getSelectedFile();
-			try {
-				final ReadFile readWM = new ReadFile(filechoosen);
-				WeightMatrix aux = readWM.readWeightMatrix();
-				if (aux!= null){				//Hemos seleccionado matrices del fichero				
-					selectMatrixFile = true;	//(no quiere decir q tengas las dimensiones apropiadas
-					matrices = aux;
-					lblNewLabel_1.setText(filechoosen.getName());
-				}						
-				
-
-			} catch (final FileNotFoundException e) {
-				// TODO Auto-generated catch block
+	private void btnCancelarEntrenamientoActionPerformed() {
+		
+		MainWindow.cancelTraining = true;
+		System.out.print("Estado: "+ sw.getState());
+//		// Display results
+		sw.cancel(true); //Cancelamos el hilo
+		
+		String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
+		try {
+			String strToAdd = FileUtils.readFileToString(new File(fileName));
+			System.out.println(strToAdd);
+			textPane.setText(textPane.getText()+ strToAdd);
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-		} else {
-			System.out.println("Open command cancelled by user.");
-		}
-
-	}
-
-	private void btnCancelarEntrenamientoActionPerformed() {
-		MainWindow.cancelTraining = true;
-		sw.cancel(true); //Cancelamos el hilo
-		System.out.print("Estado: "+ sw.getState());
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
 		if (ev.getStateChange() == ItemEvent.SELECTED) {
 			btnPausarReanundarEntrenamiento.setText("Reanudar entrenamiento");
 			//We pause the training
-			System.out.print("Hola");
 			MainWindow.cancelTraining = true;
 			sw.cancel(true);
 
