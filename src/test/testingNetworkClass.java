@@ -3,6 +3,7 @@ package test;
 import java.awt.Dimension;
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import org.apache.log4j.PropertyConfigurator;
 
@@ -11,6 +12,7 @@ import architecture.Network;
 import architecture.NetworkManager;
 import architecture.Neuron;
 import utilities.Matrix;
+import utilities.WeightMatrix;
 
 public class testingNetworkClass {
 	
@@ -365,7 +367,128 @@ Network ne = new Network();
 	}
 	
 	
+	public void  testingCalculateOutputs(){
+		System.out.print("Probamos con una red sin bias. Traza a papel");
+		//Inputs, en este caso solo un patrón
+		ArrayList<BigDecimal[]> inputs = new ArrayList<>();
+		BigDecimal[] patron1 = new BigDecimal [3];
+		patron1[0] = new BigDecimal(3);
+		patron1[1] = new BigDecimal(7);
+		patron1[2] = new BigDecimal(6);
+		inputs.add(patron1);
+		
+		BigDecimal[] patron2 = new BigDecimal [3];
+		patron2[0] = new BigDecimal(4);
+		patron2[1] = new BigDecimal(5);
+		patron2[2] = new BigDecimal(8);
+		inputs.add(patron2);
+		
+		//Output deseados
+		ArrayList<BigDecimal[]> desiredOutputs = new ArrayList<>();
+		BigDecimal[] ris1 = new BigDecimal [3];
+		ris1[0] = new BigDecimal(300);
+		ris1[1] = new BigDecimal(700);
+		ris1[2] = new BigDecimal(600);
+		desiredOutputs.add(ris1);
+		
+		BigDecimal[] ris2 = new BigDecimal [3];
+		ris2[0] = new BigDecimal(400);
+		ris2[1] = new BigDecimal(500);
+		ris2[2] = new BigDecimal(800);
+		desiredOutputs.add(ris2);
 	
+		NetworkManager ne = new NetworkManager("Prueba de salidas", 1, 3, 2, inputs, desiredOutputs, false);
+		
+		System.out.print("Creamos matrices W y V \n");
+		BigDecimal [][] auxW = new BigDecimal[2][3];
+		auxW[0][0] = new BigDecimal(10); 
+		auxW[0][1] = new BigDecimal(10);
+		auxW[0][2] = new BigDecimal(10);
+		
+		auxW[1][0] = new BigDecimal(10); 
+		auxW[1][1] = new BigDecimal(10);
+		auxW[1][2] = new BigDecimal(10);
+		
+		Matrix W = new Matrix(auxW);
+		W.printMatrixConsole();
+
+		BigDecimal [][] auxV = new BigDecimal[3][2];
+		auxV[0][0] = new BigDecimal(5); 
+		auxV[0][1] = new BigDecimal(5);
+		
+		auxV[1][0] = new BigDecimal(5);
+		auxV[1][1] = new BigDecimal(5);
+		
+		auxV[2][0] = new BigDecimal(5);
+		auxV[2][1] = new BigDecimal(5);
+		
+		Matrix V = new Matrix(auxV);
+		V.printMatrixConsole();
+		WeightMatrix matrices = new WeightMatrix(W, V);
+		ArrayList<BigDecimal[]>  outputs = ne.calculateOutputs(matrices);
+		System.out.print("\n Mostramos las salidas obtenidas \n");
+		for (BigDecimal[] ou: outputs){
+			for (int i = 0; i< ou.length; i++){
+				System.out.print(ou[i]+"\n");
+			}
+			System.out.print("\n");
+		}
+		
+		
+		System.out.print("Probamos con los mismos datos de entrada pero esta vez con bias (hay q cambiar las matrices\n");
+		NetworkManager ne2 = new NetworkManager("Prueba de salidas", 1, 3, 2, inputs, desiredOutputs, true);
+		
+		System.out.print("Creamos matrices W y V \n");
+		BigDecimal [][] auxW2 = new BigDecimal[3][4];
+		auxW2[0][0] = new BigDecimal(10); 
+		auxW2[0][1] = new BigDecimal(10);
+		auxW2[0][2] = new BigDecimal(10);
+		auxW2[0][3] = new BigDecimal(10);
+		
+		auxW2[1][0] = new BigDecimal(10); 
+		auxW2[1][1] = new BigDecimal(10);
+		auxW2[1][2] = new BigDecimal(10);
+		auxW2[1][3] = new BigDecimal(10);
+		
+		auxW2[2][0] = new BigDecimal(10); 
+		auxW2[2][1] = new BigDecimal(10);
+		auxW2[2][2] = new BigDecimal(10);
+		auxW2[2][3] = new BigDecimal(10);
+		
+		Matrix W2 = new Matrix(auxW2);
+		W2.printMatrixConsole();
+
+		BigDecimal [][] auxV2 = new BigDecimal[3][3];
+		auxV2[0][0] = new BigDecimal(5); 
+		auxV2[0][1] = new BigDecimal(5);
+		auxV2[0][2] = new BigDecimal(5);
+		
+		auxV2[1][0] = new BigDecimal(5);
+		auxV2[1][1] = new BigDecimal(5);
+		auxV2[1][2] = new BigDecimal(5);
+		
+		auxV2[2][0] = new BigDecimal(5);
+		auxV2[2][1] = new BigDecimal(5);
+		auxV2[2][2] = new BigDecimal(5);
+		
+		Matrix V2 = new Matrix(auxV2);
+		V2.printMatrixConsole();
+		WeightMatrix matrices2 = new WeightMatrix(W2, V2);
+		ArrayList<BigDecimal[]>  outputs2 = ne2.calculateOutputs(matrices2);
+		System.out.print("\n Mostramos las salidas obtenidas \n");
+		for (BigDecimal[] ou: outputs2){
+			for (int i = 0; i< ou.length; i++){
+				System.out.print(ou[i]+"\n");
+			}
+			System.out.print("\n");
+		}
+		
+
+		
+		
+		
+		
+	}
 	
 	void testingUpdateWV (){
 		
@@ -440,7 +563,14 @@ Network ne = new Network();
 		//testN.testSetUpNetworkWithoutBias();
 		
 		/** Probando el SetUp con bias*/
-		testN.testingCreateNetworkWithBias();
+		//testN.testingCreateNetworkWithBias();
+		
+		/**Probando el obtener salidas*/
+		testN.testingCalculateOutputs();
+		
+		
+		
+		
 		
 //		
 //		System.out.print ("Probando el funcionamiento de punteros en java: \n");

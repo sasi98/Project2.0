@@ -14,14 +14,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 import utilities.WeightMatrix;
+import dataManager.CalculateOutputsWindowOuts;
 import dataManager.ReadFile;
 import dataManager.WriteExcel;
 import architecture.NetworkManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -122,6 +126,9 @@ public class CalculateOutputsWindow {
 	
 		} else 
 			System.out.println("Open command cancelled by user.");
+		
+		
+		
 	}
 	
 	private void btnCalcularOutputsActionPerformed() {
@@ -139,6 +146,36 @@ public class CalculateOutputsWindow {
 		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
 		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
 		writer.closeFile();
+		
+		
+		// Testing collecting data
+		String outFile = new String( "C:\\repositoryGit\\Salidas\\previousInformationCalculateOutputs.txt");
+		CalculateOutputsWindowOuts resultados = new CalculateOutputsWindowOuts(outFile);
+		resultados.results (ne.getName(), matrices, ne.getInputs(), ne.getDesiredOutputs(), salidas);
+		// Display results
+		FileReader reader;
+		try {
+			reader = new FileReader(outFile);
+			BufferedReader br = new BufferedReader(reader);
+			textPane.read(br, null);
+			br.close();
+			//br.toString()
+			
+		//	textPane.getText();
+			
+			//textPane.requestFocus();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		
+		
+		
 	}
 
 	public Panel getPanel() {
@@ -148,8 +185,6 @@ public class CalculateOutputsWindow {
 	public void setPanel(Panel panel) {
 		this.panel = panel;
 	}
-
-	
 }
 
 
