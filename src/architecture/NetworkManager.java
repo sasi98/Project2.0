@@ -230,6 +230,14 @@ public class NetworkManager {
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
 				end = true;
 			}
+			
+			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
+				end = true; 
+			}
+			
 			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
 				results.setStatus(1);
 				log.debug("El error ha alcanzado la cota.");
@@ -240,12 +248,7 @@ public class NetworkManager {
 				
 			} 				
 			//if (TrainingWindow.sw.isCancelled()){
-			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
-				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
-				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
-				end = true; 
-			}
+			
 			
 			iteration++;
 		} // fin while

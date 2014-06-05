@@ -86,7 +86,7 @@ public class CalculateOutputsWindow {
         panel.add(btnCalcularOutputs);
         
         
-        JTextPane textPane = new JTextPane();
+        textPane = new JTextPane();
 		textPane.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		scrollPane.setBounds(43, 392, 470, 216);

@@ -362,19 +362,19 @@ public class TrainingWindow {
 			ne.training(iterationMax, cotaError, learningCnt, matrices, momentB) ;
 				return null;
 			}
-//			@Override
-//			protected void done() {
-//				// Display results
-//				String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
-//					try {
-//						String strToAdd = FileUtils.readFileToString(new File(fileName));
-//						System.out.println(strToAdd);
-//						textPane.setText(textPane.getText()+ strToAdd);
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//				super.done();
-//			}
+			@Override
+			protected void done() {
+				// Display results
+				String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
+					try {
+						String strToAdd = FileUtils.readFileToString(new File(fileName));
+						System.out.println(strToAdd);
+						textPane.setText(textPane.getText()+ strToAdd);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+				super.done();
+			}
 			
 		};
 		
@@ -434,7 +434,6 @@ public class TrainingWindow {
 		System.out.print("Estado: "+ sw.getState());
 //		// Display results
 		sw.cancel(true); //Cancelamos el hilo
-		
 		String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
 		try {
 			String strToAdd = FileUtils.readFileToString(new File(fileName));
