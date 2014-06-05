@@ -42,21 +42,13 @@ public class NetworkManager {
 														// de salida,
 														// exceptuando a redes
 														// con bias
-			numNeuronsO;
+										numNeuronsO;
 	/** numNeuronsO y numNeuronsE incluyen el tama√±o del bias en el caso */
 
 	ArrayList<BigDecimal[]> inputs, desiredOutputs;
-
 	private boolean bias;
 	private String name; // Lo usaremos para distingirla una vez creada.
 	private static Logger log = Logger.getLogger(NetworkManager.class);
-
-	// training parameter
-	int iterMax;
-	BigDecimal cuote;
-	double learningCNT;
-	WeightMatrix matrices;
-	boolean momentoB;
 
 	public NetworkManager() {
 
@@ -156,20 +148,8 @@ public class NetworkManager {
 		this.numNeuronsS = numNeuronsS;
 	}
 
-	public void setupTrainingParameter(int iterMax, BigDecimal cuote,
-			double learningCNT, WeightMatrix matrices, boolean momentoB) {
-		this.iterMax = iterMax;
-		this.cuote = cuote;
-		this.learningCNT = learningCNT;
-		this.matrices = matrices;
-		this.momentoB = momentoB;
-	}
 
-	public void trainingFromSavedParameters() {
-		this.training(iterMax, cuote, learningCNT, matrices, momentoB);
-	}
-
-	public void training(int iterMax, BigDecimal cuote, double learningCNT,
+	public void training (int iterMax, BigDecimal cuote, double learningCNT,
 			WeightMatrix matrices, boolean momentoB) {
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
@@ -177,40 +157,18 @@ public class NetworkManager {
 		previousV = matrices.getV();
 		boolean end = false;
 		int iteration = 0;
-
-		// WriteOutcomes writer = new
-		// WriteOutcomes("C:\\repositoryGit\\Salidas\\training.txt", this);
-		// //Outcomes file
-		// writer.closeFile();
-		// WriteExcel writerByIteration = new WriteExcel
-		// ("C:\\repositoryGit\\Salidas\\resultsByIteration.csv"); //Outcomes
-		// file
+		
+		TrainingParameters results = new TrainingParameters();
 		WriteExcel writerErrorProgress = new WriteExcel(
-				"C:\\repositoryGit\\Salidas\\ErrorProgress.csv"); // Outcomes
-																	// file
+				"C:\\repositoryGit\\Salidas\\ErrorProgress.csv"); // Outcomes file
 		WriteExcel writerMatrices = new WriteExcel(
-				"C:\\repositoryGit\\Salidas\\MatricesObtenidas.csv"); // Outcomes
-																		// file
-		// writer.writeBasicInformation();
+				"C:\\repositoryGit\\Salidas\\MatricesObtenidas.csv"); // Outcomes file
 
 		while (!end) {
-
-			// String fileName = new String
-			// ("C:\\repositoryGit\\Salidas\\checkingTrainingWithMomentB.csv");
-			// String strIteration = String.valueOf(iteration);
-			// fileName = fileName + strIteration + ".csv";
-			// WriteExcel writerByPatron = new WriteExcel (fileName);
-			// WriteExcel writerByPatron = new WriteExcel ("empty");
-			// WriteExcel writer = new WriteExcel (fileName);
-
-			
-
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
-				// Las actuales W y V serÔøΩn utilizadas en el momento beta de la
-				// SIGUIENTE iteraciÔøΩn en el for,
-				// las debo guardar antes, para poder ser utilizadas en la it
-				// siguiente
+				// Las actuales W y V serÌan utilizadas en el momento beta de la SIGUIENTE iteraciÛn en el for,
+				// las debo guardar antes, para poder ser utilizadas en la it siguiente
 				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
 							learningCNT, desiredOutputs.get(i), W, V);
@@ -219,25 +177,20 @@ public class NetworkManager {
 							inputs.get(i), learningCNT, desiredOutputs.get(i),
 							W, V); // Establecemos la red con el patrÔøΩn i
 				}
-
 				if (momentoB) {
-					subNetwork.trainWithMomentB(i); // La entrenamos
+					subNetwork.trainWithMomentB(i);
 				} else {
 					subNetwork.train(i);
 				}
 
-				W = subNetwork.getW(); // after training, we get the matrix W
-										// and V
+				W = subNetwork.getW(); // after training, we get the matrix W and V
 				V = subNetwork.getV();
 				log.debug("Valores de W y V tras actualizaciÔøΩn de matriz");
 				W.printMatrix(); // logger prints
 				V.printMatrix();
 			}
-			// writer.closeFile();
-			// writerByPatron.closeFile();
-			// Comprobado con trazas hasta aquÔøΩ, everything is working fine
-			log.trace("Final del training de todas los patrones. Inicio del cÔøΩlculo del error");
-
+			// Comprobado con trazas hasta aquÌ everything is working fine
+			log.trace("Final del training de todas los patrones. Inicio del c·lculo del error");
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
@@ -253,7 +206,7 @@ public class NetworkManager {
 				errorList.add(subNetwork.calculateError());
 			}
 
-			// Calculamos el error medio de la iteraciÔøΩn
+			// Calculamos el error medio de la iteraciÛn
 			BigDecimal errorIt = new BigDecimal(0);
 			for (BigDecimal error : errorList) {
 				errorIt = errorIt.add(error);
@@ -262,71 +215,45 @@ public class NetworkManager {
 					RoundingMode.HALF_UP);
 			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 
-			// Add error in memory
+			// Add current error, matrix and iteration in memory and in results class
 			TrainingWindow.errorGraph.put(iteration, errorIt);
-			//
 			writerErrorProgress.writeError(errorIt, iteration);
-			log.debug("Error ponderado en la interacciÔøΩn " + iteration + " es "
-					+ errorIt);
+			
+			log.debug("Error ponderado en la interaciÛn " + iteration + " es " + errorIt);
 
 			if (iteration == iterMax) {
-				log.debug("LLegamos al lÔøΩmite de las iteraciones. Iteration: "
-						+ iteration + " MÔøΩximo: " + iterMax);
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				log.debug("LLegamos al lÌmite de las iteraciones. Iteration: "
+						+ iteration + " M·ximo: " + iterMax);
+				results.setStatus(0);
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); 
 				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
-				writerMatrices.writeMatrices(new WeightMatrix(W, V));
-				writerMatrices.closeFile();
-				writerErrorProgress.closeFile();
-				
 				end = true;
 			}
 			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
+				results.setStatus(1);
 				log.debug("El error ha alcanzado la cota.");
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
+				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
 				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, new WeightMatrix(W, V));
-				writerMatrices.writeMatrices(new WeightMatrix(W, V));
-				writerMatrices.closeFile();
-				writerErrorProgress.closeFile();
 				end = true;
 				
-			} 			// if ( (errorIt.compareTo(cuote) == 1) || (iteration == iterMax) )
-			// // El error se pasa de la cota, o nÔøΩ de iter = mÔøΩximo
-			// end = true;
-
-			// Escribir matrices W y V y error obtenido
-			errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
-			// writerByIteration.writeOneIterationInf(iteration, errorIt, W, V);
-			
-			
-			
-			if (MainWindow.cancelTraining == true) { // Se cancela el  entrenamiento,
-				// rompemos el bucle y cerramos
-				// ficheros
+			} 				
+			//if (TrainingWindow.sw.isCancelled()){
+			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
 				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
 				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
-				writerMatrices.writeMatrices(new WeightMatrix(W, V));
-				writerMatrices.closeFile();
-				writerErrorProgress.closeFile();
 				end = true; 
-				return;
 			}
 			
 			iteration++;
-
 		} // fin while
-
-		// Escribimos las matrices obtenidas
+		
+	//Salimos del bucle
 		writerMatrices.writeMatrices(new WeightMatrix(W, V));
 		writerMatrices.closeFile();
-
-		// writerByIteration.closeFile();
 		writerErrorProgress.closeFile();
-
-		// writer.closeFile();
-
 	}
 
 	// pre: this debe de ser una red vÔøΩlida, sus atributos no pueden ser nulos

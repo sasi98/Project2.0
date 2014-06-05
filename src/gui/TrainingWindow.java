@@ -43,6 +43,7 @@ import dataManager.TrainingWindowOuts;
 public class TrainingWindow {
 
 	public static SwingWorker<Void, Void> worker;
+	
 	public static Graph errorGraph;
 	private boolean isStarted = false;
 
@@ -68,7 +69,7 @@ public class TrainingWindow {
 	private WeightMatrix matrices;
 	private boolean selectMatrixFile; //Flag para ver si hemos cogido las matrices de fichero o no
 	NetworkManager ne;
-	SwingWorker<Integer, Integer> sw;
+	private SwingWorker<Integer, Integer> sw;
 
 	
 
@@ -358,22 +359,23 @@ public class TrainingWindow {
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
-				ne.training(iterationMax, cotaError, learningCnt, matrices,	momentB);
+			ne.training(iterationMax, cotaError, learningCnt, matrices, momentB) ;
 				return null;
 			}
-			@Override
-			protected void done() {
-				// Display results
-				String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
-					try {
-						String strToAdd = FileUtils.readFileToString(new File(fileName));
-						System.out.println(strToAdd);
-						textPane.setText(textPane.getText()+ strToAdd);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-				super.done();
-			}
+//			@Override
+//			protected void done() {
+//				// Display results
+//				String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
+//					try {
+//						String strToAdd = FileUtils.readFileToString(new File(fileName));
+//						System.out.println(strToAdd);
+//						textPane.setText(textPane.getText()+ strToAdd);
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//				super.done();
+//			}
+			
 		};
 		
 		sw.execute();
