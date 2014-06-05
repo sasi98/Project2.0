@@ -1,26 +1,21 @@
 package gui;
 
-import java.awt.Checkbox;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -29,12 +24,6 @@ import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.NewNetworkWindowOuts;
 import dataManager.PatronData;
-import dataManager.WriteExcel;
-
-import javax.swing.JScrollPane;
-import javax.swing.JScrollBar;
-
-import org.jfree.text.TextBox;
 
 public class NewNetworkWindow {
 
@@ -91,7 +80,7 @@ public class NewNetworkWindow {
 		lblNewLabel_4.setBounds(400, 125, 151, 16);
 		panel.add(lblNewLabel_4);
 
-		final JLabel lblNewLabel_7 = new JLabel("Selecci���n de datos: ");
+		final JLabel lblNewLabel_7 = new JLabel("Selecci���������n de datos: ");
 		lblNewLabel_7.setBounds(40, 125, 156, 16);
 		panel.add(lblNewLabel_7);
 
@@ -139,12 +128,13 @@ public class NewNetworkWindow {
 		checkBox = new JCheckBox("Bias");
 		checkBox.setBounds(400, 212, 57, 23);
 		panel.add(checkBox);
+		// textPane.setEditable(false);
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(40, 282, 642, 184);
+		panel.add(scrollPane);
 
 		textPane = new JTextPane();
-		//textPane.setEditable(false);
-		scrollPane = new JScrollPane(textPane);
-		scrollPane.setBounds(40, 349, 642, 244);
-		panel.add(scrollPane);
+		scrollPane.setViewportView(textPane);
 
 	}
 
@@ -170,18 +160,21 @@ public class NewNetworkWindow {
 		// ID debe estar entre 000 y 510
 		idCompany = tfIdCompany.getText();
 
-		if ((idCompany == null) || (idCompany.equals("")))
-			JOptionPane.showMessageDialog(null,
-					"Error, el campo identificador de empresa est��� vacio",
-					"Campo requerido", JOptionPane.ERROR_MESSAGE);
-		else {
+		if ((idCompany == null) || (idCompany.equals(""))) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Error, el campo identificador de empresa est��������� vacio",
+							"Campo requerido", JOptionPane.ERROR_MESSAGE);
+		} else {
 			int auxInt = Integer.parseInt(idCompany);
-			if ((auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3))
+			if ((auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3)) {
 				JOptionPane.showMessageDialog(null,
 						"Error, el identificador debe de tener formato 000"
 								+ " y valores entre 0 y 510.",
-						"Identificador no v���lido", JOptionPane.ERROR_MESSAGE);
-			else {
+						"Identificador no v���������lido",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
 				numPatrones = (int) sPatrones.getValue();
 				if (numPatrones == 0) {
 					sPatrones.setValue(10);
@@ -201,8 +194,9 @@ public class NewNetworkWindow {
 				if ((strInicio == null) || (strInicio.equals(""))) {
 					tfInicio.setText("1");
 					inicio = 1;
-				} else
+				} else {
 					inicio = Integer.parseInt(strInicio);
+				}
 
 				bias = checkBox.isSelected();
 
@@ -261,39 +255,45 @@ public class NewNetworkWindow {
 				else {
 					// open a new JFrame
 				}
-				
-				
-				// Create the Network, give it an identificator (we name the Network)
+
+				// Create the Network, give it an identificator (we name the
+				// Network)
 				MainWindow.numInstances++;
-				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
+				String name = idCompany + "_"
+						+ this.comboBox_inputType.getSelectedItem()
+						+ MainWindow.numInstances;
 				NetworkManager aux = new NetworkManager(name, numPatrones,
 						numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 				MainWindow.neList.add(aux);
 
-				System.out.print("Current number of instances: "+ MainWindow.neList.size());
+				System.out.print("Current number of instances: "
+						+ MainWindow.neList.size());
 
 				// Testing collecting data
-				outFile = new String ("C:\\repositoryGit\\Salidas\\NewNetworkWindowResults.txt");
-				NewNetworkWindowOuts resultados = new NewNetworkWindowOuts(outFile);
-				resultados.createNewNetworkingOut(idCompany, numNeuronES, numNeuronO, numPatrones,
-						bias,  this.comboBox_inputType.getSelectedItem().toString(), name, inputs, desiredOutputs);
-				//Display results
-//				outFile = new String(
-//						"C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
-//				WriteExcel patrones = new WriteExcel(outFile);
-//				patrones.writeInputsOutputs(inputs, desiredOutputs);
-//				patrones.closeFile();
-//
+				outFile = new String(
+						"C:\\repositoryGit\\Salidas\\NewNetworkWindowResults.txt");
+				NewNetworkWindowOuts resultados = new NewNetworkWindowOuts(
+						outFile);
+				resultados.createNewNetworkingOut(idCompany, numNeuronES,
+						numNeuronO, numPatrones, bias, this.comboBox_inputType
+								.getSelectedItem().toString(), name, inputs,
+						desiredOutputs);
+				// Display results
+				// outFile = new String(
+				// "C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
+				// WriteExcel patrones = new WriteExcel(outFile);
+				// patrones.writeInputsOutputs(inputs, desiredOutputs);
+				// patrones.closeFile();
+				//
 				// Display results
 				FileReader reader;
 				try {
 					reader = new FileReader(outFile);
-					
+
 					BufferedReader br = new BufferedReader(reader);
 					textPane.read(br, null);
 					br.close();
-					
-					
+
 					// textPane.requestFocus();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -302,8 +302,6 @@ public class NewNetworkWindow {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				
 
 			}// end else2
 		}// end else1

@@ -6,23 +6,17 @@
 
 package gui;
 
-import graph.Graph;
-
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -39,7 +33,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import architecture.NetworkManager;
-import java.awt.Color;
 
 /**
  * 
@@ -51,7 +44,7 @@ public class MainWindow extends JFrame {
 	public static ArrayList<NetworkManager> neList = new ArrayList<>();
 	// public static HashMap<String, Graph> chartMap = new HashMap<String,
 	// Graph>();
-	public static int numInstances = 0; // N�mero de instancias creadas
+	public static int numInstances = 0; // N���mero de instancias creadas
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
 
@@ -78,6 +71,7 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 		}
 		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				final MainWindow window = new MainWindow();
 				window.frame.setVisible(true);
@@ -107,9 +101,9 @@ public class MainWindow extends JFrame {
 	private void initialize() {
 
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1000, 700);
+		frame.setBounds(100, 100, 1000, 550);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().setBackground(Color.white);
 		btnCrearNueva = new JButton("Nueva");
@@ -140,24 +134,28 @@ public class MainWindow extends JFrame {
 	private void createEvents() {
 
 		btnCrearNueva.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) { // NewNetworkWindow
 				btnCrearNuevaActionPerformed();
 			}
 		});
 
 		btnEntrenar.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				btnEntrenarActionPerformed();
 			}
 		});
 
 		btnCalcularSalidas.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				btnCalcularSalidasActionPerformed();
 			}
 		});
 
 		tglbtnTrazas.addItemListener(new ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent ev) {
 				tglbtnTrazasActionPerformed(ev);
 			}
@@ -196,7 +194,8 @@ public class MainWindow extends JFrame {
 
 	private void btnCrearNuevaActionPerformed() {
 		if (trainingWindow != null) {
-			trainingWindow.getPanel().hide(); // Close other internals frames before
+			trainingWindow.getPanel().hide(); // Close other internals frames
+												// before
 		}
 		if (calculateOutputsWindow != null) {
 			calculateOutputsWindow.getPanel().hide();
@@ -215,7 +214,7 @@ public class MainWindow extends JFrame {
 				// 700, 450));
 				desktopPane.add(newNetworkWindow.getPanel(), BorderLayout.WEST);
 				newNetworkWindow.getPanel().show();
-			} else { // El panel no est� cerrado pero he vuelto a hacer click,
+			} else { // El panel no est��� cerrado pero he vuelto a hacer click,
 						// borro todo pero no creo una instancia nueva
 						// clearTextFields(newNetworkWindow.getFrame());
 
@@ -315,11 +314,12 @@ public class MainWindow extends JFrame {
 				f.setText("");
 				// if (c instanceof JSpinner){
 				// JSpinner f1 = (JSpinner) c;
-				// f1.setValue(0);	
-				// System.out.print("Entra aqu�");
+				// f1.setValue(0);
+				// System.out.print("Entra aqu���");
 				// }
-			} else if (c instanceof Container)
+			} else if (c instanceof Container) {
 				clearTextFields((Container) c);
+			}
 		}
 	}
 
