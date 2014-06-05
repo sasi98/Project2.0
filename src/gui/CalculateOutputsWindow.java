@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import utilities.StandardDeviation;
 import utilities.WeightMatrix;
 import dataManager.CalculateOutputsWindowOuts;
 import dataManager.ReadFile;
@@ -21,6 +22,7 @@ import architecture.NetworkManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.beans.DesignMode;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -139,10 +141,66 @@ public class CalculateOutputsWindow {
 				ne = aux;
 			}
 		}
-		//manejar excepciones
 		ArrayList<BigDecimal[]> salidas = ne.calculateOutputs(matrices); //Salidas obtenidas
+		//manejar excepciones!!!!!!!!!!!!!!!
+		
+		//Calculamos la media de cada patrón.
+		ArrayList<BigDecimal> averageByPatterns = new ArrayList<>();
+		for (BigDecimal[] desiredOutputsPattern: ne.getDesiredOutputs()){
+			BigDecimal average = StandardDeviation.calculateAverage(desiredOutputsPattern);
+			averageByPatterns.add(average);
+		}
+		//Calculamos la desviación típica de los resultados obtenidos con respecto a la media
+		ArrayList<BigDecimal> standardDeviation = new ArrayList<>();
+		for (int i = 0; i<salidas.size(); i++){
+			BigDecimal deviation = StandardDeviation.calculateDeviation(averageByPatterns.get(i), salidas.get(i));
+			standardDeviation.add(deviation);
+		}
+		int k = 0;
+		for (BigDecimal b: standardDeviation){
+			System.out.print("Patrón "+ k+"; Desviación estandar:  "+standardDeviation+"\n");
+			k++;
+		}
+		
+		/**  RESULTADO:  standarDeviation array*/
+		
+		//Solo en el caso de que sea la desviación estandar de entre todos los resultados
+		//Calculamos la media de todas las neuronas de salida, para eso las metemos todas juntas en un vector
+		int vectorSize = ne.getNumPatrones() * ne.getNumNeuronsS();
+		BigDecimal[] desiredOutputsJoined = new BigDecimal[vectorSize];
+		int j = 0;
+		for (BigDecimal[] desiredOutputsPattern: ne.getDesiredOutputs()){
+			for (int i = 0; i< desiredOutputsPattern.length; i++){
+				desiredOutputsJoined[j] = desiredOutputsPattern[i];
+				j = j + i;
+			}
+		}
+		//Media de todas las neuronas usadas en el training
+		BigDecimal average = StandardDeviation.calculateAverage(desiredOutputsJoined);
+		
+		
+		//Calculamos la desviación típica de los resultados obtenidos (juntos) con respecto a la media
+		BigDecimal[] outputsObtainedJoined = new BigDecimal[vectorSize];
+		for (BigDecimal[] outputsObtainedPattern: salidas){
+			for (int i = 0; i< outputsObtainedPattern.length; i++){
+				outputsObtainedJoined[j] = outputsObtainedPattern[i];
+				j = j + i;
+			}
+		}
+		BigDecimal deviation = StandardDeviation.calculateDeviation(average, outputsObtainedJoined);
+		
+		System.out.print("Desviación típica de todas las neuronas de salida con respecto a la media de las"
+				+ "neuronas de salida deseadas: " +deviation+"\n");
+		
+		/**RESULTADO: deviation value**/
+		
+		
+		
+		
+		
+		
 		//Escribir salidas en fichero y en pantalla
-		//Grafico con las deseadas y las obtenidas o la variaciï¿½n delta
+		//Grafico con las deseadas y las obtenidas
 		WriteExcel writer = new WriteExcel ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
 		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
 		writer.closeFile();

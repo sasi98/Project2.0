@@ -234,7 +234,7 @@ public class TrainingWindow {
 		
 		
 		
-		//addNewGraph();
+		addNewGraph();
 		
 
 	}
@@ -299,6 +299,7 @@ public class TrainingWindow {
 
 		MainWindow.cancelTraining = false;
 		selectMatrixFile = false; 
+		deleteGraph();
 		addNewGraph();
 
 		final String stCotaError = tfcortaError.getText();
@@ -432,16 +433,6 @@ public class TrainingWindow {
 		
 		MainWindow.cancelTraining = true;
 		System.out.print("Estado: "+ sw.getState());
-//		// Display results
-		sw.cancel(true); //Cancelamos el hilo
-		String fileName = new String("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
-		try {
-			String strToAdd = FileUtils.readFileToString(new File(fileName));
-			System.out.println(strToAdd);
-			textPane.setText(textPane.getText()+ strToAdd);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 	}
 
 	private void btnPausarReanundarEntrenamientoActionPerformed(ItemEvent ev) {
@@ -475,6 +466,11 @@ public class TrainingWindow {
 		panel.add(panelGraph);
 		//panel.repaint();
 
+	}
+	
+	private void deleteGraph() {
+		panel.remove(panelGraph);
+		
 	}
 
 	public void setPanel(final Panel panel) {

@@ -510,7 +510,7 @@ public class WriteExcel {
 			for (int i = 0; i<outputs.size(); i++){
 				wr.append("Patrón: "+ i+ "\n");
 				for (int j = 0; j< outputs.get(i).length; j++){
-					wr.append("RM:  "+ inputs.get(i)[j]+ "RI Obtenida:  " +outputs.get(i)[j]+ " RI Deseada:  " + desiredOutput.get(i)[j]+ "\n");
+					wr.append("RM:  "+ inputs.get(i)[j]+ "  RI Obtenida:  " +outputs.get(i)[j]+ "  RI Deseada:  " + desiredOutput.get(i)[j]+ "\n");
 				}
 				wr.append("\n");
 			}

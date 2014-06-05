@@ -48,7 +48,7 @@ public class Graph {
 		xyseries = new XYSeries("Error set");
 		// xyseries.add(1.0D, 1.0D);
 		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
-		xyseriescollection.addSeries(xyseries);
+		xyseriescollection.addSeries(xyseries); //Para poner más de un dato por gráfico
 		return xyseriescollection;
 	}
 

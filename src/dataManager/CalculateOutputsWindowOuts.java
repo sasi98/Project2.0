@@ -20,7 +20,7 @@ public class CalculateOutputsWindowOuts extends WriteExcel {
 	
 	public void results(String name, WeightMatrix matrices, ArrayList<BigDecimal[]> inputs, 
 			ArrayList<BigDecimal[]> desiredOutput, ArrayList<BigDecimal[]> outputs){
-		wr.append("Calculamos las salidas para la red: "+name);
+		wr.append("Calculamos las salidas para la red: "+name+ "\n");
 		wr.append("Matrices de pesos utilizadas: \n");
 		writeMatrices(matrices);
 		wr.append("\nComprobamos los resultados");

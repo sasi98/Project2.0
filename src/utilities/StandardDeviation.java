@@ -19,7 +19,7 @@ public class StandardDeviation {
 	}
 	
 	
-	//Devuelve la media ponderada de u
+	//Devuelve la media ponderada de un vector 
 	public static BigDecimal calculateAverage (BigDecimal[] values){
 		BigDecimal acum = new BigDecimal(0);
 		for (BigDecimal b: values){
