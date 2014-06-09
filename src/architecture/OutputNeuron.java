@@ -9,12 +9,14 @@ public class OutputNeuron extends Neuron {
 	BigDecimal desiredOut;
 	
 
-	public OutputNeuron() {
+	public OutputNeuron(String funtion) {
 		// TODO Auto-generated constructor stub
+		super(funtion);
+		
 	}
 
-	public OutputNeuron (BigDecimal outValue, boolean bias) {
-		super(outValue, bias);
+	public OutputNeuron (BigDecimal outValue, boolean bias, String funtion) {
+		super(outValue, bias, funtion);
 		// TODO Auto-generated constructor stub
 	}
 

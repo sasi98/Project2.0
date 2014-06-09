@@ -150,7 +150,7 @@ public class NetworkManager {
 
 
 	public void training (int iterMax, BigDecimal cuote, double learningCNT,
-			WeightMatrix matrices, boolean momentoB) {
+			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion) {
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
 		previousW = matrices.getW();
@@ -171,14 +171,14 @@ public class NetworkManager {
 				// las debo guardar antes, para poder ser utilizadas en la it siguiente
 				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, V);
+							learningCNT, desiredOutputs.get(i), W, V, funtion);
 				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
 							inputs.get(i), learningCNT, desiredOutputs.get(i),
-							W, V); // Establecemos la red con el patr�n i
+							W, V, funtion); // Establecemos la red con el patr�n i
 				}
-				if (momentoB) {
-					subNetwork.trainWithMomentB(i);
+				if (momentoBool) {
+					subNetwork.trainWithMomentB(i, momentoB);
 				} else {
 					subNetwork.train(i);
 				}
@@ -196,11 +196,11 @@ public class NetworkManager {
 				Network subNetwork = new Network();
 				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, V);
+							learningCNT, desiredOutputs.get(i), W, V, funtion);
 				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
 							inputs.get(i), learningCNT, desiredOutputs.get(i),
-							W, V);
+							W, V, funtion);
 				}
 
 				errorList.add(subNetwork.calculateError());
@@ -276,11 +276,11 @@ public class NetworkManager {
 				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
 							0.00001, desiredOutputs.get(i), matrices.getW(),
-							matrices.getV());
+							matrices.getV(), "Lineal");
 				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
 							inputs.get(i), 0.00001, desiredOutputs.get(i),
-							matrices.getW(), matrices.getV());
+							matrices.getW(), matrices.getV(), "Lineal");
 				}
 				subNetwork.feedForward(); // Propagación hacia delante, se
 											// calculan las salidas

@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 
 import utilities.Matrix;
 import utilities.WeightMatrix;
+import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.ReadFile;
 import dataManager.TrainingWindowOuts;
@@ -53,7 +54,7 @@ public class TrainingWindow {
 										// // Switch button: Restart or paused
 										// training (
 	private JComboBox comboBox;
-	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnSi, rdbtnNo,
+	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnNo,
 			rdbtnAleatorias, rdbtnProcedentesDeArchivo;
 	private JTextArea txtrUtilizarMatricesDe;
 	private JLabel lblNewLabel_1;
@@ -64,11 +65,16 @@ public class TrainingWindow {
 	private double learningCnt;
 	private int iterationMax;
 	private boolean momentB;
+	private double momentBValue;
 	private WeightMatrix matrices;
 	private boolean selectMatrixFile; // Flag para ver si hemos cogido las
 										// matrices de fichero o no
+	private Value.Funtion funtion;
+	private String funtionStr;
+	
 	NetworkManager ne;
 	private SwingWorker<Integer, Integer> sw;
+	private JTextField tfmomentoB;
 
 	/**
 	 * Create the application.
@@ -166,19 +172,15 @@ public class TrainingWindow {
 		groupFuncion.add(rdbtnTangencial);
 		groupFuncion.add(rdbtnLineal);
 
-		rdbtnSi = new JRadioButton("Si");
-		rdbtnSi.setBounds(new Rectangle(223, 95, 43, 23));
-		panel.add(rdbtnSi);
-
-		rdbtnNo = new JRadioButton("No");
-		rdbtnNo.setSelected(true);
-		momentB = false;
-		rdbtnNo.setBounds(new Rectangle(295, 95, 50, 23));
-		panel.add(rdbtnNo);
-
-		final ButtonGroup groupSiNo = new ButtonGroup();
-		groupSiNo.add(rdbtnSi);
-		groupSiNo.add(rdbtnNo);
+//		rdbtnNo = new JRadioButton("No");
+//		rdbtnNo.setSelected(true);
+//		momentB = false;
+//		rdbtnNo.setBounds(new Rectangle(295, 95, 50, 23));
+//		panel.add(rdbtnNo);
+//
+//		final ButtonGroup groupSiNo = new ButtonGroup();
+//		groupSiNo.add(rdbtnSi);
+//		groupSiNo.add(rdbtnNo);
 
 		rdbtnAleatorias = new JRadioButton("Aleatorias");
 		rdbtnAleatorias.setBounds(223, 220, 80, 23);
@@ -207,6 +209,11 @@ public class TrainingWindow {
 		tfmaxIt.setColumns(10);
 		tfmaxIt.setBounds(new Rectangle(223, 186, 80, 20));
 		panel.add(tfmaxIt);
+		
+		tfmomentoB = new JTextField();
+		tfmomentoB.setBounds(223, 96, 80, 20);
+		panel.add(tfmomentoB);
+		tfmomentoB.setColumns(10);
 
 		btnCancelarEntrenamiento = new JButton("Cancelar entrenamiento");
 		btnCancelarEntrenamiento.setBounds(679, 440, 158, 27);
@@ -312,10 +319,23 @@ public class TrainingWindow {
 		} else {
 			iterationMax = Integer.parseInt(stItMax);
 		}
-		if (rdbtnSi.isSelected()) { // Entrenamiento con momento Beta a���adido
-									// en
-									// la actualizaci���n de matriz
+		
+		final String stMomentoB = tfmomentoB.getText();
+		if ((stMomentoB == null) || (stMomentoB.equals(""))) {
+			momentB = false; //No utilizamos momento
+
+		} else {
+			momentBValue = Double.parseDouble(stMomentoB);
 			momentB = true;
+		}
+		
+		if (rdbtnLineal.isSelected()){
+			System.out.print("Funcion lineal");
+			funtionStr = "Lineal";
+		}
+		else if (rdbtnTangencial.isSelected()){
+			System.out.print("Funcion tangencial");
+			funtionStr = "Tangencial";
 		}
 
 		NetworkManager aux2 = null;
@@ -358,7 +378,7 @@ public class TrainingWindow {
 			@Override
 			protected Integer doInBackground() throws Exception {
 				ne.training(iterationMax, cotaError, learningCnt, matrices,
-						momentB);
+						momentB, momentBValue,funtionStr);
 				return null;
 			}
 

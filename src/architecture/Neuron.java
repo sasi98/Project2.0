@@ -13,26 +13,29 @@ public class Neuron {
 	private BigDecimal outValue;
 	private ArrayList<Connection> connections; //tanto las conexiones hacia delante como las que tenga hacia atrï¿½s
 	private boolean bias;
+	private String funtion; //Funcion en el cálculo de las salidas. Lineal o tangencial pueden ser sus valores
 	
 	private static Logger log = Logger.getLogger(Neuron.class);
 	
 	
 	
 	
-	public Neuron() {
+	public Neuron(String funtion) {
 		super();
 		this.outValue = new BigDecimal(0);
 		this.connections = new ArrayList<>();
 		this.bias = false; 
+		this.funtion = funtion; 
 	}
 	
 	
-	public Neuron (BigDecimal outValue, boolean bias) {
+	public Neuron (BigDecimal outValue, boolean bias, String funtion) {
 		super();
 		log.debug("Creando neurona con valor: " + outValue + "; Bias: "+ bias);
 		this.outValue = outValue;
 		this.connections = new ArrayList<>();
 		this.bias = bias;
+		this.funtion = funtion;
 	}
 	
 
@@ -89,8 +92,16 @@ public class Neuron {
 	        		//output = f(bias+sum);
 	        	} 	
 	        }
-	        acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
-	        outValue = acum;
+	        log.trace("Valor acum: "+ acum+"\n");
+	        if (funtion == "Lineal"){
+	        	acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+		        outValue = acum;
+	        } else if (funtion == "Tangencial"){
+	        	acum = Neuron.TangentFuntion(acum.doubleValue());
+	        	acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+	        	outValue = acum;
+	        }
+	        
     	}
     	
         log.debug("Valor de salida de la neurona: " + outValue+" See neurons from values on above \n");
@@ -115,7 +126,12 @@ public class Neuron {
     public static float f(float x) {
         return 1.0f / (1.0f + (float) Math.exp(-x));
     }
+    
+    //Tangente hiperbólica 
+    public static BigDecimal TangentFuntion (double x){
+    	return new BigDecimal (Math.tanh(x));
 
+    }
 
     
     

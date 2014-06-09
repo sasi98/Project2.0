@@ -232,7 +232,7 @@ public class PatronData {
 			BigDecimal[] dataVector = new BigDecimal[randomList.size()];
 			int j = 0;
 			for (int i: randomList){
-				dataVector[j] = valuesR.get(i).multiply(new BigDecimal(100));
+				dataVector[j] = valuesR.get(i).multiply(new BigDecimal(cnt));
 				j++;
 			}
 			return dataVector;

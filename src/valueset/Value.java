@@ -8,4 +8,10 @@ public class Value {
         public final static String ALEATORIOS = "Aleatorios";
         public final static String MANUAL = "Manual";
     }
+    
+    
+    public class Funtion {
+        public final static String LINEAL = "Lineal";
+        public final static String TANGENCIAL = "Tangencial";
+        }
 }

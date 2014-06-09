@@ -86,13 +86,14 @@ public class CalculateOutputsWindow {
         btnCalcularOutputs = new JButton("Calcular Outputs");
         btnCalcularOutputs.setBounds(474, 167, 113, 23);
         panel.add(btnCalcularOutputs);
-        
-        
-        textPane = new JTextPane();
-		textPane.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		scrollPane.setBounds(43, 392, 470, 216);
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(41, 214, 484, 231);
 		panel.add(scrollPane);
+		
+		
+		textPane = new JTextPane();
+		scrollPane.setViewportView(textPane);
+		textPane.setEditable(false);
 
 	}
 

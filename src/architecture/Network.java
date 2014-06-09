@@ -13,6 +13,7 @@ import dataManager.ReadExcel;
 import dataManager.WriteExcel;
 import utilities.Matrix;
 import utilities.WeightMatrix;
+import valueset.Value;
 
 public class Network {
 	
@@ -24,8 +25,8 @@ public class Network {
 										
 	
 	
-	private double				learningCNT, 
-								momentoB = 0.9; //Lo utilizaremos para evitar minimos locales
+	private double				learningCNT; 
+								 //Lo utilizaremos para evitar minimos locales
 	
 	
 	private Neuron[] 				inputLayer,  //Vector que contiene las neuronas de entrada de la red (bias incluido en el caso)
@@ -35,6 +36,8 @@ public class Network {
 	private Matrix W, V; 
 	
 	private BigDecimal[] desiredOutputLayer; //No es una neurona, es solo un valor q compararemos con el obtenido
+	
+	private String FuntionType;
 
 	private static Logger log = Logger.getLogger(Network.class);
 	
@@ -60,7 +63,7 @@ public class Network {
 	//post: 
 	
 	public void setUpPatronWithoutBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
+			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
 	{	
 		log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada y de salida: "+ valuesInputLayer.length + 
 					"Número de neuronas ocultas: "+ numNeuronsO);
@@ -76,6 +79,7 @@ public class Network {
 			this.numNeuronsO = numNeuronsO;
 			this.W = W;
 			this.V = V;
+			this.FuntionType = funtion;
 			
 			//Creamos las 3 capas
 			this.inputLayer = new Neuron[this.numNeuronsE];
@@ -85,18 +89,18 @@ public class Network {
 			
 			//Creamos las neuronas de la capa de entrada
 			for (int i = 0; i < valuesInputLayer.length; i++){
-				Neuron n = new Neuron(valuesInputLayer[i], false);
+				Neuron n = new Neuron(valuesInputLayer[i], false, funtion);
 				this.inputLayer[i] = n;
 			}
 		
 			//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
 			for (int i = 0; i < numNeuronsO; i++){
-				Neuron n = new Neuron();
+				Neuron n = new Neuron(funtion);
 				this.hiddenLayer[i] = n;
 			}		
 			
 			for (int i = 0; i < valuesInputLayer.length; i++){
-				OutputNeuron n = new OutputNeuron();
+				OutputNeuron n = new OutputNeuron(funtion);
 				this.outputLayer[i] = n;
 				n.setDesiredOut(desiredOutputLayer[i]);
 			}
@@ -141,7 +145,7 @@ public class Network {
 		//post: 
 		
 		public void setUpPatronWithBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-				BigDecimal [] desiredOutputLayer, Matrix W, Matrix V)
+				BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
 		{	
 			int numNeuronsE = valuesInputLayer.length+1;
 			int numNeuronsS = valuesInputLayer.length;
@@ -162,6 +166,7 @@ public class Network {
 				this.numNeuronsO = numNeuronsO;
 				this.W = W;
 				this.V = V;
+				this.FuntionType = funtion;
 				
 				//Tratamiento de la red con bias (el bias será algo propio de las capas de entrada y ocultas)
 				//La red tiene bias,añadimos una neurona de valor uno en la capa de entrada y a la oculta 
@@ -173,22 +178,22 @@ public class Network {
 				this.outputLayer = new OutputNeuron[numNeuronsS];
 				
 				//Creamos las neuronas de la capa de entrada y le damos los valores del vector introducido por parámetros
-				Neuron n = new Neuron (new BigDecimal(1), true);
+				Neuron n = new Neuron (new BigDecimal(1), true, funtion);
 				inputLayer[0] = n;
 				for (int i = 0; i < valuesInputLayer.length; i++){
-					n = new Neuron(valuesInputLayer[i], false);
+					n = new Neuron(valuesInputLayer[i], false, funtion);
 					this.inputLayer[i+1] = n;
 				}
 			
 				//Creamos las neuronas de la capa oculta y de salida (inicializadas a cero)
-				Neuron nH = new Neuron (new BigDecimal(1), true);
+				Neuron nH = new Neuron (new BigDecimal(1), true, funtion);
 				hiddenLayer[0] = nH;
 				for (int i = 1; i < numNeuronsO; i++){
-					nH = new Neuron();
+					nH = new Neuron(funtion);
 					this.hiddenLayer[i] = nH;
 				}		
 				for (int i = 0; i < valuesInputLayer.length; i++){
-					OutputNeuron nO = new OutputNeuron();
+					OutputNeuron nO = new OutputNeuron(funtion);
 					this.outputLayer[i] = nO;
 					nO.setDesiredOut(desiredOutputLayer[i]);
 				}
@@ -268,17 +273,22 @@ public class Network {
         }
         
         //This is what backpropagation starts
-        
       //Calculo los deltas de error de la capa de salida
         BigDecimal[] deltaOutput = new BigDecimal[desiredOutputLayer.length];
         for (int i = 0; i<outputLayer.length; i++){
         	BigDecimal deltaE = desiredOutputLayer[i];
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
-        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
-        	
-        	outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
+        	//Si estamos usando la tangencial los deltan son multiplicados por la derivada de la funcion. 
+            if (FuntionType == "Tangencial"){
+            	BigDecimal aux = derivative(outputLayer[i].getOutValue());
+            	deltaE = deltaE.multiply(aux);   	
+            }
+            deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+            outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
         	deltaOutput[i] = deltaE;
         }
+        
+        
         
         log.debug("Mostrando delta de la capa de salida");
         for (int i = 0; i< outputLayer.length; ++i){
@@ -299,19 +309,28 @@ public class Network {
         			OutputNeuron o =  (OutputNeuron) c.getTo();
         			BigDecimal aux = o.getDeltaError();
         			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexi�n
-        			deltaE =  deltaE.add(aux);   			
+        			deltaE =  deltaE.add(aux);  
+        			
+        			if (FuntionType == "Tangencial"){
+        				deltaE = deltaE.multiply(derivative(hiddenLayer[i].getOutValue()));
+        			}
         		}
         	}
         	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	deltaHidden[i] = deltaE;   	
         }
         
+       
+        	
+        	
+        
+        
         log.debug("Mostrando delta de la capa oculta");
         for (int i = 0; i< hiddenLayer.length; ++i){
         	log.debug("Salida obtenida: "+ hiddenLayer[i].getOutValue()
         			+ " Delta de error "+ deltaHidden[i]);
-        	
         }
+       
         
     
 //        System.out.println ("Muestro los delta de salida: \n ");
@@ -412,9 +431,10 @@ public class Network {
       
 	//pre: Realizar el setup antes
 	//previousW, previousV: matrices (t - 1) utilizadas en el momento beta  
-	public void trainWithMomentB (int idPatron) {
+	public void trainWithMomentB (int idPatron, double momentoB) {
 		
 		log.info("Entrenando con momento Beta. Patrón: "+ idPatron);
+		log.info("Momento B: "+ momentoB);
         feedForward();
 //        log.trace("Ejecutando m�dulo train() after feedForward \n");
 //
@@ -432,6 +452,11 @@ public class Network {
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
         	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	
+        	 if (FuntionType == "Tangencial"){
+             	BigDecimal aux = derivative(outputLayer[i].getOutValue());
+             	deltaE = deltaE.multiply(aux);   	
+             }
+        	 deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
         	deltaOutput[i] = deltaE;
         }
@@ -455,7 +480,10 @@ public class Network {
         			OutputNeuron o =  (OutputNeuron) c.getTo();
         			BigDecimal aux = o.getDeltaError();
         			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexi�n
-        			deltaE =  deltaE.add(aux);   			
+        			deltaE =  deltaE.add(aux);   
+        			if (FuntionType == "Tangencial"){
+        				deltaE = deltaE.multiply(derivative(hiddenLayer[i].getOutValue()));
+        			}
         		}
         	}
         	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
@@ -745,6 +773,13 @@ public class Network {
 		return acum;
 	}
 	
+	
+	public static BigDecimal derivative (BigDecimal x){
+		BigDecimal aux = new BigDecimal (1);
+		aux = aux.subtract(x.pow(2));
+		aux = aux.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+		return aux;
+	}
 	
 	
 	
