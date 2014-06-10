@@ -15,6 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -30,6 +32,8 @@ import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.jfree.util.Log;
 
 import utilities.Matrix;
 import utilities.WeightMatrix;
@@ -69,12 +73,16 @@ public class TrainingWindow {
 	private WeightMatrix matrices;
 	private boolean selectMatrixFile; // Flag para ver si hemos cogido las
 										// matrices de fichero o no
+	private String pathMatrices; //Ruta del archivo de donde obtenemos las matrices iniciales, en el caso
 	private Value.Funtion funtion;
 	private String funtionStr;
+	private File directory; 
+	private String directoryName; 
 	
 	NetworkManager ne;
 	private SwingWorker<Integer, Integer> sw;
 	private JTextField tfmomentoB;
+	private static Logger log = Logger.getLogger(TrainingWindow.class);
 
 	/**
 	 * Create the application.
@@ -85,6 +93,7 @@ public class TrainingWindow {
 	}
 
 	public void initialize() {
+		pathMatrices = "";
 
 		panel = new Panel();
 		panel.setBounds(6, 0, 980, 633);
@@ -273,6 +282,7 @@ public class TrainingWindow {
 												// dimensiones apropiadas
 					matrices = aux;
 					lblNewLabel_1.setText(filechoosen.getName());
+					pathMatrices = filechoosen.getName();
 				}
 			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -372,21 +382,33 @@ public class TrainingWindow {
 			matrices = new WeightMatrix(W, V);
 
 		}
+		
+		//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
+		
+		directoryName = "C:\\repositoryGit\\Salidas\\Training_"+TrainingWindow.getCurrentTimeStamp();
+		directory = new File(directoryName);
+		try{
+			boolean creado = directory.mkdir();
+			System.out.print("creado: "+ creado+"\n");
+		}
+		catch(SecurityException se){
+			Log.error("El directorio "+ directoryName + "no ha podido ser creado");
+		}
+		System.out.print (directoryName);
 
 		// Creamos el hilo que llama al training
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
 				ne.training(iterationMax, cotaError, learningCnt, matrices,
-						momentB, momentBValue,funtionStr);
+						momentB, momentBValue,funtionStr, directoryName);
 				return null;
 			}
 
 			@Override
 			protected void done() {
 				// Display results
-				String fileName = new String(
-						"C:\\repositoryGit\\Salidas\\resultsTraining.txt");
+				String fileName = new String(directoryName +"\\resultsTraining.txt");
 				try {
 					String strToAdd = FileUtils.readFileToString(new File(
 							fileName));
@@ -406,18 +428,14 @@ public class TrainingWindow {
 			System.out.print("ha terminado");
 
 		}
-
-		// if (!isStarted) {
-
-		// sw.execute();
-		// isStarted = false;
-		// }
-
-		// Testing collecting data
-		String outFile = new String(
-				"C:\\repositoryGit\\Salidas\\previousInformationTraining.txt");
+		
+		// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
+		
+		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
 		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
-		resultados.previousInformation(ne.getName(), matrices);
+		resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
+		
+		
 
 		// Display results
 		// outFile = new String(
@@ -480,5 +498,12 @@ public class TrainingWindow {
 
 	public void setPanel(final Panel panel) {
 		this.panel = panel;
+	}
+	
+	public static String getCurrentTimeStamp() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+	    Date now = new Date();
+	    String strDate = dateFormat.format(now);
+	    return strDate;
 	}
 }

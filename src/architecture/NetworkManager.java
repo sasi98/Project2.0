@@ -150,7 +150,7 @@ public class NetworkManager {
 
 
 	public void training (int iterMax, BigDecimal cuote, double learningCNT,
-			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion) {
+			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion, String directoryName) {
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
 		previousW = matrices.getW();
@@ -159,10 +159,11 @@ public class NetworkManager {
 		int iteration = 0;
 		
 		TrainingParameters results = new TrainingParameters();
-		WriteExcel writerErrorProgress = new WriteExcel(
-				"C:\\repositoryGit\\Salidas\\ErrorProgress.csv"); // Outcomes file
-		WriteExcel writerMatrices = new WriteExcel(
-				"C:\\repositoryGit\\Salidas\\MatricesObtenidas.csv"); // Outcomes file
+
+		String outFile = new String (directoryName+"\\resultsTraining.txt");
+		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+		WriteExcel writerErrorProgress = new WriteExcel(directoryName+"\\ErrorProgress.csv"); // Outcomes file
+		WriteExcel writerMatrices = new WriteExcel(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
 
 		while (!end) {
 			for (int i = 0; i < inputs.size(); i++) {
@@ -224,25 +225,16 @@ public class NetworkManager {
 			if (iteration == iterMax) {
 				log.debug("LLegamos al límite de las iteraciones. Iteration: "
 						+ iteration + " Máximo: " + iterMax);
-				results.setStatus(0);
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); 
-				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
 				end = true;
 			}
 			
 			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt"); //
-				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
 				end = true; 
 			}
 			
 			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
-				results.setStatus(1);
-				log.debug("El error ha alcanzado la cota.");
-				String outFile = new String ("C:\\repositoryGit\\Salidas\\resultsTraining.txt");
-				TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, new WeightMatrix(W, V));
 				end = true;
 				

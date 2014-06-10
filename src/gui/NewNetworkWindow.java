@@ -4,6 +4,7 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+
+import org.apache.log4j.Logger;
 
 import valueset.Value;
 import architecture.NetworkManager;
@@ -40,8 +43,10 @@ public class NewNetworkWindow {
 	// Variables internas
 	private String idCompany;
 	private int numNeuronES, numNeuronO, numPatrones, inicio;
+	private String directoryName;
 	private String outFile; // Fichero en el que escribiremos los inputs/outputs
 	private boolean bias;
+	private static Logger log = Logger.getLogger(NewNetworkWindow.class);
 
 	/**
 	 * Create the application.
@@ -135,6 +140,20 @@ public class NewNetworkWindow {
 
 		textPane = new JTextPane();
 		scrollPane.setViewportView(textPane);
+		
+		
+		//Creación del directorio:
+		directoryName = "C:\\repositoryGit\\Salidas\\NewNetworkOuts";
+		File directory = new File(directoryName);
+		try{
+			boolean creado = directory.mkdir();
+			System.out.print("creado: "+ creado+"\n");
+		}
+		catch(SecurityException se){
+			log.error("El directorio "+ directoryName + "no ha podido ser creado");
+		}
+		System.out.print (directoryName);
+		
 
 	}
 
@@ -164,7 +183,7 @@ public class NewNetworkWindow {
 			JOptionPane
 					.showMessageDialog(
 							null,
-							"Error, el campo identificador de empresa estï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ vacio",
+							"Error, el campo identificador de empresa está vacio",
 							"Campo requerido", JOptionPane.ERROR_MESSAGE);
 		} else {
 			int auxInt = Integer.parseInt(idCompany);
@@ -172,7 +191,7 @@ public class NewNetworkWindow {
 				JOptionPane.showMessageDialog(null,
 						"Error, el identificador debe de tener formato 000"
 								+ " y valores entre 0 y 510.",
-						"Identificador no vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lido",
+						"Identificador no válido",
 						JOptionPane.ERROR_MESSAGE);
 			} else {
 				numPatrones = (int) sPatrones.getValue();
@@ -270,8 +289,7 @@ public class NewNetworkWindow {
 						+ MainWindow.neList.size());
 
 				// Testing collecting data
-				outFile = new String(
-						"C:\\repositoryGit\\Salidas\\NewNetworkWindowResults.txt");
+				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
 				NewNetworkWindowOuts resultados = new NewNetworkWindowOuts(
 						outFile);
 				resultados.createNewNetworkingOut(idCompany, numNeuronES,

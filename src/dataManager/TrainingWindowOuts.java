@@ -14,10 +14,23 @@ public class TrainingWindowOuts extends WriteExcel {
 		super(fileName);
 	}
 	
-	public void previousInformation(String name, WeightMatrix matrices){
-		wr.append("Comenzando entrenamiento de la Red: "+name);
-		wr.append("Matrices iniciales: \n");
+	public void previousInformation(String name, WeightMatrix matrices, double learningCnt, double momentB, String funcion, String pathArchivo){
+		wr.append("Comenzando entrenamiento de la Red: "+name+"\n");
+		wr.append("Coeficiente de aprendizaje: "+ learningCnt +"\n");
+		if (momentB != 0){
+			wr.append("Momento Beta: "+ momentB+"\n");
+		}
+		else{
+			wr.append("No se ha utilizado momento B \n");
+		}
+		wr.append("Función de activación: "+funcion+"\n");
+		wr.append("Matrices iniciales");
+		if (pathArchivo != "")
+			wr.append(" procedentes del archivo: "+ pathArchivo+"\n");
+		else
+			wr.append(" generadas de forma aletoria \n");
 		writeMatrices(matrices);
+		wr.append("\n");
 		closeFile();
 	}
 
@@ -27,6 +40,7 @@ public class TrainingWindowOuts extends WriteExcel {
 		wr.append("Error resultante en la iteración = " +error+"\n");
 		wr.append("Matrices de pesos obtenidas: \n ");
 		writeMatrices(matrices);
+		wr.append("\n");
 		closeFile();
 	}
 	
@@ -35,6 +49,7 @@ public class TrainingWindowOuts extends WriteExcel {
 		wr.append("Error = "+error+" Cota = "+cota+"\n");
 		wr.append("Matrices de pesos obtenidas: \n");
 		writeMatrices(matrices);
+		wr.append("\n");
 		closeFile();
 	}
 	
