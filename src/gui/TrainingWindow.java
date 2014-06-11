@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -42,6 +43,8 @@ import architecture.NetworkManager;
 import dataManager.ReadFile;
 import dataManager.TrainingWindowOuts;
 
+import javax.swing.JCheckBox;
+
 public class TrainingWindow {
 
 	public static SwingWorker<Void, Void> worker;
@@ -59,16 +62,17 @@ public class TrainingWindow {
 										// training (
 	private JComboBox comboBox;
 	private JRadioButton rdbtnLineal, rdbtnTangencial, rdbtnNo,
-			rdbtnAleatorias, rdbtnProcedentesDeArchivo;
+			rdbtnAleatorias, rdbtnProcedentesDeArchivo,  rdbtnFijo, rdbtnVariable;
 	private JTextArea txtrUtilizarMatricesDe;
-	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_1, lbMsnlearningCuoteMax;
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
+	private JCheckBox cbAcotadoLearning;
 
 	private BigDecimal cotaError;
-	private double learningCnt;
+	private double learningCnt, learningCNTCuote;
 	private int iterationMax;
-	private boolean momentB;
+	private boolean momentB, acotadoMax, learningCNTVariable;
 	private double momentBValue;
 	private WeightMatrix matrices;
 	private boolean selectMatrixFile; // Flag para ver si hemos cogido las
@@ -142,11 +146,7 @@ public class TrainingWindow {
 		panel.add(lblMaxIt);
 
 		comboBox = new JComboBox();
-		comboBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		
 
 		for (final NetworkManager ne : MainWindow.neList) { // Aï¿½ï¿½ï¿½adimos las
 															// instancias
@@ -211,7 +211,7 @@ public class TrainingWindow {
 
 		tflearningCNT = new JTextField();
 		tflearningCNT.setColumns(10);
-		tflearningCNT.setBounds(new Rectangle(223, 126, 80, 20));
+		tflearningCNT.setBounds(new Rectangle(411, 126, 80, 20));
 		panel.add(tflearningCNT);
 
 		tfmaxIt = new JTextField();
@@ -238,7 +238,46 @@ public class TrainingWindow {
 		lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setBounds(294, 250, 165, 14);
 		panel.add(lblNewLabel_1);
+		
+		rdbtnFijo = new JRadioButton("Fijo");
+		rdbtnFijo.setBounds(219, 125, 48, 23);
+		rdbtnFijo.setSelected(true);
+		panel.add(rdbtnFijo);
+		
+		rdbtnVariable = new JRadioButton("Variable");
+		rdbtnVariable.setBounds(283, 125, 69, 23);
+		panel.add(rdbtnVariable);
+		
+		ButtonGroup groupLearningCNT = new ButtonGroup();
+		groupLearningCNT.add(rdbtnFijo);
+		groupLearningCNT.add(rdbtnVariable);
+		
+		JLabel lblValor = new JLabel("Valor : ");
+		lblValor.setBounds(374, 129, 46, 14);
+		panel.add(lblValor);
+		
+		cbAcotadoLearning = new JCheckBox("Acotado superior");
+		cbAcotadoLearning.setBounds(374, 155, 115, 23);
+		panel.add(cbAcotadoLearning);
+		
+		lbMsnlearningCuoteMax = new JLabel("");
+		lbMsnlearningCuoteMax.setBounds(374, 189, 136, 14);
+		panel.add(lbMsnlearningCuoteMax);
 
+		if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
+			double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
+			double currentValue = Double.parseDouble(tflearningCNT.getText()); 
+				if (currentValue> max){
+					JOptionPane.showMessageDialog(
+							null,
+							"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
+							+ "relación a los datos. Modifica este parámetro",
+							"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
+				}
+				
+			}
+		
+		
 		addNewGraph();
 
 	}
@@ -265,7 +304,26 @@ public class TrainingWindow {
 				btnCancelarEntrenamientoActionPerformed();
 			}
 		});
+		
+		comboBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comboBoxActionPerformed ();
+			}
+		});
+		
+		cbAcotadoLearning.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cbAcotadoLearningActionPerformed();
+			}
+		});
 
+		tflearningCNT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tflearningCNTActionPerformed();
+			}
+		});
+		
 	}
 
 	private void rdbtnProcedentesDeArchivoActionPerformed() {
@@ -296,11 +354,25 @@ public class TrainingWindow {
 
 	private void btnIniciarEntrenamientoActionPerformed() {
 
+		boolean start = true; 
 		MainWindow.cancelTraining = false;
 		selectMatrixFile = false;
 		deleteGraph();
 		addNewGraph();
-
+		if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
+			double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
+			double currentValue = Double.parseDouble(tflearningCNT.getText()); 
+				if (currentValue> max){
+					JOptionPane.showMessageDialog(
+							null,
+							"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
+							+ "relación a los datos. Modifica este parámetro",
+							"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
+					start = false; 
+				}
+				
+			}
+		
 		final String stCotaError = tfcortaError.getText();
 		if ((stCotaError == null) || (stCotaError.equals(""))) {
 			tfcortaError.setText("0.001");
@@ -321,6 +393,11 @@ public class TrainingWindow {
 			learningCnt = Double.parseDouble(stCnsLearning);
 		}
 
+		if (cbAcotadoLearning.isSelected()){
+			acotadoMax = true;
+		}
+		
+		
 		final String stItMax = tfmaxIt.getText();
 		if ((stItMax == null) || (stItMax.equals(""))) {
 			tfmaxIt.setText("1000");
@@ -347,7 +424,13 @@ public class TrainingWindow {
 			System.out.print("Funcion tangencial");
 			funtionStr = "Tangencial";
 		}
-
+		
+		if (rdbtnFijo.isSelected()){
+			learningCNTVariable = false; 
+		}else if (rdbtnVariable.isSelected()){
+			learningCNTVariable = true; 
+		}
+if (start){
 		NetworkManager aux2 = null;
 		for (final NetworkManager aux : MainWindow.neList) {
 			if (aux.getName().equals(comboBox.getSelectedItem())) {
@@ -401,7 +484,7 @@ public class TrainingWindow {
 			@Override
 			protected Integer doInBackground() throws Exception {
 				ne.training(iterationMax, cotaError, learningCnt, matrices,
-						momentB, momentBValue,funtionStr, directoryName);
+						momentB, momentBValue,funtionStr, directoryName, acotadoMax);
 				return null;
 			}
 
@@ -464,6 +547,7 @@ public class TrainingWindow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+}
 
 	}
 
@@ -472,7 +556,76 @@ public class TrainingWindow {
 		MainWindow.cancelTraining = true;
 		System.out.print("Estado: " + sw.getState());
 	}
+	
+	
+	private void cbAcotadoLearningActionPerformed() {
+		if ((cbAcotadoLearning.isSelected()) && (ne != null)){ //Si lo seleccionamos, Incluiremos un mensaje acerca del 
+											//valor máximo del coeficiente
+			Matrix R = Matrix.createMatrixFromArrayOfVectors(ne.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+			Matrix RTransp = Matrix.transponer(R);
+			Matrix mCorrelacion = Matrix.product(R, RTransp); //R es mi matriz de datos, y R · R Transpuesta es mi matriz de correlación de datos
+			learningCNTCuote = 1 / mCorrelacion.getMaxDiagonal().doubleValue();
+			//1 dividido entre el máximo de nuestra diagonal será el máximo
+			
+			
+			
+			lbMsnlearningCuoteMax.setText(Double.toString(learningCNTCuote));
+		}
+		else{
+			learningCNTCuote = 0; 
+			lbMsnlearningCuoteMax.setText("");		
+		}
+	}
+	
+	private void comboBoxActionPerformed() {
+		NetworkManager aux2 = null;
+		for (final NetworkManager aux : MainWindow.neList) {
+			if (aux.getName().equals(comboBox.getSelectedItem())) {
+				aux2 = aux; // Controlar que se halla elegido alguna, de lo
+							// contrario tendremos null exceptions
+			}
+		}
+		ne = aux2;
+		
+		//como depende de los datos de entrada, si cambiamos la red, tenemos que tendremos 
+		//que calcular de nuevo la cuota superior del learning en el caso de q tengamos esa opción seleccionada
+	
+			if (cbAcotadoLearning.isSelected()){ //Si lo seleccionamos, Incluiremos un mensaje acerca del 
+				//valor máximo del coeficiente
+				Matrix R = Matrix.createMatrixFromArrayOfVectors(ne.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+				Matrix RTransp = Matrix.transponer(R);
+				Matrix mCorrelacion = Matrix.product(R, RTransp); //R es mi matriz de datos, y R · R Transpuesta es mi matriz de correlación de datos
+				learningCNTCuote = 1 / mCorrelacion.getMaxDiagonal().doubleValue();
+				//1 dividido entre el máximo de nuestra diagonal será el máximo
+				lbMsnlearningCuoteMax.setText(Double.toString(learningCNTCuote));
+				}
+			else{
+				learningCNTCuote = 0; 
+				lbMsnlearningCuoteMax.setText("");		
+			}
+			
+	}
 
+	private void tflearningCNTActionPerformed() {
+		if (cbAcotadoLearning.isSelected()){
+			double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
+			double currentValue = Double.parseDouble(tflearningCNT.getText()); 
+				if (currentValue> max){
+					JOptionPane.showMessageDialog(
+							null,
+							"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
+							+ "relación a los datos",
+							"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
+				}
+				
+			}
+		System.out.print("Entra en el tf learnig");
+			
+		}
+	
+		
+	
+	
 	public Panel getPanel() {
 		return panel;
 

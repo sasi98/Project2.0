@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -28,6 +29,10 @@ import architecture.NetworkManager;
 import dataManager.NewNetworkWindowOuts;
 import dataManager.PatronData;
 
+import javax.swing.JRadioButton;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 public class NewNetworkWindow {
 
 	// Variables GUI
@@ -39,6 +44,7 @@ public class NewNetworkWindow {
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
 	private JCheckBox checkBox;
+	private JRadioButton rdbtnSimple, rdbtnConCapaOculta;
 
 	// Variables internas
 	private String idCompany;
@@ -72,20 +78,20 @@ public class NewNetworkWindow {
 		panel.add(lblNewLabel);
 
 		final JLabel lblNewLabel_2 = new JLabel(
-				"N\u00BA Patrones de aprendizaje: ");
+				"Número de patrones de aprendizaje: ");
 		lblNewLabel_2.setBounds(399, 168, 177, 16);
 		panel.add(lblNewLabel_2);
 
 		final JLabel lblNewLabel_3 = new JLabel(
-				"N\u00BA de neuronas de entrada/salida:");
+				"Número de neuronas de entrada/salida:");
 		lblNewLabel_3.setBounds(398, 86, 215, 16);
 		panel.add(lblNewLabel_3);
 
-		final JLabel lblNewLabel_4 = new JLabel("N\u00BA de neuronas ocultas:");
+		final JLabel lblNewLabel_4 = new JLabel("Número de neuronas ocultas:");
 		lblNewLabel_4.setBounds(400, 125, 151, 16);
 		panel.add(lblNewLabel_4);
 
-		final JLabel lblNewLabel_7 = new JLabel("Selecciï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½n de datos: ");
+		final JLabel lblNewLabel_7 = new JLabel("Selección de datos: ");
 		lblNewLabel_7.setBounds(40, 125, 156, 16);
 		panel.add(lblNewLabel_7);
 
@@ -141,6 +147,27 @@ public class NewNetworkWindow {
 		textPane = new JTextPane();
 		scrollPane.setViewportView(textPane);
 		
+		JLabel lblTipoDeRed = new JLabel("Tipo de red: ");
+		lblTipoDeRed.setBounds(723, 87, 104, 14);
+		panel.add(lblTipoDeRed);
+		
+		rdbtnSimple = new JRadioButton("Simple");
+		
+		
+		rdbtnSimple.setBounds(818, 83, 109, 23);
+		panel.add(rdbtnSimple);
+		
+		rdbtnConCapaOculta = new JRadioButton("Con capa oculta");
+		rdbtnConCapaOculta.setBounds(818, 118, 109, 23);
+		rdbtnConCapaOculta.setSelected(true);
+		panel.add(rdbtnConCapaOculta);
+		
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		buttonGroup.add(rdbtnConCapaOculta);
+		buttonGroup.add(rdbtnSimple);
+
+	
 		
 		//Creación del directorio:
 		directoryName = "C:\\repositoryGit\\Salidas\\NewNetworkOuts";
@@ -164,6 +191,19 @@ public class NewNetworkWindow {
 				bCreateNNActionPerformed();
 			}
 		});
+		rdbtnSimple.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				rdbtnSimpleActionPerformed();
+			}
+		});
+		
+		rdbtnConCapaOculta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnConCapaOcultaActionPerformed();
+			}
+
+		});
+		
 	}
 
 	public Panel getPanel() {
@@ -204,10 +244,14 @@ public class NewNetworkWindow {
 					spNumNeurons.setValue(6);
 					numNeuronES = 6;
 				}
-				numNeuronO = (int) spNumNeuronO.getValue();
-				if (numNeuronO == 0) {
-					numNeuronO = numNeuronES - (numNeuronES / 2);
-					spNumNeuronO.setValue(numNeuronO);
+				if (rdbtnConCapaOculta.isSelected()){
+					numNeuronO = (int) spNumNeuronO.getValue();
+					if (numNeuronO == 0) {
+						numNeuronO = numNeuronES - (numNeuronES / 2);
+						spNumNeuronO.setValue(numNeuronO);
+					}
+				}else{
+					numNeuronO = 0;
 				}
 				String strInicio = tfInicio.getText();
 				if ((strInicio == null) || (strInicio.equals(""))) {
@@ -324,4 +368,15 @@ public class NewNetworkWindow {
 			}// end else2
 		}// end else1
 	}
+	
+	
+	private void rdbtnSimpleActionPerformed() {
+		spNumNeuronO.setEnabled(false);
+		numNeuronO = 0;
+	}
+
+	private void rdbtnConCapaOcultaActionPerformed() {
+		spNumNeuronO.setEnabled(true);
+	}
+	
 }

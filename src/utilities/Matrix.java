@@ -374,6 +374,50 @@ public static Matrix createMatrixFromArrays (ArrayList<ArrayList<BigDecimal>> ar
 	
 }
 
+//Genera una matrix (filas = nº de vectores , columnas = tamaño de los arrays) a partir 
+//del vector de BigDecimal introducido por parámetrs
+public static Matrix createMatrixFromArrayOfVectors (ArrayList<BigDecimal[]> arrayMatrix){
+	int numRow = arrayMatrix.size();
+	int numColum = arrayMatrix.get(0).length;
+	Matrix newM = new Matrix (new BigDecimal[numRow][numColum]);
+	for (int i = 0; i<newM.getRow(); i++){
+		BigDecimal[] aux = arrayMatrix.get(i);
+		for (int j = 0; j < newM.getColumn(); j++){
+			newM.setValuePos(i, j,aux[j]);
+		}
+	}
+	return newM;
+	
+}
 
+
+//Pre: la matriz tiene que ser cuadrada
+//Return el máximo de la diagonal 
+public BigDecimal getMaxDiagonal (){
+	ArrayList<BigDecimal> diagonal = new ArrayList<>();
+	if (this.column != this.row){
+		log.error("No se puede obtener el máximo de la diagonal, pues las matrices no son cuadradas."+
+				"Dimensiones: Filas: "+this.row+" Columnas: " + this.column);
+	return null;
+	}
+	else{
+		//Get the diagonal
+		for (int i = 0; i< this.row; i++){
+			for (int j = 0; j<this.column; j++){
+				if (i == j)
+					diagonal.add(this.getValuePos(i, j));
+			}
+		}
+		//Get the max of the diagonal
+		BigDecimal max = diagonal.get(0);
+		for (BigDecimal a: diagonal){
+			if(a.compareTo(max) == 1)
+				max = a;
+		}
+		return max;
+	}
+}
+	
+	
 
 }
