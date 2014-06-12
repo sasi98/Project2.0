@@ -33,6 +33,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import architecture.NetworkManager;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
 
 /**
  * 
@@ -59,6 +61,7 @@ public class MainWindow extends JFrame {
 	private NewNetworkWindow newNetworkWindow;
 	private TrainingWindow trainingWindow;
 	private CalculateOutputsWindow calculateOutputsWindow;
+	private JMenuBar menuBar;
 
 	/**
 	 * @param args
@@ -106,28 +109,35 @@ public class MainWindow extends JFrame {
 
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().setBackground(Color.white);
-		btnCrearNueva = new JButton("Nueva");
-		btnEntrenar = new JButton("Entrenar");
-		btnCalcularSalidas = new JButton("Calcular salidas");
-
-		toolBar = new JToolBar();
-		toolBar.setBackground(Color.WHITE);
-		toolBar.setForeground(Color.WHITE);
-		toolBar.setBounds(6, 6, 215, 21);
-		toolBar.add(btnCrearNueva);
-		toolBar.add(btnEntrenar);
-		toolBar.add(btnCalcularSalidas);
-		frame.getContentPane().add(toolBar);
-
-		desktopPane = new JDesktopPane();
-		desktopPane.setBounds(6, 39, 988, 633);
-		desktopPane.setBackground(Color.WHITE);
-		desktopPane.setOpaque(false);
-		frame.getContentPane().add(desktopPane);
-
-		tglbtnTrazas = new JToggleButton("Desactivar trazas");
-		tglbtnTrazas.setBounds(851, 6, 123, 21);
-		frame.getContentPane().add(tglbtnTrazas);
+		
+		menuBar = new JMenuBar();
+		menuBar.setBounds(0, 0, 984, 21);
+		frame.getContentPane().add(menuBar);
+		
+		JMenu mnCrearEstructuraRed = new JMenu("Arquitectura de red\r\n");
+		menuBar.add(mnCrearEstructuraRed);
+								
+										desktopPane = new JDesktopPane();
+										desktopPane.setBounds(0, 21, 984, 491);
+										frame.getContentPane().add(desktopPane);
+										desktopPane.setBackground(Color.WHITE);
+										desktopPane.setOpaque(false);
+										btnCrearNueva = new JButton("Nueva");
+										btnEntrenar = new JButton("Entrenar");
+										btnCalcularSalidas = new JButton("Calcular salidas");
+										
+												toolBar = new JToolBar();
+												toolBar.setBounds(58, 86, 215, 21);
+												desktopPane.add(toolBar);
+												toolBar.setBackground(Color.WHITE);
+												toolBar.setForeground(Color.WHITE);
+												toolBar.add(btnCrearNueva);
+												toolBar.add(btnEntrenar);
+												toolBar.add(btnCalcularSalidas);
+												
+														tglbtnTrazas = new JToggleButton("Desactivar trazas");
+														tglbtnTrazas.setBounds(855, 29, 123, 21);
+														desktopPane.add(tglbtnTrazas);
 
 	}
 
@@ -322,5 +332,4 @@ public class MainWindow extends JFrame {
 			}
 		}
 	}
-
 }
