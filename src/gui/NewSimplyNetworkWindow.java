@@ -124,6 +124,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 		this.add(scrollPane);
 
 		textPane = new JTextPane();
+		textPane.setEditable(false);
 		scrollPane.setViewportView(textPane);
 		
 				
