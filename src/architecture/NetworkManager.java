@@ -12,9 +12,11 @@ import javax.swing.SwingWorker;
 import org.apache.log4j.Logger;
 
 
+
 //import dataManager.WriteOutcomes;
 import utilities.Matrix;
 import utilities.WeightMatrix;
+import valueset.LearningConstant;
 import dataManager.TrainingWindowOuts;
 import dataManager.WriteExcel;
 
@@ -150,7 +152,13 @@ public class NetworkManager {
 
 
 	public void training (int iterMax, BigDecimal cuote, double learningCNT,
-			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion, String directoryName, boolean acotadoMax) {
+			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion, String directoryName, boolean variableLearning) {
+		int contToResetLearn = 0;
+		double increment;
+		BigDecimal previousError = null;
+		increment = learningCNT/2;
+		LearningConstant  learningClass = new LearningConstant(learningCNT, increment); 
+			
 		Matrix W = matrices.getW();
 		Matrix V = matrices.getV();
 		previousW = matrices.getW();
@@ -172,10 +180,10 @@ public class NetworkManager {
 				// las debo guardar antes, para poder ser utilizadas en la it siguiente
 				if (bias) {
 					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, V, funtion);
+							learningClass.getValue(), desiredOutputs.get(i), W, V, funtion);
 				} else {
 					subNetwork.setUpPatronWithoutBias(numNeuronsO,
-							inputs.get(i), learningCNT, desiredOutputs.get(i),
+							inputs.get(i), learningClass.getValue(), desiredOutputs.get(i),
 							W, V, funtion); // Establecemos la red con el patrï¿½n i
 				}
 				if (momentoBool) {
@@ -219,7 +227,10 @@ public class NetworkManager {
 			// Add current error, matrix and iteration in memory and in results class
 			TrainingWindow.errorGraph.put(iteration, errorIt);
 			writerErrorProgress.writeError(errorIt, iteration);
-			
+			if (iteration == 0){
+				previousError = errorIt;
+			}
+		
 			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
 
 			if (iteration == iterMax) {
@@ -241,6 +252,28 @@ public class NetworkManager {
 			} 				
 			//if (TrainingWindow.sw.isCancelled()){
 			
+			//Si nuestro learning es variable, y el contador ha llegado a un número determinado de it, 
+			//comprobamos si el error es menor que el último guardado, si es menor, incrementamos el learning consta,
+			
+			if ((variableLearning)&&(contToResetLearn == LearningConstant.IT_LIMIT_TO_MODIFY)){
+				if (errorIt.compareTo(previousError) == -1){ //el algorimo mejora
+					learningClass.setPreviousValue(learningClass.getValue());
+					learningClass.incValue();
+					previousError = errorIt;
+					contToResetLearn = 0;
+					System.out.print("Incrementamos constant learning: " +learningClass.getValue()+"\n");
+				}else if (errorIt.compareTo(previousError) == 1){ //el algorimo empeora
+					learningClass.setPreviousValue(learningClass.getValue());
+					learningClass.decValue();
+					previousError = errorIt; 
+					contToResetLearn = 0; 
+					System.out.print("Decrementamos el constant learning: " +learningClass.getValue()+"\n");
+				}
+			}
+			else{
+				contToResetLearn++;
+			}
+		
 			
 			iteration++;
 		} // fin while

@@ -484,7 +484,7 @@ if (start){
 			@Override
 			protected Integer doInBackground() throws Exception {
 				ne.training(iterationMax, cotaError, learningCnt, matrices,
-						momentB, momentBValue,funtionStr, directoryName, acotadoMax);
+						momentB, momentBValue,funtionStr, directoryName, learningCNTVariable);
 				return null;
 			}
 
