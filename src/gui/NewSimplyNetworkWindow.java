@@ -86,7 +86,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(860, 330, 110, 29);
-		add(btnCancelar);
+		this.add(btnCancelar);
 
 		comboBox_inputType = new JComboBox();
 		comboBox_inputType.setBounds(220, 48, 110, 22);
