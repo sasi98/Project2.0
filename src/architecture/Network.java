@@ -1,19 +1,12 @@
 package architecture;
 
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-import jxl.demo.Write;
-
 import org.apache.log4j.Logger;
 
-import dataManager.ReadExcel;
-import dataManager.WriteExcel;
 import utilities.Matrix;
-import utilities.WeightMatrix;
-import valueset.Value;
 
 public class Network {
 	
@@ -22,11 +15,8 @@ public class Network {
 	private int 					numNeuronsE, /*Número de neuronas de entrada por patrón, bias incluido en el caso*/
 									numNeuronsS, /*Número de neuronas de salida*/
 									numNeuronsO; /*Número de neuronas ocultas, bias incluido en el caso*/
-										
-	
-	
+							
 	private double				learningCNT; 
-								 //Lo utilizaremos para evitar minimos locales
 	
 	
 	private Neuron[] 				inputLayer,  //Vector que contiene las neuronas de entrada de la red (bias incluido en el caso)
@@ -782,7 +772,19 @@ public class Network {
 	}
 	
 	
-	
+	public void connectLayers (Neuron[] from, Neuron[] to, Matrix W){
+		for (int i = 0; i < to.length; i++) {
+			for (int j = 0; j < from.length; j++) {
+				//Create the connection object and put it in both neurons, and give it the weight from the matriz W            	
+	            Connection c = new Connection(from[j],to[i],W.getValuePos(i, j));
+	            log.debug("Creando conexi�n: From: "+ from[j] +" to " + to[i] + " con peso " + W.getValuePos(i, j));
+	            to[i].addConnection(c);
+	            from[j].addConnection(c);
+	        }
+		}
+		
+		
+	}
 	
 	
 	

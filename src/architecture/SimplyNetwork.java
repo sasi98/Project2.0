@@ -1,18 +1,10 @@
 package architecture;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-
-import jxl.demo.Write;
 
 import org.apache.log4j.Logger;
 
-import dataManager.ReadExcel;
-import dataManager.WriteExcel;
 import utilities.Matrix;
-import utilities.WeightMatrix;
-import valueset.Value;
 
 public class SimplyNetwork {
 		

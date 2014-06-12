@@ -2,23 +2,14 @@ package architecture;
 
 import gui.MainWindow;
 import gui.TrainingWindow;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-
-import javax.swing.SwingWorker;
-
 import org.apache.log4j.Logger;
-
-
-
-//import dataManager.WriteOutcomes;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.LearningConstant;
-import dataManager.TrainingWindowOuts;
-import dataManager.WriteExcel;
+import outsFiles.*;
 
 public class NetworkManager {
 
@@ -44,7 +35,9 @@ public class NetworkManager {
 														// de salida,
 														// exceptuando a redes
 														// con bias
-										numNeuronsO;
+	
+										numNeuronsO;// if 0, nuestra red es simple
+	
 	/** numNeuronsO y numNeuronsE incluyen el tama√±o del bias en el caso */
 
 	ArrayList<BigDecimal[]> inputs, desiredOutputs;
@@ -169,7 +162,7 @@ public class NetworkManager {
 		TrainingParameters results = new TrainingParameters();
 
 		String outFile = new String (directoryName+"\\resultsTraining.txt");
-		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
+		LNTrainingOuts resultados = new LNTrainingOuts(outFile);
 		WriteExcel writerErrorProgress = new WriteExcel(directoryName+"\\ErrorProgress.csv"); // Outcomes file
 		WriteExcel writerMatrices = new WriteExcel(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
 
@@ -330,6 +323,115 @@ public class NetworkManager {
 		}
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public void trainingSimplyNetwork (int iterMax, BigDecimal cuote, double learningCNT,
+			Matrix W, boolean momentoBool, double momentoB, String funtion, String directoryName) {
+		
+		previousW = W;
+		
+		boolean end = false;
+		int iteration = 0;
+		
+		TrainingParameters results = new TrainingParameters();
+
+		String outFile = new String (directoryName+"\\resultsTraining.txt");
+		SNTrainingOuts resultados = new SNTrainingOuts(outFile);
+		WriteExcel writerErrorProgress = new WriteExcel(directoryName+"\\ErrorProgress.csv"); // Outcomes file
+		WriteExcel writerMatrices = new WriteExcel(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
+
+		while (!end) {
+			for (int i = 0; i < inputs.size(); i++) {
+				SimplyNetwork subNetwork = new SimplyNetwork();
+				// Las actuales W y V serÌan utilizadas en el momento beta de la SIGUIENTE iteraciÛn en el for,
+				// las debo guardar antes, para poder ser utilizadas en la it siguiente
+				if (bias) {
+					subNetwork.setUpPatronWithBias(inputs.get(i),
+							learningCNT, desiredOutputs.get(i), W, funtion);
+				} else {
+					subNetwork.setUpPatronWithoutBias(inputs.get(i), learningCNT, desiredOutputs.get(i),
+							W, funtion); // Establecemos la red con el patrÔøΩn i
+				}
+//				if (momentoBool) {
+//					subNetwork.trainWithMomentB(i, momentoB);
+//				} else {
+					subNetwork.train(i);
+				//}
+				W = subNetwork.getW(); // after training, we get the matrix W and V
+				log.debug("Valores de W tras actualizaciÛn de matriz");
+				W.printMatrix(); // logger prints
+			}
+			// Comprobado con trazas hasta aquÌ everything is working fine
+			log.trace("Final del training de todas los patrones. Inicio del c·lculo del error");
+			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
+			for (int i = 0; i < inputs.size(); i++) {
+				SimplyNetwork subNetwork = new SimplyNetwork();
+				if (bias) {
+					subNetwork.setUpPatronWithBias(inputs.get(i),
+							learningCNT, desiredOutputs.get(i), W, funtion);
+				} else {
+					subNetwork.setUpPatronWithoutBias(inputs.get(i), learningCNT, desiredOutputs.get(i),
+							W, funtion);
+				}
+
+				errorList.add(subNetwork.calculateError());
+			}
+
+			// Calculamos el error medio de la iteraciÛn
+			BigDecimal errorIt = new BigDecimal(0);
+			for (BigDecimal error : errorList) {
+				errorIt = errorIt.add(error);
+			}
+			errorIt = errorIt.divide(new BigDecimal(errorList.size()),
+					RoundingMode.HALF_UP);
+			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
+
+			// Add current error, matrix and iteration in memory and in results class
+			TrainingWindow.errorGraph.put(iteration, errorIt);
+			writerErrorProgress.writeError(errorIt, iteration);
+			
+			log.debug("Error ponderado en la interaciÛn " + iteration + " es " + errorIt);
+
+			if (iteration == iterMax) {
+				log.debug("LLegamos al lÌmite de las iteraciones. Iteration: "
+						+ iteration + " M·ximo: " + iterMax);
+				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, W);
+				end = true;
+			}
+			
+			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
+				resultados.cancelledTraining(iteration, errorIt , W);
+				end = true; 
+			}
+			
+			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
+				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, W);
+				end = true;
+				
+			} 				
+			//if (TrainingWindow.sw.isCancelled()){
+			
+			
+			iteration++;
+		} // fin while
+		
+	//Salimos del bucle
+		//writerMatrices.writeMatrices(new WeightMatrix(W, V));
+		writerMatrices.closeFile();
+		writerErrorProgress.closeFile();
+	}
+	
+	
+	
+	
+	
+	
 
 	
 

@@ -16,6 +16,11 @@ public class WeightMatrix {
 		V = v;
 	}
 	
+	public WeightMatrix(Matrix w) {
+		super();
+		W = w;
+	}
+	
 	public Matrix getW() {
 		return W;
 	}

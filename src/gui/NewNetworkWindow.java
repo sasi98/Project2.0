@@ -17,6 +17,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -24,14 +25,11 @@ import javax.swing.JTextPane;
 
 import org.apache.log4j.Logger;
 
+import outsFiles.NewNetworkOuts;
 import valueset.Value;
 import architecture.NetworkManager;
-import dataManager.NewNetworkWindowOuts;
 import dataManager.PatronData;
 
-import javax.swing.JRadioButton;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class NewNetworkWindow {
 
@@ -334,7 +332,7 @@ public class NewNetworkWindow {
 
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
-				NewNetworkWindowOuts resultados = new NewNetworkWindowOuts(
+				NewNetworkOuts resultados = new NewNetworkOuts(
 						outFile);
 				resultados.createNewNetworkingOut(idCompany, numNeuronES,
 						numNeuronO, numPatrones, bias, this.comboBox_inputType

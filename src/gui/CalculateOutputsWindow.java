@@ -1,28 +1,8 @@
 package gui;
 
-import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.Panel;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
-import utilities.StandardDeviation;
-import utilities.WeightMatrix;
-import dataManager.CalculateOutputsWindowOuts;
-import dataManager.ReadFile;
-import dataManager.WriteExcel;
-import architecture.NetworkManager;
-
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.beans.DesignMode;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,6 +10,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+
+import outsFiles.CalculateOutputsOuts;
+import outsFiles.WriteExcel;
+import utilities.StandardDeviation;
+import utilities.WeightMatrix;
+import architecture.NetworkManager;
+import dataManager.ReadFile;
 
 public class CalculateOutputsWindow {
 
@@ -209,7 +203,7 @@ public class CalculateOutputsWindow {
 		
 		// Testing collecting data
 		String outFile = new String( "C:\\repositoryGit\\Salidas\\previousInformationCalculateOutputs.txt");
-		CalculateOutputsWindowOuts resultados = new CalculateOutputsWindowOuts(outFile);
+		CalculateOutputsOuts resultados = new CalculateOutputsOuts(outFile);
 		resultados.results (ne.getName(), matrices, ne.getInputs(), ne.getDesiredOutputs(), salidas);
 		// Display results
 		FileReader reader;

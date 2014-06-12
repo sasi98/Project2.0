@@ -40,8 +40,8 @@ import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.Value;
 import architecture.NetworkManager;
-import dataManager.ReadFile;
-import dataManager.TrainingWindowOuts;
+import dataManager.*;
+import outsFiles.*;
 
 import javax.swing.JCheckBox;
 
@@ -75,6 +75,7 @@ public class TrainingWindow {
 	private boolean momentB, acotadoMax, learningCNTVariable;
 	private double momentBValue;
 	private WeightMatrix matrices;
+	private Matrix W; 
 	private boolean selectMatrixFile; // Flag para ver si hemos cogido las
 										// matrices de fichero o no
 	private String pathMatrices; //Ruta del archivo de donde obtenemos las matrices iniciales, en el caso
@@ -83,6 +84,7 @@ public class TrainingWindow {
 	private File directory; 
 	private String directoryName; 
 	
+	private File filechoosen;
 	NetworkManager ne;
 	private SwingWorker<Integer, Integer> sw;
 	private JTextField tfmomentoB;
@@ -180,16 +182,6 @@ public class TrainingWindow {
 															// time
 		groupFuncion.add(rdbtnTangencial);
 		groupFuncion.add(rdbtnLineal);
-
-//		rdbtnNo = new JRadioButton("No");
-//		rdbtnNo.setSelected(true);
-//		momentB = false;
-//		rdbtnNo.setBounds(new Rectangle(295, 95, 50, 23));
-//		panel.add(rdbtnNo);
-//
-//		final ButtonGroup groupSiNo = new ButtonGroup();
-//		groupSiNo.add(rdbtnSi);
-//		groupSiNo.add(rdbtnNo);
 
 		rdbtnAleatorias = new JRadioButton("Aleatorias");
 		rdbtnAleatorias.setBounds(223, 220, 80, 23);
@@ -332,20 +324,23 @@ public class TrainingWindow {
 		final int returnValue = filechooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			final File filechoosen = filechooser.getSelectedFile();
-			try {
-				final ReadFile readWM = new ReadFile(filechoosen);
-				WeightMatrix aux = readWM.readWeightMatrix();
-				if (aux != null) { // Hemos seleccionado matrices del fichero
-					selectMatrixFile = true; // (no quiere decir q tengas las
-												// dimensiones apropiadas
-					matrices = aux;
-					lblNewLabel_1.setText(filechoosen.getName());
-					pathMatrices = filechoosen.getName();
-				}
-			} catch (final FileNotFoundException e) {
+//			try {
+//				final ReadFile readMatrices = new ReadFile(filechoosen);
+//				WeightMatrix aux = readMatrices.readWeightMatrix();
+//				Matrix Waux = readMatrices.readSingleWeightMatrix();
+//				if (aux != null) { // Hemos seleccionado matrices del fichero
+//					selectMatrixFile = true; // (no quiere decir q tengas las
+//												// dimensiones apropiadas
+//					matrices = aux;
+//					lblNewLabel_1.setText(filechoosen.getName());
+//					pathMatrices = filechoosen.getName();
+//				}
+				
+				
+//			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//				e.printStackTrace();
+//			}
 
 		} else {
 			System.out.println("Open command cancelled by user.");
@@ -452,18 +447,48 @@ if (start){
 																		// de
 																		// forma
 																		// aletoria
-			final Dimension dW = new Dimension(ne.getNumNeuronsO(),
+			
+			if (ne.getNumNeuronsO() == 0){
+				final Dimension dW = new Dimension(ne.getNumNeuronsE(),
+						ne.getNumNeuronsS());
+				W = Matrix.createRandomMatrix(
+						NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
+						NetworkManager.PRECISION);
+				//matrices = new WeightMatrix(W);
+				 
+			}
+			else{
+				final Dimension dW = new Dimension(ne.getNumNeuronsO(),
 					ne.getNumNeuronsE());
-			final Matrix W = Matrix.createRandomMatrix(
+				final Matrix W = Matrix.createRandomMatrix(
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
 					NetworkManager.PRECISION);
-			final Dimension dV = new Dimension(ne.getNumNeuronsS(),
+				final Dimension dV = new Dimension(ne.getNumNeuronsS(),
 					ne.getNumNeuronsO());
-			final Matrix V = Matrix.createRandomMatrix(
+				final Matrix V = Matrix.createRandomMatrix(
 					NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
 					NetworkManager.PRECISION);
-			matrices = new WeightMatrix(W, V);
+				matrices = new WeightMatrix(W, V);
+			}
 
+		}
+		else{
+			ReadFile readMatrices;
+			try {
+				readMatrices = new ReadFile(filechoosen);
+				WeightMatrix aux = readMatrices.readWeightMatrix();
+				Matrix Waux = readMatrices.readSingleWeightMatrix();
+				if (aux != null) { // Hemos seleccionado matrices del fichero
+					selectMatrixFile = true; // (no quiere decir q tengas las
+												// dimensiones apropiadas
+					matrices = aux;
+					lblNewLabel_1.setText(filechoosen.getName());
+					pathMatrices = filechoosen.getName();
+				}
+				}catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
@@ -483,8 +508,17 @@ if (start){
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
+				
+				if (ne.getNumNeuronsO()==0){
+					System.out.print("Red simple sin capas");
+					ne.trainingSimplyNetwork(iterationMax, cotaError, learningCnt, matrices.getW(), momentB, momentBValue, funtionStr, directoryName);
+					
+				}
+				else{
+					System.out.print("Red simple con capa oculta");
 				ne.training(iterationMax, cotaError, learningCnt, matrices,
 						momentB, momentBValue,funtionStr, directoryName, learningCNTVariable);
+				}
 				return null;
 			}
 
@@ -515,8 +549,17 @@ if (start){
 		// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
 		
 		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
-		TrainingWindowOuts resultados = new TrainingWindowOuts(outFile);
-		resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
+		
+		if (ne.getNumNeuronsO() == 0){
+			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
+			resultados.previousInformation(ne.getName(), W, learningCNTCuote, momentBValue, funtionStr, pathMatrices);
+		
+			
+		}else{
+			LNTrainingOuts resultados = new LNTrainingOuts(outFile);
+			resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
+		}
+		
 		
 		
 
