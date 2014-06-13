@@ -1,4 +1,4 @@
-package dataManager;
+package loadFiles;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
 import org.apache.log4j.Logger;
 
 import utilities.Matrix;
@@ -17,12 +16,12 @@ import utilities.WeightMatrix;
 
 public class ReadFile {
 
-	private String name; //Nombre archivo
-	private File file; //Archivo
-	private FileReader reader;
-	private BufferedReader br;
+	protected String name; //Nombre archivo
+	protected File file; //Archivo
+	protected FileReader reader;
+	protected BufferedReader br;
 	private static final Logger log = Logger.getLogger(ReadFile.class);
-	
+		
 	
 	
 	public ReadFile (File file) throws FileNotFoundException {
@@ -38,7 +37,15 @@ public class ReadFile {
 		reader = new FileReader(fileName);
 		br = new BufferedReader(reader);
 	}
-	
+		
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
 	
 	//pre: Fichero debe de contener el formato adecuado. Las matrices deben de ser escritas en el orden 
 	//W, V y van precededidas por una linea con el formato: "Matrix W/V:" fichero con extensión .csv
@@ -57,7 +64,7 @@ public class ReadFile {
 					W = Matrix.createMatrixFromArrays(arrayMatrix);
 					row = br.readLine(); //Inicializamos valores para leer V
 					arrayMatrix = new ArrayList<>();
-				}
+					}
 						
 				StringTokenizer st = new StringTokenizer (row,";" );
 				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
@@ -67,7 +74,7 @@ public class ReadFile {
 					BigDecimal value = new BigDecimal(strValue);
 					arrayRow.add(value);
 				}
-			arrayMatrix.add(arrayRow);
+				arrayMatrix.add(arrayRow);
 			row = br.readLine();
 			}			
 			V = Matrix.createMatrixFromArrays(arrayMatrix);
@@ -80,7 +87,7 @@ public class ReadFile {
 	
 	}
 	
-	//Lee la matrix de pesos 
+		//Lee la matrix de pesos 
 	public Matrix readSingleWeightMatrix (){
 		ArrayList<ArrayList<BigDecimal>> arrayMatrix = new ArrayList<>();
 		String row;
@@ -91,7 +98,7 @@ public class ReadFile {
 				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
 				while(st.hasMoreTokens()){  
 					String strValue = (String) st.nextElement();
-					strValue = strValue.replace(",", ".");
+						strValue = strValue.replace(",", ".");
 					BigDecimal value = new BigDecimal(strValue);
 					arrayRow.add(value);
 				}
@@ -105,18 +112,11 @@ public class ReadFile {
 			e.printStackTrace();
 			return null;
 		}
+	}
+		
+				
+				
+			
+			
+				
 }
-		
-			
-			
-		
-		
-			
-}
-		
-	
-	
-	
-	
-	
-	

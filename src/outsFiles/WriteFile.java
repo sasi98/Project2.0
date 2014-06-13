@@ -19,27 +19,27 @@ import architecture.NetworkManager;
 import architecture.Neuron;
 import architecture.OutputNeuron;
 
-public class WriteExcel {
+public class WriteFile {
 		protected String name; //Nombre archivo
 		protected File outFile; //crear un nuevo archivo, si un archivo con el mismo nombre ya existe podríamos sin querer escribir contenido sobre el mismo
 		protected FileWriter write;
 		protected BufferedWriter bw;
 		protected PrintWriter wr;
-		private static final Logger log = Logger.getLogger(WriteExcel.class);
+		private static final Logger log = Logger.getLogger(WriteFile.class);
 				
 		
-		public WriteExcel() {
+		public WriteFile() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
-		public WriteExcel (String name, Network ne) {
+		public WriteFile (String name, Network ne) {
 			super(); 
 			this.name = name;
 			this.outFile = new File (name);
 			openFile();
 		}
 		
-		public WriteExcel (String name) {
+		public WriteFile (String name) {
 			super(); 
 			log.debug("Creando WriteExcel: "+ name+ "Puntero: "+this);
 			this.name = name;
@@ -286,6 +286,12 @@ public class WriteExcel {
 //		}
 		
 		
+		public File getOutFile() {
+			return outFile;
+		}
+		public void setOutFile(File outFile) {
+			this.outFile = outFile;
+		}
 		//pre: el fichero debe de existir y estar abierto e inicializado
 		//Escribe en un fichero excel la información global obtenida en una iteración. 
 		//iteration: entero que identifica la iteración en la que estamos

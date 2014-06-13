@@ -1,28 +1,129 @@
 package gui;
 
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JEditorPane;
+import javax.swing.JTable;
+
+import java.awt.Color;
+
+import javax.swing.JLabel;
+import javax.swing.JButton;
+
+import architecture.NetworkManager;
+import architecture.StructureParameters;
+import architecture.TrainingParameters;
+
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.UIManager;
+import javax.swing.JTextPane;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LoadNetworkWindow extends JPanel {
+	
+	private TrainingParameters redShowed;
+	
+	
+	
+	//GUI variables
+	private JComboBox				 comboBox;
+	private JButton 				 btnAbrir,
+									 btnAceptar;
+	private JTextPane				 textPane;
 
 	public LoadNetworkWindow() {
-		// TODO Auto-generated constructor stub
+		initialize();
+		createEvents();
 	}
 
-	public LoadNetworkWindow(LayoutManager layout) {
-		super(layout);
-		// TODO Auto-generated constructor stub
-	}
 
-	public LoadNetworkWindow(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
 
-	public LoadNetworkWindow(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		// TODO Auto-generated constructor stub
-	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
 
+		this.setBounds(0, 21, 984, 491);
+		this.setLayout(null);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Selecci\u00F3n de red", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		panel_1.setBounds(93, 106, 342, 195);
+		this.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JPanel panelSeleccion = new JPanel();
+		panelSeleccion.setBounds(6, 16, 325, 172);
+		panelSeleccion.setLayout(null);
+		panel_1.add(panelSeleccion);
+		
+		final JLabel lblNewLabel = new JLabel("Existente");
+		lblNewLabel.setBounds(30, 37, 97, 24);
+		panelSeleccion.add(lblNewLabel);
+		
+		comboBox = new JComboBox();
+		comboBox.setBounds(182, 37, 97, 24);
+		for (StructureParameters ne: MainWindow.structureCreatedList) {
+			comboBox.addItem(ne.getName());
+		}
+		panelSeleccion.add(comboBox);
+		
+		JLabel lblDeArchivo = new JLabel("De archivo");
+		panelSeleccion.add(lblDeArchivo);
+		lblDeArchivo.setBounds(30, 92, 97, 24);
+		
+		btnAbrir = new JButton("Abrir");
+		btnAbrir.setBounds(182, 93, 97, 23);
+		panelSeleccion.add(btnAbrir);
+		
+		btnAceptar = new JButton("Aceptar");
+		btnAceptar.setBounds(124, 412, 90, 30);
+		add(btnAceptar);
+		
+		textPane = new JTextPane();
+		textPane.setBounds(652, 50, 290, 367);
+		textPane.setEditable (false);
+		add(textPane);
+		textPane.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Informaci\u00F3n general", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(307, 412, 90, 30);
+		add(btnCancelar);
+		
+	}
+	
+	private void createEvents() {
+		btnAbrir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnAbrirActionPerformed();
+			}
+		});
+		
+	}
+	
+	private void btnAbrirActionPerformed() {
+		
+		
+	}
+	
+	private void showGeneralInformation (){
+		
+		
+		
+		
+	}
+	
+	
+	
+	
 }

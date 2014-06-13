@@ -19,6 +19,9 @@ public class NetworkManager {
 																// multiplican
 																// los valores
 																// del excel
+	
+	public static final String SIMPLE = "Simple",
+							   OCULTA = "Con capa oculta";
 	public static Matrix previousW, previousV;
 
 	public static final int PRECISION = 10;
@@ -163,8 +166,8 @@ public class NetworkManager {
 
 		String outFile = new String (directoryName+"\\resultsTraining.txt");
 		LNTrainingOuts resultados = new LNTrainingOuts(outFile);
-		WriteExcel writerErrorProgress = new WriteExcel(directoryName+"\\ErrorProgress.csv"); // Outcomes file
-		WriteExcel writerMatrices = new WriteExcel(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
+		WriteFile writerErrorProgress = new WriteFile(directoryName+"\\ErrorProgress.csv"); // Outcomes file
+		WriteFile writerMatrices = new WriteFile(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
 
 		while (!end) {
 			for (int i = 0; i < inputs.size(); i++) {
@@ -343,8 +346,8 @@ public class NetworkManager {
 
 		String outFile = new String (directoryName+"\\resultsTraining.txt");
 		SNTrainingOuts resultados = new SNTrainingOuts(outFile);
-		WriteExcel writerErrorProgress = new WriteExcel(directoryName+"\\ErrorProgress.csv"); // Outcomes file
-		WriteExcel writerMatrices = new WriteExcel(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
+		WriteFile writerErrorProgress = new WriteFile(directoryName+"\\ErrorProgress.csv"); // Outcomes file
+		WriteFile writerMatrices = new WriteFile(directoryName+"\\MatricesObtenidas.csv"); // Outcomes file
 
 		while (!end) {
 			for (int i = 0; i < inputs.size(); i++) {

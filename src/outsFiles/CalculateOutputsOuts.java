@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import utilities.WeightMatrix;
 import architecture.Network;
 
-public class CalculateOutputsOuts extends WriteExcel {
+public class CalculateOutputsOuts extends WriteFile {
 
 	public CalculateOutputsOuts() {
 		// TODO Auto-generated constructor stub

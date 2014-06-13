@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import architecture.NetworkManager;
+import architecture.StructureParameters;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -42,8 +43,8 @@ public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	// Lista con las actuales instancias de la clase NetworkManager
-	public static ArrayList<NetworkManager> neList = new ArrayList<>();
+	// Lista con las actuales estructuras de red creadas
+	public static ArrayList<StructureParameters> structureCreatedList = new ArrayList<>();
 	public static int numInstances = 0; 
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
@@ -71,7 +72,7 @@ public class MainWindow extends JFrame {
 	 */
 	public static void main(String args[]) {
 		try {
-			UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+			//UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

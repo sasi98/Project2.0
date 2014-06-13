@@ -9,7 +9,7 @@ import utilities.WeightMatrix;
 //Clase que representa las salidas de pantalla de la ventana de entrenamiento de las redes creadas
 //con capa oculta LN--> LayerHiddenNetwork
 
-public class LNTrainingOuts extends WriteExcel {
+public class LNTrainingOuts extends WriteFile {
 
 	public LNTrainingOuts(String fileName) {
 		super(fileName);

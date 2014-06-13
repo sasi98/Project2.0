@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -11,18 +13,25 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
 
-import outsFiles.NewNetworkOuts;
+import outsFiles.StructureParametersOuts;
 import architecture.NetworkManager;
+import architecture.StructureParameters;
 import dataManager.PatronData;
 import valueset.Value;
 
 public class NewSimplyNetworkWindow extends JPanel {
 
 	/**GUI Variables*/
-	private JButton 			bCreateNN, btnCancelar;
+	private JPanel 				panel_1,
+								panel;
+	private JButton 			bCreateNN, 
+								btnCancelar,
+								btnGuardar;
 	private JTextField 			tfIdCompany, 
 								tfInicio;
 	private JComboBox<String> 	comboBox_inputType;
@@ -40,8 +49,10 @@ public class NewSimplyNetworkWindow extends JPanel {
 								numPatrones, 
 								inicio;
 	private boolean 			bias;
+	private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
 	
-	private static Logger log = Logger.getLogger(NewNetworkWindow.class);
+	private static Logger log = Logger.getLogger(NewSimplyNetworkWindow.class);
+	private JPanel panel_2;
 
 	/**
 	 * Create the application.
@@ -59,72 +70,94 @@ public class NewSimplyNetworkWindow extends JPanel {
 
 		this.setBounds(0, 21, 984, 491);
 		this.setLayout(null);
+		
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Selecci\u00F3n de datos y estructura de la red", TitledBorder.LEFT, TitledBorder.TOP, null, null));
+		panel_1.setBounds(61, 56, 755, 193);
+		add(panel_1);
+		panel_1.setLayout(null);
+		
+		panel = new JPanel();
+		panel.setBounds(10, 22, 735, 159);
+		panel_1.add(panel);
+		panel.setLayout(null);
 
-		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
-		lblNewLabel.setBounds(31, 86, 145, 16);
-		this.add(lblNewLabel);
-
-		final JLabel lblNewLabel_2 = new JLabel("Patrones de aprendizaje: ");
-		lblNewLabel_2.setBounds(386, 51, 177, 16);
-		this.add(lblNewLabel_2);
-
-		final JLabel lblNewLabel_3 = new JLabel("Neuronas de entrada/salida:");
-		lblNewLabel_3.setBounds(386, 86, 215, 16);
-		this.add(lblNewLabel_3);
-
-		final JLabel lblNewLabel_7 = new JLabel("Selección de datos: ");
-		lblNewLabel_7.setBounds(31, 51, 156, 16);
-		this.add(lblNewLabel_7);
+		final JLabel lblNewLabel_7 = new JLabel("Tipo de datos: ");
+		lblNewLabel_7.setBounds(31, 22, 156, 16);
+		panel.add(lblNewLabel_7);
 
 		final JLabel lblNewLabel_8 = new JLabel("Inicio de los datos:");
-		lblNewLabel_8.setBounds(31, 123, 120, 16);
-		this.add(lblNewLabel_8);
-
-		bCreateNN = new JButton("Crear red");
-		bCreateNN.setBounds(734, 330, 110, 29);
-		this.add(bCreateNN);
+		lblNewLabel_8.setBounds(31, 96, 120, 16);
+		panel.add(lblNewLabel_8);
 		
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(860, 330, 110, 29);
-		this.add(btnCancelar);
-
 		comboBox_inputType = new JComboBox();
-		comboBox_inputType.setBounds(220, 48, 110, 22);
+		comboBox_inputType.setBounds(215, 19, 115, 22);
 		comboBox_inputType.addItem(Value.ComboBox.SOLAPADOS);
 		comboBox_inputType.addItem(Value.ComboBox.NOSOLAPADOS);
 		comboBox_inputType.addItem(Value.ComboBox.ALEATORIOS);
-		comboBox_inputType.addItem(Value.ComboBox.MANUAL);
-		this.add(comboBox_inputType);
-
+		panel.add(comboBox_inputType);
+		
+		final JLabel lblNewLabel_2 = new JLabel("Patrones de aprendizaje: ");
+		lblNewLabel_2.setBounds(383, 22, 177, 16);
+		panel.add(lblNewLabel_2);
+				
+		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
+		lblNewLabel.setBounds(31, 57, 145, 16);
+		panel.add(lblNewLabel);
+			
 		tfIdCompany = new JTextField();
-		tfIdCompany.setBounds(278, 83, 52, 22);
-		this.add(tfIdCompany);
+		tfIdCompany.setBounds(278, 54, 52, 22);
+		panel.add(tfIdCompany);
 		tfIdCompany.setColumns(10);
-
+		
 		tfInicio = new JTextField();
-		tfInicio.setBounds(278, 120, 52, 22);
-		this.add(tfInicio);
+		tfInicio.setBounds(278, 93, 52, 22);
+		panel.add(tfInicio);
 		tfInicio.setColumns(10);
-
+				
 		sPatrones = new JSpinner();
-		sPatrones.setBounds(623, 48, 37, 22);
+		sPatrones.setBounds(623, 19, 37, 22);
 		sPatrones.setValue(5);
-		this.add(sPatrones);
-
+		panel.add(sPatrones);
+										
 		spNumNeurons = new JSpinner();
-		spNumNeurons.setBounds(623, 83, 37, 22);
+		spNumNeurons.setBounds(623, 54, 37, 22);
 		spNumNeurons.setValue(0);
-		this.add(spNumNeurons);
-
+		panel.add(spNumNeurons);
+												
 		checkBox = new JCheckBox("Bias");
-		checkBox.setBounds(381, 120, 57, 23);
-		this.add(checkBox);
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(40, 282, 642, 184);
-		this.add(scrollPane);
+		checkBox.setBounds(383, 93, 52, 23);
+		panel.add(checkBox);
+														
+		final JLabel lblNewLabel_3 = new JLabel("Neuronas de entrada/salida:");
+		lblNewLabel_3.setBounds(new Rectangle(383, 57, 215, 16));
+																
+		panel.add(lblNewLabel_3);
 
+		bCreateNN = new JButton("Crear red");
+		bCreateNN.setBounds(864, 258, 110, 29);
+		this.add(bCreateNN);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(864, 310, 110, 29);
+		add(btnCancelar);
+		
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(864, 358, 110, 29);
+		add(btnGuardar);
+		
+		panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Salidas de datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_2.setBounds(61, 265, 761, 205);
+		add(panel_2);
+		panel_2.setLayout(null);
+		
 		textPane = new JTextPane();
-		textPane.setEditable(false);
+		textPane.setBounds(67, 281, 749, 182);
+		textPane.setEditable (false);
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 16, 749, 182);
+		panel_2.add(scrollPane);
 		scrollPane.setViewportView(textPane);
 		
 				
@@ -141,14 +174,45 @@ public class NewSimplyNetworkWindow extends JPanel {
 
 	
 	private void createEvents() {
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnGuardarActionPerformed();
+			}
+		});
 		bCreateNN.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				bCreateNNActionPerformed();
-				
+				bCreateNNActionPerformed();	
 			}
 		});		
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnCancelarActionPerformed();
+			}
+		});
 	}
+	
+	//Guardamos la red en un fichero. 
+		private void btnGuardarActionPerformed() {
+			if (currentNet != null){
+				final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+				fileChooser.setDialogTitle("Especifica un nombre para el fichero a guardar"); 
+				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
+					File file = fileChooser.getSelectedFile();
+					if (!file.toString().endsWith(".csv")){   //Añadimos la extensión, en caso de que no se la hallamos puesta
+						file = new File (file + ".csv");
+					}
+					StructureParametersOuts classFile = new StructureParametersOuts(file.toString());
+					classFile.saveStructureParameters(currentNet);
+					JOptionPane.showMessageDialog (null,"Los parámetros de la red han sido guardados",
+							"Archivo guardado", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog (null,"Error, no se ha creado ninguna red",
+						"Red no creada", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 
 
 	private void bCreateNNActionPerformed() {
@@ -218,24 +282,17 @@ public class NewSimplyNetworkWindow extends JPanel {
 					inputs = manejador.createRandomArrayRm(NetworkManager.CNT, randomLists);
 					desiredOutputs = manejador.createRandomArrayRi(NetworkManager.CNT, randomLists);
 				}
-
-				// Manuales
-				else {
-					// open a new JFrame
-				}
-
+				
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
-				MainWindow.neList.add(aux);
-
+				StructureParameters aux = new StructureParameters (name,NetworkManager.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
+				MainWindow.structureCreatedList.add(aux);
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
-				NewNetworkOuts resultados = new NewNetworkOuts(
-						outFile);
-				resultados.createNewNetworkingOut(idCompany, numNeuronES, 0, numPatrones, bias, this.comboBox_inputType .getSelectedItem().toString(), name, inputs, desiredOutputs);
+				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
+				resultados.consoleOut(aux);
 				
 				// Display results
 				FileReader reader;
@@ -257,5 +314,9 @@ public class NewSimplyNetworkWindow extends JPanel {
 
 			}// end else2
 		}// end else1
+	}
+	
+	private void btnCancelarActionPerformed() {
+		MainWindow.clearTextFields(this);
 	}
 }

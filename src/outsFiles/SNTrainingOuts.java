@@ -8,7 +8,7 @@ import utilities.Matrix;
 //Clase que representa las salidas de pantalla de la ventana de entrenamiento 
 //de las redes creadas sin capa oculta 
 
-public class SNTrainingOuts extends WriteExcel {
+public class SNTrainingOuts extends WriteFile {
 
 	public SNTrainingOuts(String fileName) {
 		super(fileName);
