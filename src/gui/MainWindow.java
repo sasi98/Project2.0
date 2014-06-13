@@ -17,6 +17,7 @@ import java.util.Collections;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -46,6 +47,7 @@ public class MainWindow extends JFrame {
 	public static int numInstances = 0; 
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
+	public static ArrayList<JPanel> createdWindows = new ArrayList<>();
 
 	// Variables GUI
 	private JFrame frame;
@@ -53,18 +55,17 @@ public class MainWindow extends JFrame {
 	private JToggleButton tglbtnTrazas;
 	private JMenuItem mntmCrearRedSimple,
 					  mntmCrearRedCon,
-					  mntmCargarRedExistente;
+					  mntmCargarRedExistente,
+					  mntmEstablecerParametros,
+					  mntmEntrenarRed;
 
 	// JPanel classes
 	private NewSimplyNetworkWindow newSimplyNet;
 	private NewHiddenNetworkWindow newHiddenNet;
+	private LoadNetworkWindow loadNetwork;
+	private SetUpParametersTrainWindow sepUpParameters;
+	private TrainingWindow trainingWindow;
 	
-	
-//	private NewNetworkWindow newNetworkWindow;
-//	private TrainingWindow trainingWindow;
-//	private CalculateOutputsWindow calculateOutputsWindow;
-
-
 	/**
 	 * @param args the command line arguments
 	 */
@@ -104,9 +105,10 @@ public class MainWindow extends JFrame {
 		
 		desktopPane = new JDesktopPane();
 		desktopPane.setBounds(0, 21, 984, 491);
-		frame.getContentPane().add(desktopPane);
 		desktopPane.setBackground(Color.WHITE);
-		desktopPane.setOpaque(false);
+		//desktopPane.setOpaque(false);
+		frame.getContentPane().add(desktopPane);
+	
 		
 		menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 984, 21);
@@ -128,6 +130,13 @@ public class MainWindow extends JFrame {
 		JMenu mnEntrenamiento = new JMenu("Entrenamiento");
 		menuBar.add(mnEntrenamiento);
 		
+		mntmEstablecerParametros = new JMenuItem("Establecer par\u00E1metros");
+		mnEntrenamiento.add(mntmEstablecerParametros);
+		
+		mntmEntrenarRed = new JMenuItem("Entrenar red");
+		
+		mnEntrenamiento.add(mntmEntrenarRed);
+		
 		JMenu mnResultados = new JMenu("Resultados");
 		menuBar.add(mnResultados);
 		
@@ -142,28 +151,7 @@ public class MainWindow extends JFrame {
 	}
 
 	private void createEvents() {
-
-//		btnCrearNueva.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) { // NewNetworkWindow
-//				btnCrearNuevaActionPerformed();
-//			}
-//		});
-//
-//		btnEntrenar.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				btnEntrenarActionPerformed();
-//			}
-//		});
-//
-//		btnCalcularSalidas.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				btnCalcularSalidasActionPerformed();
-//			}
-//		});
-
+		
 		mntmCrearRedSimple.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mntmCrearRedSimpleActionPerformed();
@@ -173,16 +161,24 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				mntmCrearRedConActionPerformed();
 			}
-
-			
 		});
 		mntmCargarRedExistente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mntmCargarRedExistenteActionPerformed();
 			}
 		});
-		
-		
+		mntmEstablecerParametros.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mntmEstablecerParametrosActionPerformed();
+			}
+
+		});
+		mntmEntrenarRed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mntmEntrenarRedActionPerformed();
+			}
+			
+		});
 		tglbtnTrazas.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent ev) {
@@ -193,112 +189,81 @@ public class MainWindow extends JFrame {
 	}
 	
 	private void mntmCrearRedSimpleActionPerformed(){
+		hideWindows();
 		if (newSimplyNet == null) {
 			newSimplyNet = new NewSimplyNetworkWindow();
-			newSimplyNet.setBounds(new Rectangle(000, 000, 700, 450));
+			newSimplyNet.setBounds(0, 0, 984, 491);
 			desktopPane.add(newSimplyNet, BorderLayout.CENTER);
+			newSimplyNet.show();
+			createdWindows.add(newSimplyNet);
+		}
+		else{
 			newSimplyNet.show();
 		}
 	}
 	
 	private void mntmCrearRedConActionPerformed() {
+		hideWindows();
 		if (newHiddenNet == null) {
 			newHiddenNet = new NewHiddenNetworkWindow();
-			newHiddenNet.setBounds(new Rectangle(000, 000, 700, 450));
+			newHiddenNet.setBounds(new Rectangle(0, 0, 984, 491));
 			desktopPane.add(newHiddenNet, BorderLayout.CENTER);
 			newHiddenNet.show();
+			createdWindows.add(newHiddenNet);
 		}
-		
-		
+		else{
+			newHiddenNet.show();
+		}
 	}
 	
 	private void mntmCargarRedExistenteActionPerformed() {
-		
+		hideWindows();
+		if (loadNetwork == null) {
+			loadNetwork = new LoadNetworkWindow();
+			loadNetwork.setBounds(new Rectangle(0, 0, 984, 491));
+			desktopPane.add(loadNetwork, BorderLayout.CENTER);
+			loadNetwork.show();
+			createdWindows.add(loadNetwork);
+		}
+		else{
+			loadNetwork.show();
+		}
+	}
+	
+	private void mntmEstablecerParametrosActionPerformed() {
+		hideWindows();
+		if (sepUpParameters == null) {
+			sepUpParameters = new SetUpParametersTrainWindow();
+			sepUpParameters.setBounds(new Rectangle(0, 0, 984, 491));
+			desktopPane.add(sepUpParameters, BorderLayout.CENTER);
+			sepUpParameters.show();
+			createdWindows.add(sepUpParameters);
+		}
+		else{
+			sepUpParameters.show();
+		}
+	}
+	
+	private void mntmEntrenarRedActionPerformed() {
+		hideWindows();
+		if (trainingWindow == null) {
+			trainingWindow = new TrainingWindow();
+			trainingWindow.setBounds(new Rectangle(0, 0, 984, 491));
+			desktopPane.add(trainingWindow, BorderLayout.CENTER);
+			trainingWindow.show();
+			createdWindows.add(trainingWindow);
+		}
+		else{
+			trainingWindow.show();
+		}
+	}
+	
+	private void hideWindows(){
+		for (JPanel panel: createdWindows){
+			panel.hide();
+		}	
 	}
 
-//	private void btnCrearNuevaActionPerformed() {
-//		if (trainingWindow != null) {
-//			trainingWindow.getPanel().hide(); // Close other internals frames
-//												// before
-//		}
-//		if (calculateOutputsWindow != null) {
-//			calculateOutputsWindow.getPanel().hide();
-//		}
-//		if ((newNetworkWindow == null)) {
-//			newNetworkWindow = new NewNetworkWindow();
-//			// newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000,
-//			// 700, 450));
-//			desktopPane.add(newNetworkWindow.getPanel(), BorderLayout.CENTER);
-//
-//			newNetworkWindow.getPanel().show();
-//		} else {
-//			if (!newNetworkWindow.getPanel().isShowing()) {
-//				newNetworkWindow = new NewNetworkWindow();
-//				// newNetworkWindow.getFrame().setBounds(new Rectangle(000, 000,
-//				// 700, 450));
-//				desktopPane.add(newNetworkWindow.getPanel(), BorderLayout.WEST);
-//				newNetworkWindow.getPanel().show();
-//			} else { // El panel no est��� cerrado pero he vuelto a hacer click,
-//						// borro todo pero no creo una instancia nueva
-//						// clearTextFields(newNetworkWindow.getFrame());
-//
-//			}
-//		}
-//
-//	}
-//
-//	private void btnEntrenarActionPerformed() {
-//		if (newNetworkWindow != null) {
-//			newNetworkWindow.getPanel().hide();
-//		}
-//		if (calculateOutputsWindow != null) {
-//			calculateOutputsWindow.getPanel().hide();
-//		}
-//		// TrainingWindows
-//		if ((trainingWindow == null)) {
-//			trainingWindow = new TrainingWindow();
-//			// trainingWindow.getFrame().setBounds(new Rectangle(000, 000, 700,
-//			// 450));
-//			desktopPane.add(trainingWindow.getPanel(), BorderLayout.WEST);
-//			trainingWindow.getPanel().show();
-//		} else {
-//			if (!trainingWindow.getPanel().isShowing()) {
-//				trainingWindow = new TrainingWindow();
-//				// trainingWindow.getFrame().setBounds(new Rectangle(000, 000,
-//				// 700, 450));
-//				desktopPane.add(trainingWindow.getPanel(), BorderLayout.WEST);
-//				trainingWindow.getPanel().show();
-//			}
-//		}
-//
-//	}
-//
-//	private void btnCalcularSalidasActionPerformed() {
-//		if (newNetworkWindow != null) {
-//			newNetworkWindow.getPanel().hide();
-//		}
-//		if (newNetworkWindow != null) {
-//			newNetworkWindow.getPanel().hide();
-//		}
-//		if (trainingWindow != null) {
-//			trainingWindow.getPanel().hide();
-//		}
-//		// Calculate Outputs
-//		if ((calculateOutputsWindow == null)) {
-//			calculateOutputsWindow = new CalculateOutputsWindow();
-//			desktopPane.add(calculateOutputsWindow.getPanel(),
-//					BorderLayout.WEST);
-//			calculateOutputsWindow.getPanel().show();
-//		} else {
-//			if (!calculateOutputsWindow.getPanel().isShowing()) {
-//				calculateOutputsWindow = new CalculateOutputsWindow();
-//				desktopPane.add(calculateOutputsWindow.getPanel(),
-//						BorderLayout.WEST);
-//				calculateOutputsWindow.getPanel().show();
-//			}
-//		}
-//
-//	}
 
 	// Switch button: Si las trazas estaban activas, las desactiva (delete all
 	// the loggers)
@@ -308,29 +273,24 @@ public class MainWindow extends JFrame {
 	public void tglbtnTrazasActionPerformed(ItemEvent ev) {
 		if (ev.getStateChange() == ItemEvent.SELECTED) {
 			tglbtnTrazas.setText("Activar trazas");
-			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager
-					.getCurrentLoggers());
+			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
 			loggers.add(LogManager.getRootLogger());
 			for (Logger logger : loggers) {
 				logger.setLevel(Level.OFF);
-				// System.out.print("Logger: "+logger.getName()+"\n");
 			}
 		} else if (ev.getStateChange() == ItemEvent.DESELECTED) {
 			tglbtnTrazas.setText("Desactivar trazas");
-			PropertyConfigurator.configure("files" + File.separator
-					+ "log4j.properties"); // Sobreescribimos fichero
-			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager
-					.getCurrentLoggers());
+			PropertyConfigurator.configure("files" + File.separator + "log4j.properties"); // Sobreescribimos fichero
+			ArrayList<Logger> loggers = Collections.<Logger> list(LogManager.getCurrentLoggers());
 			loggers.add(LogManager.getRootLogger());
 			for (Logger logger : loggers) {
 				logger.setLevel(Level.ALL);
-				// System.out.print("Logger: "+logger.getName()+"\n");
 			}
 		}
 
 	}
 
-	public void clearTextFields(Container container) {
+	public static void clearTextFields (Container container) {
 		for (Component c : container.getComponents()) {
 			if ((c instanceof JTextField) && !(c instanceof JSpinner)) {
 				System.out.print("Tipo de componente: " + c.getName() + "\n");

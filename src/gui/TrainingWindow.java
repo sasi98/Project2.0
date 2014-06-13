@@ -45,7 +45,7 @@ import outsFiles.*;
 
 import javax.swing.JCheckBox;
 
-public class TrainingWindow {
+public class TrainingWindow extends JPanel {
 
 	public static SwingWorker<Void, Void> worker;
 

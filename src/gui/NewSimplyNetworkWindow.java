@@ -57,7 +57,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
-		this.setBounds(6, 0, 980, 633);
+		this.setBounds(0, 21, 984, 491);
 		this.setLayout(null);
 
 		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");

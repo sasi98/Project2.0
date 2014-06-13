@@ -27,6 +27,7 @@ import outsFiles.NewNetworkOuts;
 import valueset.Value;
 import architecture.NetworkManager;
 import dataManager.PatronData;
+import java.awt.Color;
 
 public class NewHiddenNetworkWindow extends JPanel {
 
@@ -68,7 +69,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
-		this.setBounds(6, 0, 980, 633);
+		this.setBounds(0, 21, 984, 491);
 		this.setLayout(null);
 
 		final JLabel lblNewLabel = new JLabel("Identificador empresa: ");
@@ -83,8 +84,8 @@ public class NewHiddenNetworkWindow extends JPanel {
 		lblNewLabel_3.setBounds(386, 86, 215, 16);
 		this.add(lblNewLabel_3);
 		
-		final JLabel lblNewLabel_4 = new JLabel("Número de neuronas ocultas:");
-		lblNewLabel_4.setBounds(400, 125, 151, 16);
+		final JLabel lblNewLabel_4 = new JLabel("Neuronas ocultas:");
+		lblNewLabel_4.setBounds(386, 123, 151, 16);
 		this.add(lblNewLabel_4);
 
 		final JLabel lblNewLabel_7 = new JLabel("Selección de datos: ");
@@ -96,7 +97,8 @@ public class NewHiddenNetworkWindow extends JPanel {
 		this.add(lblNewLabel_8);
 
 		bCreateNN = new JButton("Crear red");
-		bCreateNN.setBounds(736, 437, 110, 29);
+		bCreateNN.setBackground(Color.WHITE);
+		bCreateNN.setBounds(733, 293, 110, 29);
 		this.add(bCreateNN);
 
 		comboBox_inputType = new JComboBox();
@@ -133,7 +135,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 		this.add(spNumNeuronO);
 
 		checkBox = new JCheckBox("Bias");
-		checkBox.setBounds(381, 120, 57, 23);
+		checkBox.setBounds(386, 161, 57, 23);
 		this.add(checkBox);
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(40, 282, 642, 184);
@@ -142,8 +144,8 @@ public class NewHiddenNetworkWindow extends JPanel {
 		textPane = new JTextPane();
 		scrollPane.setViewportView(textPane);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(856, 437, 110, 29);
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(744, 363, 110, 29);
 		add(btnCancelar);
 		
 				
@@ -163,10 +165,14 @@ public class NewHiddenNetworkWindow extends JPanel {
 		bCreateNN.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				bCreateNNActionPerformed();
-				
+				bCreateNNActionPerformed();	
 			}
-		});		
+		});	
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnCancelarActionPerformed();
+			}
+		});
 	}
 
 
@@ -247,14 +253,14 @@ public class NewHiddenNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
+				NetworkManager aux = new NetworkManager(name, numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 				MainWindow.neList.add(aux);
 
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
 				NewNetworkOuts resultados = new NewNetworkOuts(outFile);
-				resultados.createNewNetworkingOut(idCompany, numNeuronES, 0, numPatrones, bias, this.comboBox_inputType .getSelectedItem().toString(), name, inputs, desiredOutputs);
+				resultados.createNewNetworkingOut(idCompany, numNeuronES, numNeuronO, numPatrones, bias, this.comboBox_inputType .getSelectedItem().toString(), name, inputs, desiredOutputs);
 				
 				// Display results
 				FileReader reader;
@@ -277,5 +283,11 @@ public class NewHiddenNetworkWindow extends JPanel {
 			}// end else2
 		}// end else1
 	}
+	
+
+	private void btnCancelarActionPerformed() {
+		MainWindow.clearTextFields(this);
+	}
+	
 }
 
