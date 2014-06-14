@@ -7,62 +7,31 @@ import valueset.LearningConstant;
 
 public class TrainingParameters {
 	
-	private StructureParameters redFeatures;
-	private int iterMax;
-	private int currentIt; 
-	private BigDecimal ErrorIt; 
-	private BigDecimal cuote;
-	private LearningConstant learning;
-	private WeightMatrix matrices;
-	private double momentoBvalue;
-	private boolean momentoB;
+//	private StructureParameters redFeatures;
+	private String 				funcion;
+	private int 				iterMax;  
+	private BigDecimal 			cuoteError;
+	private LearningConstant 	learning;
+	private WeightMatrix 		matrices;
+	private double				momentoBvalue;
+	private boolean 			momentoB;
 	
 	public TrainingParameters() {
 		super();
 	}
 
-	public int getIterMax() {
-		return iterMax;
-	}
-
-	public void setIterMax(int iterMax) {
+	public TrainingParameters(String funcion, int iterMax,
+			BigDecimal cuoteError, LearningConstant learning,
+			WeightMatrix matrices, double momentoBvalue, boolean momentoB) {
+		super();
+		this.funcion = funcion;
 		this.iterMax = iterMax;
-	}
-
-	public int getCurrentIt() {
-		return currentIt;
-	}
-
-	public void setCurrentIt(int currentIt) {
-		this.currentIt = currentIt;
-	}
-
-	public BigDecimal getErrorIt() {
-		return ErrorIt;
-	}
-
-	public void setErrorIt(BigDecimal errorIt) {
-		ErrorIt = errorIt;
-	}
-
-	public BigDecimal getCuote() {
-		return cuote;
-	}
-
-	public void setCuote(BigDecimal cuote) {
-		this.cuote = cuote;
-	}
-
-	
-
-	public WeightMatrix getMatrices() {
-		return matrices;
-	}
-
-	public void setMatrices(WeightMatrix matrices) {
+		this.cuoteError = cuoteError;
+		this.learning = learning;
 		this.matrices = matrices;
+		this.momentoBvalue = momentoBvalue;
+		this.momentoB = momentoB;
 	}
-
 	
 	
 

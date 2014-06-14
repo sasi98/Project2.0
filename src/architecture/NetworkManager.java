@@ -13,90 +13,37 @@ import outsFiles.*;
 
 public class NetworkManager {
 
-	// Constantes que representan los valores m�ximos y minimos con los que se
-	// crean las matrices aletorias
-	public static final int MATRIX_MAX = 10, MATRIX_MIN = -10; // CNT por la que
-																// multiplican
-																// los valores
-																// del excel
+	public static final int 				CNT = 1000,  		/**Valor CNT por el que se multiplican los valores del excel*/
+											PRECISION = 10,     /**Valor que indica el n�mero de d�gitos decimales que tienes los datos*/
+											MATRIX_MAX = 10,    /**Valor m�ximo para la creaci�n de matrices de pesos aleatorias*/ 
+											MATRIX_MIN = -10;   /**Valor minimo para la creaci�n de matrices de pesos aleatorias*/
 	
-//	public static final String SIMPLE = "Simple",
-//							   OCULTA = "Con capa oculta",
-//							   LINEAL = "Lineal",
-//							   TANGENCIAL = "Tangencial";
-//	
-	public static Matrix previousW, previousV;
+	public static Matrix 					previousW, 
+											previousV;
 
-	public static final int PRECISION = 10;
+	private int 							numPatrones,   /**numNeuronsO y numNeuronsE incluyen el tama�o del bias en el caso*/ 
+											numNeuronsE, 
+											numNeuronsS, 	
+											numNeuronsO;
 
-	public static final int CNT = 1000;
-
-	private int numPatrones, numNeuronsE, numNeuronsS, // Debido a la tipología
-														// de nuestra red Rm
-														// ligado a Ri el número
-														// de neuronas de
-														// entradas
-														// siempre será el mismo
-														// que el nº de neuronas
-														// de salida,
-														// exceptuando a redes
-														// con bias
+	private ArrayList<BigDecimal[]> 		inputs, 
+											desiredOutputs;
 	
-										numNeuronsO;// if 0, nuestra red es simple
+	private boolean 						bias;
+	private StructureParameters 			structure;
+	private TrainingParameters				trainingPar;
 	
-	/** numNeuronsO y numNeuronsE incluyen el tamaño del bias en el caso */
-
-	ArrayList<BigDecimal[]> inputs, desiredOutputs;
-	private boolean bias;
-	private String name; // Lo usaremos para distingirla una vez creada.
 	private static Logger log = Logger.getLogger(NetworkManager.class);
 
 	public NetworkManager() {
-
-	}
-
-	// pre: inputs and desiredOutputs deben ser arrays válidos (creados por la
-	// clase PatronData, en la interfaz)
-	// sizeNetwork: tamaño de la red, representa el número de neuronas de
-	// entrada o salida que tendrá la red, sin incluir
-	// neurona bias en el caso
-	// numNeuronsO: Número de neuronas en la capa oculta, de nuevo sin incluir
-	// la neurona bias en el caso
-	public NetworkManager(String name, int numPatrones, int sizeNetwork,
-			int numNeuronsO, ArrayList<BigDecimal[]> inputs,
-			ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
-
 		super();
-		this.name = name;
-		this.numPatrones = numPatrones;
-		this.numNeuronsS = sizeNetwork;
-		if (bias) {
-			this.numNeuronsE = sizeNetwork + 1;
-			this.numNeuronsO = numNeuronsO + 1;
-		} else {
-			this.numNeuronsE = sizeNetwork;
-			this.numNeuronsO = numNeuronsO;
-		}
-		this.inputs = inputs;
-		this.desiredOutputs = desiredOutputs;
-		this.bias = bias;
-
-		log.debug("Creando NetworkManager: " + this.name + " Nº de patrones "
-				+ this.numPatrones + " Nº de neuronas de entrada"
-				+ this.numNeuronsE + "Nº de neuronas de salida \n"
-				+ this.numNeuronsS + " Nº de neuronas ocultas: "
-				+ this.numNeuronsO + "Bias: " + bias);
-
 	}
+
 
 	// GETTERS
 
 	public int getNumPatrones() {
 		return numPatrones;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public int getNumNeuronsO() {
@@ -123,10 +70,6 @@ public class NetworkManager {
 
 	public void setNumPatrones(int numPatrones) {
 		this.numPatrones = numPatrones;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public void setNumNeuronsO(int numNeuronsO) {

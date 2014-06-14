@@ -42,6 +42,7 @@ import valueset.LearningConstant;
 import valueset.Value;
 import architecture.NetworkManager;
 import architecture.StructureParameters;
+import architecture.TrainingParameters;
 import dataManager.*;
 import outsFiles.*;
 
@@ -49,6 +50,7 @@ import javax.swing.JCheckBox;
 
 import loadFiles.ReadFile;
 
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import javax.swing.JList;
@@ -58,7 +60,7 @@ import java.awt.Color;
 public class SetUpParametersTrainWindow extends JPanel{
 		
 		
-		/**GUI variables*/
+	/**GUI variables*/
 	
 	private JPanel 								panel_1,
 												panel_2,
@@ -73,7 +75,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 												rdbtnTangencial, 
 												rdbtnAleatorias,
 												rdbtnProcedentesDeArchivo;
-	private JTextArea 							txtrUtilizarMatricesDe;
+	private JTextPane							textPane;
 	private JComboBox 							comboBox,
 												comboBox_1;
 	private JButton								btnAceptar, 
@@ -90,7 +92,6 @@ public class SetUpParametersTrainWindow extends JPanel{
 												learningCNTVariable,
 												selectMatrixFile;  /**Ruta del archivo de donde obtenemos las matrices iniciales, en el caso*/
 	private WeightMatrix 						matrices;
-	private Matrix	 							W; 
 	private LearningConstant					learningClass;
 	
 	private String 								pathMatrices, 
@@ -98,7 +99,8 @@ public class SetUpParametersTrainWindow extends JPanel{
 												directoryName;
 	private File 								directory,
 												filechoosen;
-	private StructureParameters 				currentRed;
+	private StructureParameters 				currentStructure;
+	private TrainingParameters 					trainingParameters;
 	
 	private static Logger log = Logger.getLogger(SetUpParametersTrainWindow.class);
 
@@ -114,57 +116,64 @@ public class SetUpParametersTrainWindow extends JPanel{
 	public void initialize() {
 		
 		pathMatrices = "";
-		this.setBounds(6, 0, 980, 633);
+		selectMatrixFile = false;
 		this.setLayout(null);
-		
+		this.setBounds(MainWindow.JPANEL_MEASURES);
 		/**Paneles*/
 		
 		panel_4 = new JPanel();
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Par\u00E1metros de entrenamiento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_4.setBounds(79, 60, 413, 450);
+		panel_4.setBounds(30, 47, 434, 433);
 		this.add(panel_4);
 		panel_4.setLayout(null);
 			
 		panel_1 = new JPanel();
-		panel_1.setBounds(6, 16, 397, 427);
+		panel_1.setBounds(10, 19, 414, 403);
 		panel_4.add(panel_1);
 		panel_1.setLayout(null);
 		
 		panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Coeficiente de aprendizaje", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.setBounds(24, 242, 252, 174);
+		panel_3.setBounds(10, 200, 383, 125);
 		panel_1.add(panel_3);
 		panel_3.setLayout(null);
 		
 		panel_2 = new JPanel();
 		panel_2.setLayout(null);
-		panel_2.setBounds(10, 16, 232, 147);
+		panel_2.setBounds(10, 16, 363, 96);
 		panel_3.add(panel_2);
 			
+		textPane = new JTextPane();
+		textPane.setBounds(606, 68, 336, 398);
+		textPane.setEditable (false);
+		add(textPane);
+		textPane.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Informaci\u00F3n general", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		
+		
 		/**Etiquetas*/
 		
 		final JLabel lblFuncion = new JLabel("Funci\u00F3n:  ");
-		lblFuncion.setBounds(24,72, 77, 14);
+		lblFuncion.setBounds(24,52, 77, 14);
 		panel_1.add(lblFuncion);
 		
 		final JLabel lblAadirMomento = new JLabel("Momento Beta: ");
-		lblAadirMomento.setBounds(24, 132, 77, 16);
+		lblAadirMomento.setBounds(24, 100, 121, 16);
 		panel_1.add(lblAadirMomento);
 		
 		final JLabel lblCotaDeError = new JLabel("Cota de error:");
-		lblCotaDeError.setBounds(24, 159, 86, 16);
+		lblCotaDeError.setBounds(24, 127, 86, 16);
 		panel_1.add(lblCotaDeError);
 		
-		final JLabel lblMaxIt = new JLabel("M\u00E1ximo N\u00BA Iteraciones:");
-		lblMaxIt.setBounds(24, 186, 121, 16);
+		final JLabel lblMaxIt = new JLabel("N\u00BA Max Iteraciones:");
+		lblMaxIt.setBounds(24, 154, 121, 16);
 		panel_1.add(lblMaxIt);
 		
 		final JLabel lblValor = new JLabel("Valor: ");
-		lblValor.setBounds(10, 80, 46, 17);
+		lblValor.setBounds(207, 24, 46, 17);
 		panel_2.add(lblValor);
 		
 		final JLabel lblTipologa = new JLabel("Tipolog\u00EDa:");
-		lblTipologa.setBounds(10, 24, 46, 17);
+		lblTipologa.setBounds(10, 24, 68, 17);
 		panel_2.add(lblTipologa);
 		
 		final JLabel lblAcotado = new JLabel("Acotado: ");
@@ -172,11 +181,11 @@ public class SetUpParametersTrainWindow extends JPanel{
 		panel_2.add(lblAcotado);
 		
 		final JLabel lblLmite = new JLabel("L\u00EDmite: ");
-		lblLmite.setBounds(10, 108, 46, 14);
+		lblLmite.setBounds(207, 53, 46, 14);
 		panel_2.add(lblLmite);
 		
 		final JLabel lblmatrices = new JLabel("Matrices iniciales: ");
-		lblmatrices.setBounds(24, 33, 86, 28);
+		lblmatrices.setBounds(24, 13, 115, 28);
 		panel_1.add(lblmatrices);
 		
 		/**TextField, comboBox y RadioButton*/
@@ -184,80 +193,80 @@ public class SetUpParametersTrainWindow extends JPanel{
 		final ButtonGroup groupFuncion = new ButtonGroup(); //Para que solo pueda ser selecionado uno 
 		final ButtonGroup groupMatrices = new ButtonGroup();
 		rdbtnLineal = new JRadioButton("Lineal");
-		rdbtnLineal.setBounds(139, 68, 69, 23);
+		rdbtnLineal.setBounds(145, 48, 69, 23);
 		panel_1.add(rdbtnLineal);
 		rdbtnLineal.setSelected(true);
 		groupFuncion.add(rdbtnLineal);
 									
 		rdbtnTangencial = new JRadioButton("Tangencial");
-		rdbtnTangencial.setBounds(221, 68, 100, 23);
+		rdbtnTangencial.setBounds(247, 48, 100, 23);
 		panel_1.add(rdbtnTangencial);
 		groupFuncion.add(rdbtnTangencial);
 		
 		
 		rdbtnAleatorias = new JRadioButton("Aleatorias");
-		rdbtnAleatorias.setBounds(139, 31, 80, 23);
+		rdbtnAleatorias.setBounds(145, 16, 100, 23);
 		panel_1.add(rdbtnAleatorias);
 		rdbtnAleatorias.setSelected(true);
 		groupMatrices.add(rdbtnAleatorias);
 		
-	    rdbtnProcedentesDeArchivo = new JRadioButton("Procedentes de archivo");
-	    rdbtnProcedentesDeArchivo.setBounds(219, 31, 149, 23);
+	    rdbtnProcedentesDeArchivo = new JRadioButton("Seleccionar de archivo");
+	    rdbtnProcedentesDeArchivo.setBounds(247, 16, 161, 23);
 		panel_1.add(rdbtnProcedentesDeArchivo);
 		groupMatrices.add(rdbtnProcedentesDeArchivo);
 							
 		tfmomentoB = new JTextField();
-		tfmomentoB.setBounds(217, 130, 80, 20);
+		tfmomentoB.setBounds(217, 98, 80, 20);
 		panel_1.add(tfmomentoB);
 		tfmomentoB.setColumns(10);
 						
 		tflearningCNT = new JTextField();
-		tflearningCNT.setBounds(132, 79, 90, 17);
+		tflearningCNT.setBounds(263, 24, 90, 17);
 		panel_2.add(tflearningCNT);
 		tflearningCNT.setColumns(10);
 		
 		textField = new JTextField();
 		textField.setEditable(false);
-		textField.setBounds(132, 107, 90, 17);
+		textField.setBounds(263, 51, 90, 17);
 		panel_2.add(textField);
 		textField.setColumns(10);
 		
 		tfcortaError = new JTextField();
-		tfcortaError.setBounds(217, 157, 80, 20);
+		tfcortaError.setBounds(217, 125, 80, 20);
 		panel_1.add(tfcortaError);
 		tfcortaError.setColumns(10);
 		
 		tfmaxIt = new JTextField();
-		tfmaxIt.setBounds(217, 184, 80, 20);
+		tfmaxIt.setBounds(217, 152, 80, 20);
 		panel_1.add(tfmaxIt);
 		tfmaxIt.setColumns(10);
 		
 		comboBox = new JComboBox();
 		comboBox.addItem(valueset.Value.LearningCNTTipologia.FIJO);
 		comboBox.addItem(valueset.Value.LearningCNTTipologia.VARIABLE);
-		comboBox.setBounds(132, 24, 90, 17);
+		comboBox.setBounds(81, 24, 90, 17);
 		panel_2.add(comboBox);
 		
 		comboBox_1 = new JComboBox();
 		comboBox_1.addItem("Cota superior");
-		comboBox.addItem("Sin cota");
-		comboBox_1.setBounds(132, 52, 90, 17);
+		comboBox_1.addItem("Sin cota");
+		comboBox_1.setBounds(81, 52, 90, 17);
 		panel_2.add(comboBox_1);
 						
 		/**Botones*/						
-
+		
 		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(298, 311, 89, 23);
+		btnAceptar.setBounds(83, 369, 89, 23);
 		panel_1.add(btnAceptar);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(298, 345, 89, 23);
+		btnCancelar.setBounds(304, 369, 89, 23);
 		panel_1.add(btnCancelar);
 		
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(298, 379, 89, 23);
+		btnGuardar.setBounds(192, 369, 89, 23);
 		panel_1.add(btnGuardar);
-														
+																	
 																											
 //
 //			if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
@@ -278,36 +287,71 @@ public class SetUpParametersTrainWindow extends JPanel{
 
 
 	private void createEvents() {
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnAceptarActionPerformed();
+			}
+		});
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnCancelarActionPerformed();
+			}
+		});
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnGuardarActionPerformed();
+			}
+		});
 		rdbtnProcedentesDeArchivo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				rdbtnProcedentesDeArchivoActionPerformed();
 			}
 		});
-		tflearningCNT.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				tflearningCNTActionPerformed();
-			}
-		});
+//		tflearningCNT.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				tflearningCNTActionPerformed();
+//			}
+//		});
+		
 	}
 		
-	private void btnIniciarEntrenamientoActionPerformed() {
-//			if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
-//				double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
-//				double currentValue = Double.parseDouble(tflearningCNT.getText()); 
-//					if (currentValue> max){
-//						JOptionPane.showMessageDialog(
-//								null,
-//								"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
-//								+ "relación a los datos. Modifica este parámetro",
-//								"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
-//						start = false; 
-//					}
-//					
-//				}
-			
+	private void btnAceptarActionPerformed() {
+		if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { 			//Las matrices no fueron seleccionadas de archivo
+																	 			//se generan de forma aleatoria,
+			if (currentStructure.getTypeData() == Value.RedType.SIMPLE){
+				final Dimension dW = new Dimension(currentStructure.getNumNeuronsE(),currentStructure.getNumNeuronsS());
+				Matrix W = Matrix.createRandomMatrix( NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
+				matrices = new WeightMatrix(W);
+			}
+			else{ 
+				final Dimension dW = new Dimension(currentStructure.getNumNeuronsO(), currentStructure.getNumNeuronsE());
+				final Matrix W = Matrix.createRandomMatrix(
+				NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
+				NetworkManager.PRECISION);
+				final Dimension dV = new Dimension(currentStructure.getNumNeuronsS(), currentStructure.getNumNeuronsO());
+				final Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
+				NetworkManager.PRECISION);
+				matrices = new WeightMatrix(W, V);
+			}
+		}
+		else{
+			ReadFile readMatrices;
+			try {
+				readMatrices = new ReadFile(filechoosen);
+				WeightMatrix aux = readMatrices.readWeightMatrix();
+				Matrix Waux = readMatrices.readSingleWeightMatrix();
+				if (aux != null) { // Hemos seleccionado matrices del fichero
+					selectMatrixFile = true; // o quiere decir q tengas las dimensiones apropiadas
+					matrices = aux;
+					pathMatrices = filechoosen.getName();
+				}
+			}catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 		if (rdbtnLineal.isSelected())
 			funtionStr = Value.Funtion.LINEAL;
-		else if (rdbtnTangencial.isSelected()){
+		else if (rdbtnTangencial.isSelected())
 			funtionStr = Value.Funtion.TANGENCIAL;
 			
 		final String stCotaError = tfcortaError.getText();
@@ -337,7 +381,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		}
 		final String stCnsLearning = tflearningCNT.getText();
 		double learningValue;
-		double learningCoute;
+		double learningCoute = 0;
 		boolean acotado = false;
 		if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
 			tflearningCNT.setText("0.00001");
@@ -349,7 +393,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		String tipologia = comboBox.getSelectedItem().toString(); //Fijo o Variable
 		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
 			acotado = true;
-			Matrix R = Matrix.createMatrixFromArrayOfVectors(currentRed.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+			Matrix R = Matrix.createMatrixFromArrayOfVectors(currentStructure.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
 			learningCoute = calculateCotaLearning (R);
 			textField.setText(Double.toString(learningCoute));
 			acotado = true;
@@ -357,183 +401,10 @@ public class SetUpParametersTrainWindow extends JPanel{
 		else
 			textField.setText("Sin cuota");
 		
-		learningClass = new LearningConstant(learningValue, tipologia , acotado, learningCoute);
+		learningClass = new LearningConstant(learningValue, tipologia, acotado, learningCoute);
 		
-		
-		
-		}
-			
-			
-//	if (start){
-//			NetworkManager aux2 = null;
-//			for (final NetworkManager aux : MainWindow.neList) {
-//				if (aux.getName().equals(comboBox.getSelectedItem())) {
-//					aux2 = aux; // Controlar que se halla elegido alguna, de lo
-//								// contrario tendremos null exceptions
-//				}
-//			}
-//			ne = aux2;
-//
-//			if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { // Las
-//																			// matrices
-//																			// no
-//																			// fueron
-//																			// seleccionadas
-//																			// de
-//																			// archivo,
-//																			// se
-//																			// generan
-//																			// de
-//																			// forma
-//																			// aletoria
-//				
-//				if (ne.getNumNeuronsO() == 0){
-//					final Dimension dW = new Dimension(ne.getNumNeuronsE(),
-//							ne.getNumNeuronsS());
-//					W = Matrix.createRandomMatrix(
-//							NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
-//							NetworkManager.PRECISION);
-//					//matrices = new WeightMatrix(W);
-//					 
-//				}
-//				else{
-//					final Dimension dW = new Dimension(ne.getNumNeuronsO(),
-//						ne.getNumNeuronsE());
-//					final Matrix W = Matrix.createRandomMatrix(
-//						NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
-//						NetworkManager.PRECISION);
-//					final Dimension dV = new Dimension(ne.getNumNeuronsS(),
-//						ne.getNumNeuronsO());
-//					final Matrix V = Matrix.createRandomMatrix(
-//						NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
-//						NetworkManager.PRECISION);
-//					matrices = new WeightMatrix(W, V);
-//				}
-//
-//			}
-//			else{
-//				ReadFile readMatrices;
-//				try {
-//					readMatrices = new ReadFile(filechoosen);
-//					WeightMatrix aux = readMatrices.readWeightMatrix();
-//					Matrix Waux = readMatrices.readSingleWeightMatrix();
-//					if (aux != null) { // Hemos seleccionado matrices del fichero
-//						selectMatrixFile = true; // (no quiere decir q tengas las
-//													// dimensiones apropiadas
-//						matrices = aux;
-//						lblNewLabel_1.setText(filechoosen.getName());
-//						pathMatrices = filechoosen.getName();
-//					}
-//					}catch (FileNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			
-//			//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
-//			
-//			directoryName = "C:\\repositoryGit\\Salidas\\Training_"+TrainingWindow.getCurrentTimeStamp();
-//			directory = new File(directoryName);
-//			try{
-//				boolean creado = directory.mkdir();
-//				System.out.print("creado: "+ creado+"\n");
-//			}
-//			catch(SecurityException se){
-//				Log.error("El directorio "+ directoryName + "no ha podido ser creado");
-//			}
-//			System.out.print (directoryName);
-//
-//			// Creamos el hilo que llama al training
-//			sw = new SwingWorker<Integer, Integer>() {
-//				@Override
-//				protected Integer doInBackground() throws Exception {
-//					
-//					if (ne.getNumNeuronsO()==0){
-//						System.out.print("Red simple sin capas");
-//						ne.trainingSimplyNetwork(iterationMax, cotaError, learningCnt, matrices.getW(), momentB, momentBValue, funtionStr, directoryName);
-//						
-//					}
-//					else{
-//						System.out.print("Red simple con capa oculta");
-//					ne.training(iterationMax, cotaError, learningCnt, matrices,
-//							momentB, momentBValue,funtionStr, directoryName, learningCNTVariable);
-//					}
-//					return null;
-//				}
-//
-//				@Override
-//				protected void done() {
-//					// Display results
-//					String fileName = new String(directoryName +"\\resultsTraining.txt");
-//					try {
-//						String strToAdd = FileUtils.readFileToString(new File(
-//								fileName));
-//						System.out.println(strToAdd);
-//						textPane.setText(textPane.getText() + strToAdd);
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//					super.done();
-//				}
-//
-//			};
-//
-//			sw.execute();
-//
-//			if (sw.isCancelled()) {
-//				System.out.print("ha terminado");
-//
-//			}
-//			
-//			// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
-//			
-//			String outFile = new String(directoryName +"\\previousInformationTraining.txt");
-//			
-//			if (ne.getNumNeuronsO() == 0){
-//				SNTrainingOuts resultados = new SNTrainingOuts(outFile);
-//				resultados.previousInformation(ne.getName(), W, learningCNTCuote, momentBValue, funtionStr, pathMatrices);
-//			
-//				
-//			}else{
-//				LNTrainingOuts resultados = new LNTrainingOuts(outFile);
-//				resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
-//			}
-//			
-//			
-//			
-//
-//			// Display results
-//			// outFile = new String(
-//			// "C:\\repositoryGit\\Salidas\\ChosenPatrons.csv");
-//			// WriteExcel patrones = new WriteExcel(outFile);
-//			// patrones.writeInputsOutputs(inputs, desiredOutputs);
-//			// patrones.closeFile();
-//			//
-//
-//			// Display results
-//			FileReader reader;
-//			try {
-//				reader = new FileReader(outFile);
-//				BufferedReader br = new BufferedReader(reader);
-//				textPane.read(br, null);
-//				br.close();
-//				// br.toString()
-//
-//				// textPane.getText();
-//
-//				// textPane.requestFocus();
-//			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	}
-//
-//		}
-
-		
+		trainingParameters = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
+	}
 
 	//Dada la matriz de correlación de datos, devuelve 1/maximo de la diagona R · R Transp
 	private double calculateCotaLearning (Matrix R) {
@@ -546,54 +417,77 @@ public class SetUpParametersTrainWindow extends JPanel{
 	}
 
 
-		private void rdbtnProcedentesDeArchivoActionPerformed() {
-			final JFileChooser filechooser = new JFileChooser(
-					"C:\\repositoryGit\\Salidas");
+	private void rdbtnProcedentesDeArchivoActionPerformed() {
+		final JFileChooser filechooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
 			final int returnValue = filechooser.showOpenDialog(null);
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				final File filechoosen = filechooser.getSelectedFile();
-//				try {
-//					final ReadFile readMatrices = new ReadFile(filechoosen);
-//					WeightMatrix aux = readMatrices.readWeightMatrix();
-//					Matrix Waux = readMatrices.readSingleWeightMatrix();
-//					if (aux != null) { // Hemos seleccionado matrices del fichero
-//						selectMatrixFile = true; // (no quiere decir q tengas las
-//													// dimensiones apropiadas
-//						matrices = aux;
-//						lblNewLabel_1.setText(filechoosen.getName());
-//						pathMatrices = filechoosen.getName();
-//					}
+				try {
+					final ReadFile readMatrices = new ReadFile(filechoosen);
+					WeightMatrix aux = readMatrices.readWeightMatrix();
+					Matrix Waux = readMatrices.readSingleWeightMatrix();
+					if (aux != null) { // Hemos seleccionado matrices del fichero
+						selectMatrixFile = true; // (no quiere decir q tengas las
+													// dimensiones apropiadas
+						matrices = aux;
+						//lblNewLabel_1.setText(filechoosen.getName());
+						pathMatrices = filechoosen.getName();
+					}
 					
 					
-//				} catch (final FileNotFoundException e) {
+				} catch (final FileNotFoundException e) {
 					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+					e.printStackTrace();
+				}
 
 			} else {
 				System.out.println("Open command cancelled by user.");
 			}
 		}
 
-		private void tflearningCNTActionPerformed() {
-			if (cbAcotadoLearning.isSelected()){
-				double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
-				double currentValue = Double.parseDouble(tflearningCNT.getText()); 
-					if (currentValue> max){
-						JOptionPane.showMessageDialog(
-								null,
-								"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
-								+ "relación a los datos",
-								"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
-					}
-					
-				}
-			System.out.print("Entra en el tf learnig");
-				
-			}
+//		private void tflearningCNTActionPerformed() {
+//			if (cbAcotadoLearning.isSelected()){
+//				double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
+//				double currentValue = Double.parseDouble(tflearningCNT.getText()); 
+//					if (currentValue> max){
+//						JOptionPane.showMessageDialog(
+//								null,
+//								"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
+//								+ "relación a los datos",
+//								"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
+//					}
+//					
+//				}
+//			System.out.print("Entra en el tf learnig");
+//				
+//			}
 		
+
+		private void btnCancelarActionPerformed() {
+			// TODO Auto-generated method stub
 			
-	
+		}
+
+		private void btnGuardarActionPerformed() {
+			if (trainingParameters != null){
+				final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+				fileChooser.setDialogTitle("Guardar parámetros de entrenamiento"); 
+				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
+					File file = fileChooser.getSelectedFile();
+					if (!file.toString().endsWith(".csv")){   //Añadimos la extensión, en caso de que no se la hallamos puesta
+						file = new File (file + ".csv");
+					}
+//					StructureParametersOuts classFile = new StructureParametersOuts(file.toString());
+//					classFile.saveStructureParameters(currentNet);
+					JOptionPane.showMessageDialog (null,"Los parámetros de entrenamiento han sido guardados",
+							"Archivo guardado", JOptionPane.PLAIN_MESSAGE);
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog (null,"Error, no hay parámetros de entrenamiento establecidos",
+						"Parámetros no establecidos", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 		
 		public static String getCurrentTimeStamp() {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");

@@ -41,7 +41,6 @@ import javax.swing.JMenuItem;
  */
 public class MainWindow extends JFrame {
 
-	private static final long serialVersionUID = 1L;
 	
 	// Lista con las actuales estructuras de red creadas
 	public static ArrayList<StructureParameters> structureCreatedList = new ArrayList<>();
@@ -49,6 +48,9 @@ public class MainWindow extends JFrame {
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
 	public static ArrayList<JPanel> createdWindows = new ArrayList<>();
+	public static final Rectangle JPANEL_MEASURES = new Rectangle(0, 0, 984, 491);
+	public static final Rectangle DESKTOP_PANEL_MEASURES = new Rectangle(0, 21, 984, 491);
+	
 
 	// Variables GUI
 	private JFrame frame;
@@ -105,7 +107,7 @@ public class MainWindow extends JFrame {
 		frame.getContentPane().setBackground(Color.white);
 		
 		desktopPane = new JDesktopPane();
-		desktopPane.setBounds(0, 21, 984, 491);
+		desktopPane.setBounds(DESKTOP_PANEL_MEASURES);
 		desktopPane.setBackground(Color.WHITE);
 		//desktopPane.setOpaque(false);
 		frame.getContentPane().add(desktopPane);
@@ -193,7 +195,7 @@ public class MainWindow extends JFrame {
 		hideWindows();
 		if (newSimplyNet == null) {
 			newSimplyNet = new NewSimplyNetworkWindow();
-			newSimplyNet.setBounds(0, 0, 984, 491);
+			newSimplyNet.setBounds(JPANEL_MEASURES);
 			desktopPane.add(newSimplyNet, BorderLayout.CENTER);
 			newSimplyNet.show();
 			createdWindows.add(newSimplyNet);
@@ -207,7 +209,7 @@ public class MainWindow extends JFrame {
 		hideWindows();
 		if (newHiddenNet == null) {
 			newHiddenNet = new NewHiddenNetworkWindow();
-			newHiddenNet.setBounds(new Rectangle(0, 0, 984, 491));
+			newHiddenNet.setBounds(JPANEL_MEASURES);
 			desktopPane.add(newHiddenNet, BorderLayout.CENTER);
 			newHiddenNet.show();
 			createdWindows.add(newHiddenNet);
@@ -221,7 +223,7 @@ public class MainWindow extends JFrame {
 		hideWindows();
 		if (loadNetwork == null) {
 			loadNetwork = new LoadNetworkWindow();
-			loadNetwork.setBounds(new Rectangle(0, 0, 984, 491));
+			loadNetwork.setBounds(JPANEL_MEASURES);
 			desktopPane.add(loadNetwork, BorderLayout.CENTER);
 			loadNetwork.show();
 			createdWindows.add(loadNetwork);
@@ -235,7 +237,7 @@ public class MainWindow extends JFrame {
 		hideWindows();
 		if (sepUpParameters == null) {
 			sepUpParameters = new SetUpParametersTrainWindow();
-			sepUpParameters.setBounds(new Rectangle(0, 0, 984, 491));
+			sepUpParameters.setBounds(JPANEL_MEASURES);
 			desktopPane.add(sepUpParameters, BorderLayout.CENTER);
 			sepUpParameters.show();
 			createdWindows.add(sepUpParameters);
@@ -249,7 +251,7 @@ public class MainWindow extends JFrame {
 		hideWindows();
 		if (trainingWindow == null) {
 			trainingWindow = new TrainingWindow();
-			trainingWindow.setBounds(new Rectangle(0, 0, 984, 491));
+			trainingWindow.setBounds(JPANEL_MEASURES);
 			desktopPane.add(trainingWindow, BorderLayout.CENTER);
 			trainingWindow.show();
 			createdWindows.add(trainingWindow);

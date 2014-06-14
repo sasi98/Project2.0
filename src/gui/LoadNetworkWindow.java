@@ -60,7 +60,7 @@ public class LoadNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
-		this.setBounds(0, 21, 984, 491);
+		this.setBounds(MainWindow.JPANEL_MEASURES);
 		this.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();

@@ -21,6 +21,14 @@ public class StructureParameters {
 	private boolean 	bias;
 	
 
+
+	// pre: inputs and desiredOutputs deben ser arrays válidos (creados por la
+	// clase PatronData, en la interfaz)
+	// sizeNetwork: tamaño de la red, representa el número de neuronas de
+	// entrada o salida que tendrá la red, sin incluir
+	// neurona bias en el caso
+	// numNeuronsO: Número de neuronas en la capa oculta, de nuevo sin incluir
+	// la neurona bias en el caso
 	public StructureParameters (String name, String typeNet, String typeData, int numPatrones, int sizeNetwork,
 			int numNeuronsO, ArrayList<BigDecimal[]> inputs, ArrayList<BigDecimal[]> desiredOutputs, boolean bias) {
 		

@@ -84,7 +84,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
-		this.setBounds(0, 21, 984, 491);
+		this.setBounds(MainWindow.JPANEL_MEASURES);
 		this.setLayout(null);
 		
 		panel_1 = new JPanel();
@@ -221,7 +221,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 	private void btnGuardarActionPerformed() {
 		if (currentNet != null){
 			final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
-			fileChooser.setDialogTitle("Especifica un nombre para el fichero a guardar"); 
+			fileChooser.setDialogTitle("Guardar parámetros de estructura de la red"); 
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
 				File file = fileChooser.getSelectedFile();
 				if (!file.toString().endsWith(".csv")){   //Añadimos la extensión, en caso de que no se la hallamos puesta

@@ -68,7 +68,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
-		this.setBounds(0, 21, 984, 491);
+		this.setBounds(MainWindow.JPANEL_MEASURES);
 		this.setLayout(null);
 		
 		panel_1 = new JPanel();
@@ -196,7 +196,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 		private void btnGuardarActionPerformed() {
 			if (currentNet != null){
 				final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
-				fileChooser.setDialogTitle("Especifica un nombre para el fichero a guardar"); 
+				fileChooser.setDialogTitle("Guardar parámetros de estructura de la red"); 
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
 					File file = fileChooser.getSelectedFile();
 					if (!file.toString().endsWith(".csv")){   //Añadimos la extensión, en caso de que no se la hallamos puesta
@@ -286,13 +286,13 @@ public class NewSimplyNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				StructureParameters aux = new StructureParameters (name,Value.RedType.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
-				MainWindow.structureCreatedList.add(aux);
+				currentNet = new StructureParameters (name,Value.RedType.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
+				MainWindow.structureCreatedList.add(currentNet);
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
 				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
-				resultados.consoleOut(aux);
+				resultados.consoleOut(currentNet);
 				
 				// Display results
 				FileReader reader;

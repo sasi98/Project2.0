@@ -3,7 +3,7 @@ package test;
 import java.io.FileNotFoundException;
 
 import utilities.WeightMatrix;
-import dataManager.ReadFile;
+import loadFiles.*;
 
 public class TestingReadFile {
 
