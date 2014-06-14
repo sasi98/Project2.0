@@ -20,95 +20,46 @@ public class NetworkManager {
 	
 	public static Matrix 					previousW, 
 											previousV;
-
-	private int 							numPatrones,   /**numNeuronsO y numNeuronsE incluyen el tamaño del bias en el caso*/ 
-											numNeuronsE, 
-											numNeuronsS, 	
-											numNeuronsO;
-
-	private ArrayList<BigDecimal[]> 		inputs, 
-											desiredOutputs;
 	
-	private boolean 						bias;
-	private StructureParameters 			structure;
-	private TrainingParameters				trainingPar;
+	private StructureParameters 			structurePar;
+	private TrainingParameters 				trainPar;
 	
 	private static Logger log = Logger.getLogger(NetworkManager.class);
 
-	public NetworkManager() {
+	public NetworkManager(StructureParameters structurePar, TrainingParameters trainPar) {
 		super();
+		this.structurePar= structurePar;
+		this.trainPar = trainPar;
 	}
 
-
-	// GETTERS
-
-	public int getNumPatrones() {
-		return numPatrones;
-	}
-
-	public int getNumNeuronsO() {
-		return numNeuronsO;
-	}
-
-	public ArrayList<BigDecimal[]> getInputs() {
-		return inputs;
-	}
-
-	public ArrayList<BigDecimal[]> getDesiredOutputs() {
-		return desiredOutputs;
-	}
-
-	public int getNumNeuronsE() {
-		return numNeuronsE;
-	}
-
-	public int getNumNeuronsS() {
-		return numNeuronsS;
-	}
-
-	// SETTERS
-
-	public void setNumPatrones(int numPatrones) {
-		this.numPatrones = numPatrones;
-	}
-
-	public void setNumNeuronsO(int numNeuronsO) {
-		this.numNeuronsO = numNeuronsO;
-	}
-
-	public void setInputs(ArrayList<BigDecimal[]> inputs) {
-		this.inputs = inputs;
-	}
-
-	public void setDesiredOutputs(ArrayList<BigDecimal[]> desiredOutputs) {
-		this.desiredOutputs = desiredOutputs;
-	}
-
-	public void setNumNeuronsE(int numNeuronsE) {
-		this.numNeuronsE = numNeuronsE;
-	}
-
-	public void setNumNeuronsS(int numNeuronsS) {
-		this.numNeuronsS = numNeuronsS;
-	}
-
-
-	public void training (int iterMax, BigDecimal cuote, double learningCNT,
-			WeightMatrix matrices, boolean momentoBool, double momentoB, String funtion, String directoryName, boolean variableLearning) {
+	public void training (String directoryName){ 
 		int contToResetLearn = 0;
 		double increment;
 		BigDecimal previousError = null;
-		increment = learningCNT/2;
-		LearningConstant  learningClass = new LearningConstant(learningCNT, increment); 
-			
-		Matrix W = matrices.getW();
-		Matrix V = matrices.getV();
-		previousW = matrices.getW();
-		previousV = matrices.getV();
+//		increment = learningCNT/2;
+
+		/**Sacamos los parámetros de la estructura que usaremos*/
+		ArrayList<BigDecimal[]> inputs = structurePar.getInputs();
+		ArrayList<BigDecimal[]> desiredOutputs = structurePar.getDesiredOutputs();
+		int numNeuronO = structurePar.getNumNeuronsO();
+		boolean bias = structurePar.hasBias();
+		String funtion = structurePar.getTypeData();
+		
+		/**Sacamos los parámetros de entrenamiento*/
+		Matrix W = trainPar.getMatrices().getW();
+		Matrix V = trainPar.getMatrices().getV();
+		LearningConstant learning = trainPar.getLearning();
+		int iterMax = trainPar.getIterMax();
+		BigDecimal cuote = trainPar.getCuoteError();
+		double momentoValue = 0;
+		if (trainPar.isMomentoB()){
+			momentoValue = trainPar.getMomentoBvalue();
+		}
+
+		previousW = W;			/**Las actuales W y V serían utilizadas en el momento beta de la SIGUIENTE iteración en el for,*/
+		previousV = V;			/**las debo guardar antes, para poder ser utilizadas en la it siguiente*/
 		boolean end = false;
 		int iteration = 0;
-		
-		TrainingParameters results = new TrainingParameters();
 
 		String outFile = new String (directoryName+"\\resultsTraining.txt");
 		LNTrainingOuts resultados = new LNTrainingOuts(outFile);
@@ -117,53 +68,43 @@ public class NetworkManager {
 
 		while (!end) {
 			for (int i = 0; i < inputs.size(); i++) {
-				Network subNetwork = new Network();
-				// Las actuales W y V serían utilizadas en el momento beta de la SIGUIENTE iteración en el for,
-				// las debo guardar antes, para poder ser utilizadas en la it siguiente
+				Network subNetwork = new Network();    
 				if (bias) {
-					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							learningClass.getValue(), desiredOutputs.get(i), W, V, funtion);
+					subNetwork.setUpPatronWithBias(numNeuronO, inputs.get(i), learning.getValue(), desiredOutputs.get(i), W, V, funtion);
 				} else {
-					subNetwork.setUpPatronWithoutBias(numNeuronsO,
-							inputs.get(i), learningClass.getValue(), desiredOutputs.get(i),
-							W, V, funtion); // Establecemos la red con el patrï¿½n i
+					subNetwork.setUpPatronWithoutBias(numNeuronO,inputs.get(i), learning.getValue(), desiredOutputs.get(i), W, V, funtion);
 				}
-				if (momentoBool) {
-					subNetwork.trainWithMomentB(i, momentoB);
+				if (trainPar.isMomentoB()) {
+					subNetwork.trainWithMomentB(i, momentoValue);
 				} else {
 					subNetwork.train(i);
 				}
 
-				W = subNetwork.getW(); // after training, we get the matrix W and V
+				W = subNetwork.getW(); /**Después del entrenamiento, cogemos las matrices W y V*/ 
 				V = subNetwork.getV();
-				log.debug("Valores de W y V tras actualizaciï¿½n de matriz");
-				W.printMatrix(); // logger prints
+				log.debug("Valores de W y V tras actualización de matriz");
+				W.printMatrix();   //Logger prints
 				V.printMatrix();
 			}
-			// Comprobado con trazas hasta aquí everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i < inputs.size(); i++) {
 				Network subNetwork = new Network();
 				if (bias) {
-					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, V, funtion);
+					subNetwork.setUpPatronWithBias(numNeuronO, inputs.get(i),
+							learning.getValue(), desiredOutputs.get(i), W, V, funtion);
 				} else {
-					subNetwork.setUpPatronWithoutBias(numNeuronsO,
-							inputs.get(i), learningCNT, desiredOutputs.get(i),
-							W, V, funtion);
+					subNetwork.setUpPatronWithoutBias(numNeuronO,inputs.get(i), learning.getValue(), desiredOutputs.get(i), W, V, funtion);
 				}
-
 				errorList.add(subNetwork.calculateError());
 			}
 
-			// Calculamos el error medio de la iteración
+			/**Calculamos el error medio de la iteración*/
 			BigDecimal errorIt = new BigDecimal(0);
 			for (BigDecimal error : errorList) {
 				errorIt = errorIt.add(error);
 			}
-			errorIt = errorIt.divide(new BigDecimal(errorList.size()),
-					RoundingMode.HALF_UP);
+			errorIt = errorIt.divide(new BigDecimal(errorList.size()), RoundingMode.HALF_UP);
 			errorIt = errorIt.setScale(PRECISION, RoundingMode.HALF_UP);
 
 			// Add current error, matrix and iteration in memory and in results class
@@ -176,47 +117,41 @@ public class NetworkManager {
 			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
 
 			if (iteration == iterMax) {
-				log.debug("LLegamos al límite de las iteraciones. Iteration: "
-						+ iteration + " Máximo: " + iterMax);
+				log.debug("LLegamos al límite de las iteraciones. Iteration: " + iteration + " Máximo: " + iterMax);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
 				end = true;
 			}
-			
 			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
+				log.debug("Se cancela el entrenamiento en la iteración" + iteration);
 				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
 				end = true; 
 			}
-			
 			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, new WeightMatrix(W, V));
 				end = true;
 				
 			} 				
-			//if (TrainingWindow.sw.isCancelled()){
-			
 			//Si nuestro learning es variable, y el contador ha llegado a un número determinado de it, 
-			//comprobamos si el error es menor que el último guardado, si es menor, incrementamos el learning consta,
+			//comprobamos si el error es menor que el último guardado, si es menor, incrementamos el learning consta
 			
-			if ((variableLearning)&&(contToResetLearn == LearningConstant.IT_LIMIT_TO_MODIFY)){
-				if (errorIt.compareTo(previousError) == -1){ //el algorimo mejora
-					learningClass.setPreviousValue(learningClass.getValue());
-					learningClass.incValue();
-					previousError = errorIt;
-					contToResetLearn = 0;
-					System.out.print("Incrementamos constant learning: " +learningClass.getValue()+"\n");
-				}else if (errorIt.compareTo(previousError) == 1){ //el algorimo empeora
-					learningClass.setPreviousValue(learningClass.getValue());
-					learningClass.decValue();
-					previousError = errorIt; 
-					contToResetLearn = 0; 
-					System.out.print("Decrementamos el constant learning: " +learningClass.getValue()+"\n");
-				}
-			}
-			else{
-				contToResetLearn++;
-			}
-		
-			
+//			if ((variableLearning)&&(contToResetLearn == LearningConstant.IT_LIMIT_TO_MODIFY)){
+//				if (errorIt.compareTo(previousError) == -1){ //el algorimo mejora
+//					learningClass.setPreviousValue(learningClass.getValue());
+//					learningClass.incValue();
+//					previousError = errorIt;
+//					contToResetLearn = 0;
+//					System.out.print("Incrementamos constant learning: " +learningClass.getValue()+"\n");
+//				}else if (errorIt.compareTo(previousError) == 1){ //el algorimo empeora
+//					learningClass.setPreviousValue(learningClass.getValue());
+//					learningClass.decValue();
+//					previousError = errorIt; 
+//					contToResetLearn = 0; 
+//					System.out.print("Decrementamos el constant learning: " +learningClass.getValue()+"\n");
+//				}
+//			}
+//			else{
+//				contToResetLearn++;
+//			}
 			iteration++;
 		} // fin while
 		
@@ -226,69 +161,87 @@ public class NetworkManager {
 		writerErrorProgress.closeFile();
 	}
 
-	// pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos
-	// Calcula los outputs resultantes con las entradas de la red (inputs)
-	// returns: Array con los vectores los cuales se corresponden con los
-	// valores de la neuronas de salida de un patrï¿½n
-	public ArrayList<BigDecimal[]> calculateOutputs(WeightMatrix matrices) {
-		log.info("Calculate Outputs");
-		if ((matrices.getW().getRow() == numNeuronsO)
-				&& (matrices.getW().getColumn() == numNeuronsE)
-				&& (matrices.getV().getRow() == numNeuronsS)
-				&& (matrices.getV().getColumn() == numNeuronsO)) {
-			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
-			for (int i = 0; i < inputs.size(); i++) {
-				Network subNetwork = new Network();
-				// We are not using learning constant, we ignore his value
-				if (bias) {
-					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
-							0.00001, desiredOutputs.get(i), matrices.getW(),
-							matrices.getV(), "Lineal");
-				} else {
-					subNetwork.setUpPatronWithoutBias(numNeuronsO,
-							inputs.get(i), 0.00001, desiredOutputs.get(i),
-							matrices.getW(), matrices.getV(), "Lineal");
-				}
-				subNetwork.feedForward(); // PropagaciÃ³n hacia delante, se
-											// calculan las salidas
-				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
-				BigDecimal[] aux = new BigDecimal[auxNeurons.length];
-				for (int j = 0; j < auxNeurons.length; j++) { // Obtenemos el
-																// vector de
-																// neuronas de
-																// salida, y
-																// pasamos sus
-																// valores a un
-																// vector
-					aux[j] = auxNeurons[j].getOutValue();
-				}
-				outputs.add(aux);
-			}
-			return outputs;
-		} else {
-			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
-					+ " No es posible calcular las salidas");
-			return null;
-		}
+//	// pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos
+//	// Calcula los outputs resultantes con las entradas de la red (inputs)
+//	// returns: Array con los vectores los cuales se corresponden con los
+//	// valores de la neuronas de salida de un patrï¿½n
+//	public ArrayList<BigDecimal[]> calculateOutputs(WeightMatrix matrices) {
+//		log.info("Calculate Outputs");
+//		if ((matrices.getW().getRow() == numNeuronsO)
+//				&& (matrices.getW().getColumn() == numNeuronsE)
+//				&& (matrices.getV().getRow() == numNeuronsS)
+//				&& (matrices.getV().getColumn() == numNeuronsO)) {
+//			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
+//			for (int i = 0; i < inputs.size(); i++) {
+//				Network subNetwork = new Network();
+//				// We are not using learning constant, we ignore his value
+//				if (bias) {
+//					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i),
+//							0.00001, desiredOutputs.get(i), matrices.getW(),
+//							matrices.getV(), "Lineal");
+//				} else {
+//					subNetwork.setUpPatronWithoutBias(numNeuronsO,
+//							inputs.get(i), 0.00001, desiredOutputs.get(i),
+//							matrices.getW(), matrices.getV(), "Lineal");
+//				}
+//				subNetwork.feedForward(); // PropagaciÃ³n hacia delante, se
+//											// calculan las salidas
+//				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+//				BigDecimal[] aux = new BigDecimal[auxNeurons.length];
+//				for (int j = 0; j < auxNeurons.length; j++) { // Obtenemos el
+//																// vector de
+//																// neuronas de
+//																// salida, y
+//																// pasamos sus
+//																// valores a un
+//																// vector
+//					aux[j] = auxNeurons[j].getOutValue();
+//				}
+//				outputs.add(aux);
+//			}
+//			return outputs;
+//		} else {
+//			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
+//					+ " No es posible calcular las salidas");
+//			return null;
+//		}
+//
+//	}
+//	
+//	
+//	
+//	
+//	
+//	
+	
+	
+	public void trainingSimplyNetwork (String directoryName) {
+		
+		int contToResetLearn = 0;
+		double increment;
+		BigDecimal previousError = null;
+//		increment = learningCNT/2;
 
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	public void trainingSimplyNetwork (int iterMax, BigDecimal cuote, double learningCNT,
-			Matrix W, boolean momentoBool, double momentoB, String funtion, String directoryName) {
+		/**Sacamos los parámetros de la estructura que usaremos*/
+		ArrayList<BigDecimal[]> inputs = structurePar.getInputs();
+		ArrayList<BigDecimal[]> desiredOutputs = structurePar.getDesiredOutputs();
+		int numNeuronO = structurePar.getNumNeuronsO();
+		boolean bias = structurePar.hasBias();
+		String funtion = structurePar.getTypeData();
 		
-		previousW = W;
-		
+		/**Sacamos los parámetros de entrenamiento*/
+		Matrix W = trainPar.getMatrices().getW();
+		LearningConstant learning = trainPar.getLearning();
+		int iterMax = trainPar.getIterMax();
+		BigDecimal cuote = trainPar.getCuoteError();
+		double momentoValue = 0;
+		if (trainPar.isMomentoB()){
+			momentoValue = trainPar.getMomentoBvalue();
+		}
+		previousW = W;			/**La actual W seria utilizada en el momento beta de la SIGUIENTE iteración en el for,*/
+								/**la debo guardar antes, para poder ser utilizada en la it siguiente*/
 		boolean end = false;
 		int iteration = 0;
-		
-		TrainingParameters results = new TrainingParameters();
 
 		String outFile = new String (directoryName+"\\resultsTraining.txt");
 		SNTrainingOuts resultados = new SNTrainingOuts(outFile);
@@ -298,35 +251,31 @@ public class NetworkManager {
 		while (!end) {
 			for (int i = 0; i < inputs.size(); i++) {
 				SimplyNetwork subNetwork = new SimplyNetwork();
-				// Las actuales W y V serían utilizadas en el momento beta de la SIGUIENTE iteración en el for,
-				// las debo guardar antes, para poder ser utilizadas en la it siguiente
 				if (bias) {
 					subNetwork.setUpPatronWithBias(inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, funtion);
+							learning.getValue(), desiredOutputs.get(i), W, funtion);
 				} else {
-					subNetwork.setUpPatronWithoutBias(inputs.get(i), learningCNT, desiredOutputs.get(i),
-							W, funtion); // Establecemos la red con el patrï¿½n i
+					subNetwork.setUpPatronWithoutBias(inputs.get(i), learning.getValue(), desiredOutputs.get(i),
+							W, funtion);
 				}
 //				if (momentoBool) {
 //					subNetwork.trainWithMomentB(i, momentoB);
 //				} else {
 					subNetwork.train(i);
 				//}
-				W = subNetwork.getW(); // after training, we get the matrix W and V
+				W = subNetwork.getW();
 				log.debug("Valores de W tras actualización de matriz");
-				W.printMatrix(); // logger prints
+				W.printMatrix(); 	//Logger prints
 			}
-			// Comprobado con trazas hasta aquí everything is working fine
 			log.trace("Final del training de todas los patrones. Inicio del cálculo del error");
 			ArrayList<BigDecimal> errorList = new ArrayList<BigDecimal>();
 			for (int i = 0; i < inputs.size(); i++) {
 				SimplyNetwork subNetwork = new SimplyNetwork();
 				if (bias) {
 					subNetwork.setUpPatronWithBias(inputs.get(i),
-							learningCNT, desiredOutputs.get(i), W, funtion);
+							learning.getValue(), desiredOutputs.get(i), W, funtion);
 				} else {
-					subNetwork.setUpPatronWithoutBias(inputs.get(i), learningCNT, desiredOutputs.get(i),
-							W, funtion);
+					subNetwork.setUpPatronWithoutBias(inputs.get(i), learning.getValue(), desiredOutputs.get(i), W, funtion);
 				}
 
 				errorList.add(subNetwork.calculateError());
@@ -348,29 +297,23 @@ public class NetworkManager {
 			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
 
 			if (iteration == iterMax) {
-				log.debug("LLegamos al límite de las iteraciones. Iteration: "
-						+ iteration + " Máximo: " + iterMax);
+				log.debug("LLegamos al límite de las iteraciones. Iteration: " + iteration + " Máximo: " + iterMax);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, W);
 				end = true;
 			}
-			
-			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
+			if (MainWindow.cancelTraining) {
 				resultados.cancelledTraining(iteration, errorIt , W);
 				end = true; 
 			}
-			
-			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
+			if (errorIt.compareTo(cuote) == -1) {
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, W);
 				end = true;
 				
-			} 				
-			//if (TrainingWindow.sw.isCancelled()){
-			
-			
+			}
 			iteration++;
 		} // fin while
 		
-	//Salimos del bucle
+
 		//writerMatrices.writeMatrices(new WeightMatrix(W, V));
 		writerMatrices.closeFile();
 		writerErrorProgress.closeFile();

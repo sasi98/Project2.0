@@ -62,7 +62,7 @@ public class TrainingWindow extends JPanel {
 	/**Data variables*/
 	private StructureParameters					structurePar;
 	private TrainingParameters					trainingPar; 
-	private NetworkManager 						ne;
+	private NetworkManager 						manager;
 	private SwingWorker<Integer, Integer> 		sw;
 	private String 								directoryName; 
 	private File								directory;
@@ -137,15 +137,13 @@ public class TrainingWindow extends JPanel {
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
-				if (ne.getNumNeuronsO()==0){
+				if (structurePar.getTypeNet() == Value.RedType.SIMPLE){
 					System.out.print("Red simple sin capas");
-					ne.trainingSimplyNetwork(iterationMax, cotaError, learningCnt, matrices.getW(), momentB, momentBValue, funtionStr, directoryName);
-					
+					manager.trainingSimplyNetwork (directoryName);
 				}
 				else{
 					System.out.print("Red simple con capa oculta");
-				ne.training(iterationMax, cotaError, learningCnt, matrices,
-						momentB, momentBValue,funtionStr, directoryName, learningCNTVariable);
+					manager.training(directoryName);
 				}
 				return null;
 			}
@@ -155,10 +153,9 @@ public class TrainingWindow extends JPanel {
 				// Display results
 				String fileName = new String(directoryName +"\\resultsTraining.txt");
 				try {
-					String strToAdd = FileUtils.readFileToString(new File(
-							fileName));
+					String strToAdd = FileUtils.readFileToString(new File(fileName));
 					System.out.println(strToAdd);
-					textPane.setText(textPane.getText() + strToAdd);
+					//textPane.setText(textPane.getText() + strToAdd);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -178,23 +175,20 @@ public class TrainingWindow extends JPanel {
 		
 		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
 		
-		if (ne.getNumNeuronsO() == 0){
+		if (structurePar.getTypeNet() == Value.RedType.SIMPLE){
 			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
-			resultados.previousInformation(ne.getName(), W, learningCNTCuote, momentBValue, funtionStr, pathMatrices);
-		
-			
+			//resultados.previousInformation(ne.getName(), W, learningCNTCuote, momentBValue, funtionStr, pathMatrices);
 		}else{
 			LNTrainingOuts resultados = new LNTrainingOuts(outFile);
-			resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
+			//resultados.previousInformation(ne.getName(), matrices, learningCnt, momentBValue, funtionStr, pathMatrices);
 		}
-		
 		
 		// Display results
 		FileReader reader;
 		try {
 			reader = new FileReader(outFile);
 			BufferedReader br = new BufferedReader(reader);
-			textPane.read(br, null);
+		//	textPane.read(br, null);
 			br.close();
 			// br.toString()
 

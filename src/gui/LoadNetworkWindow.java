@@ -125,6 +125,7 @@ public class LoadNetworkWindow extends JPanel {
 			try {
 				StructureParametersLoad reader = new StructureParametersLoad(filechoosen.getAbsolutePath());
 				redShowed = reader.loadStructureParameters();
+				NewHiddenNetworkWindow.estructuraPrueba = redShowed;
 				//Mostrar redShow in right window//				
 			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block

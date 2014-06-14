@@ -41,6 +41,7 @@ import utilities.WeightMatrix;
 import valueset.LearningConstant;
 import valueset.Value;
 import architecture.NetworkManager;
+import architecture.SimplyNetwork;
 import architecture.StructureParameters;
 import architecture.TrainingParameters;
 import dataManager.*;
@@ -114,7 +115,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 	
 	
 	public void initialize() {
-		
+		currentStructure = NewHiddenNetworkWindow.estructuraPrueba;
 		pathMatrices = "";
 		selectMatrixFile = false;
 		this.setLayout(null);
@@ -318,7 +319,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 	private void btnAceptarActionPerformed() {
 		if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { 			//Las matrices no fueron seleccionadas de archivo
 																	 			//se generan de forma aleatoria,
-			if (currentStructure.getTypeData() == Value.RedType.SIMPLE){
+			if (currentStructure.getTypeNet() == Value.RedType.SIMPLE){
 				final Dimension dW = new Dimension(currentStructure.getNumNeuronsE(),currentStructure.getNumNeuronsS());
 				Matrix W = Matrix.createRandomMatrix( NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
 				matrices = new WeightMatrix(W);
@@ -395,6 +396,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 			acotado = true;
 			Matrix R = Matrix.createMatrixFromArrayOfVectors(currentStructure.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
 			learningCoute = calculateCotaLearning (R);
+			System.out.print(learningCoute);
 			textField.setText(Double.toString(learningCoute));
 			acotado = true;
 		}
@@ -411,7 +413,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		//valor máximo del coeficiente
 		Matrix RTransp = Matrix.transponer(R);
 		Matrix mCorrelacion = Matrix.product(R, RTransp); //R es mi matriz de datos, y R · R Transpuesta es mi matriz de correlación de datos
-		double cota = 1 / mCorrelacion.getMaxDiagonal().doubleValue();
+		double cota = 1/mCorrelacion.getMaxDiagonal().doubleValue();
 		//1 dividido entre el máximo de nuestra diagonal será el máximo
 		return cota;
 	}

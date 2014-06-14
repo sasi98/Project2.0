@@ -40,6 +40,7 @@ import javax.swing.border.LineBorder;
 
 public class NewHiddenNetworkWindow extends JPanel {
 
+	public static StructureParameters estructuraPrueba;
 	/**GUI Variables*/
 	private JButton 			bCreateNN, 
 								btnCancelar,
@@ -312,6 +313,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
 				currentNet = new StructureParameters (name, Value.RedType.OCULTA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 				MainWindow.structureCreatedList.add(currentNet);
+				estructuraPrueba = currentNet;
 
 				
 				// Testing collecting data

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import utilities.Matrix;
+import valueset.Value;
 
 public class Network {
 	
@@ -269,7 +270,7 @@ public class Network {
         	BigDecimal deltaE = desiredOutputLayer[i];
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
         	//Si estamos usando la tangencial los deltan son multiplicados por la derivada de la funcion. 
-            if (FuntionType == "Tangencial"){
+            if (FuntionType == Value.Funtion.TANGENCIAL){
             	BigDecimal aux = derivative(outputLayer[i].getOutValue());
             	deltaE = deltaE.multiply(aux);   	
             }
@@ -301,7 +302,7 @@ public class Network {
         			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexi�n
         			deltaE =  deltaE.add(aux);  
         			
-        			if (FuntionType == "Tangencial"){
+        			if (FuntionType == Value.Funtion.TANGENCIAL){
         				deltaE = deltaE.multiply(derivative(hiddenLayer[i].getOutValue()));
         			}
         		}
@@ -442,7 +443,7 @@ public class Network {
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
         	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
         	
-        	 if (FuntionType == "Tangencial"){
+        	 if (FuntionType == Value.Funtion.TANGENCIAL){
              	BigDecimal aux = derivative(outputLayer[i].getOutValue());
              	deltaE = deltaE.multiply(aux);   	
              }
@@ -471,7 +472,7 @@ public class Network {
         			BigDecimal aux = o.getDeltaError();
         			aux = aux.multiply(c.getWeight()); //multiplicada por el peso de la conexi�n
         			deltaE =  deltaE.add(aux);   
-        			if (FuntionType == "Tangencial"){
+        			if (FuntionType == Value.Funtion.TANGENCIAL){
         				deltaE = deltaE.multiply(derivative(hiddenLayer[i].getOutValue()));
         			}
         		}
