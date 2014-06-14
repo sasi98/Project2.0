@@ -3,28 +3,22 @@ package architecture;
 import java.math.BigDecimal;
 
 import utilities.WeightMatrix;
+import valueset.LearningConstant;
 
 public class TrainingParameters {
 	
+	private StructureParameters redFeatures;
 	private int iterMax;
 	private int currentIt; 
 	private BigDecimal ErrorIt; 
 	private BigDecimal cuote;
-	private double learningCNT;
+	private LearningConstant learning;
 	private WeightMatrix matrices;
+	private double momentoBvalue;
 	private boolean momentoB;
-	private int status; 
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
+	
 	public TrainingParameters() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	public int getIterMax() {
@@ -59,13 +53,7 @@ public class TrainingParameters {
 		this.cuote = cuote;
 	}
 
-	public double getLearningCNT() {
-		return learningCNT;
-	}
-
-	public void setLearningCNT(double learningCNT) {
-		this.learningCNT = learningCNT;
-	}
+	
 
 	public WeightMatrix getMatrices() {
 		return matrices;
@@ -75,13 +63,6 @@ public class TrainingParameters {
 		this.matrices = matrices;
 	}
 
-	public boolean isMomentoB() {
-		return momentoB;
-	}
-
-	public void setMomentoB(boolean momentoB) {
-		this.momentoB = momentoB;
-	}
 	
 	
 

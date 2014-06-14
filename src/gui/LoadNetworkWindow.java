@@ -4,6 +4,7 @@ import java.awt.LayoutManager;
 import java.awt.Rectangle;
 
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JEditorPane;
@@ -26,12 +27,18 @@ import javax.swing.border.MatteBorder;
 import javax.swing.UIManager;
 import javax.swing.JTextPane;
 
+import outsFiles.StructureParametersOuts;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
+
+import jxl.read.biff.File;
+import loadFiles.StructureParametersLoad;
 
 public class LoadNetworkWindow extends JPanel {
 	
-	private TrainingParameters redShowed;
+	private StructureParameters redShowed;
 	
 	
 	
@@ -112,12 +119,21 @@ public class LoadNetworkWindow extends JPanel {
 	}
 	
 	private void btnAbrirActionPerformed() {
-		
-		
+		final JFileChooser filechooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+		if (filechooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			final java.io.File filechoosen = filechooser.getSelectedFile();
+			try {
+				StructureParametersLoad reader = new StructureParametersLoad(filechoosen.getAbsolutePath());
+				redShowed = reader.loadStructureParameters();
+				//Mostrar redShow in right window//				
+			} catch (final FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void showGeneralInformation (){
-		
 		
 		
 		

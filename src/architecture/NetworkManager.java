@@ -20,8 +20,11 @@ public class NetworkManager {
 																// los valores
 																// del excel
 	
-	public static final String SIMPLE = "Simple",
-							   OCULTA = "Con capa oculta";
+//	public static final String SIMPLE = "Simple",
+//							   OCULTA = "Con capa oculta",
+//							   LINEAL = "Lineal",
+//							   TANGENCIAL = "Tangencial";
+//	
 	public static Matrix previousW, previousV;
 
 	public static final int PRECISION = 10;

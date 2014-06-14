@@ -286,7 +286,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				StructureParameters aux = new StructureParameters (name,NetworkManager.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
+				StructureParameters aux = new StructureParameters (name,Value.RedType.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
 				MainWindow.structureCreatedList.add(aux);
 				
 				// Testing collecting data

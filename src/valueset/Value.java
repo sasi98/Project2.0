@@ -11,7 +11,18 @@ public class Value {
     
     
     public class Funtion {
-        public final static String LINEAL = "Lineal";
-        public final static String TANGENCIAL = "Tangencial";
-        }
+        public final static String LINEAL = "Lineal",
+        						   TANGENCIAL = "Tangencial";
+    }
+    
+    public class RedType{
+    	public static final String  SIMPLE = "Simple",
+    								OCULTA = "Con capa oculta";   	
+    }
+    
+    public class LearningCNTTipologia{
+		public final static String 	FIJO = "Fijo",
+				                    VARIABLE = "Variable";
+    }
+    
 }
