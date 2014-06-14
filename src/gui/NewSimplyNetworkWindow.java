@@ -135,20 +135,20 @@ public class NewSimplyNetworkWindow extends JPanel {
 		panel.add(lblNewLabel_3);
 
 		bCreateNN = new JButton("Crear red");
-		bCreateNN.setBounds(864, 258, 110, 29);
+		bCreateNN.setBounds(591, 425, 110, 29);
 		this.add(bCreateNN);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(864, 310, 110, 29);
+		btnCancelar.setBounds(864, 425, 110, 29);
 		add(btnCancelar);
 		
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(864, 358, 110, 29);
+		btnGuardar.setBounds(726, 425, 110, 29);
 		add(btnGuardar);
 		
 		panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Salidas de datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(61, 265, 761, 205);
+		panel_2.setBounds(61, 270, 487, 210);
 		add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -156,7 +156,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 		textPane.setBounds(67, 281, 749, 182);
 		textPane.setEditable (false);
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(6, 16, 749, 182);
+		scrollPane.setBounds(10, 17, 469, 182);
 		panel_2.add(scrollPane);
 		scrollPane.setViewportView(textPane);
 		

@@ -89,8 +89,8 @@ public class TrainingWindow extends JPanel {
 		this.add(btnIniciarEntrenamiento);
 		
 		btnCancelarEntrenamiento = new JButton("Cancelar");
-		btnIniciarEntrenamiento.setBounds(new Rectangle(679, 451, 158, 27));
-		this.add(btnIniciarEntrenamiento);
+		btnCancelarEntrenamiento.setBounds(new Rectangle(679, 451, 158, 27));
+		this.add(btnCancelarEntrenamiento);
 
 		
 

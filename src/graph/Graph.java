@@ -17,13 +17,11 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class Graph {
-	private String id;
-	private ChartPanel chartpanel;
-	private JFreeChart jfreechart;
-	private XYSeries xyseries;
+	private String 				id;
+	private ChartPanel 			chartpanel;
+	private JFreeChart 			jfreechart;
+	private XYSeries 			xyseries;
 
-	// public HashMap<Integer, BigDecimal> errorProgressMap=new HashMap<Integer,
-	// BigDecimal>();
 	public Graph() {
 		super();
 	}
@@ -32,7 +30,7 @@ public class Graph {
 		id = _id;
 	}
 
-	public void put(int iteration, BigDecimal value) {
+	public void put (int iteration, BigDecimal value) {
 		xyseries.add(iteration, value);
 		chartpanel.repaint();
 	}
@@ -45,7 +43,7 @@ public class Graph {
 	}
 
 	private XYDataset createDataset() {
-		xyseries = new XYSeries("Error set");
+		xyseries = new XYSeries("Progresión del error");
 		// xyseries.add(1.0D, 1.0D);
 		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
 		xyseriescollection.addSeries(xyseries); //Para poner más de un dato por gráfico
@@ -53,8 +51,8 @@ public class Graph {
 	}
 
 	private JFreeChart createChart(XYDataset xydataset) {
-		jfreechart = ChartFactory.createXYLineChart("Error Progress",
-				"Iteration", "Errors", xydataset, PlotOrientation.VERTICAL,
+		jfreechart = ChartFactory.createXYLineChart("Progresión del error",
+				"Iteración", "Error", xydataset, PlotOrientation.VERTICAL,
 				true, true, false);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
 		xyplot.setDomainPannable(true);
