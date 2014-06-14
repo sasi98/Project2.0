@@ -4,6 +4,7 @@ import gui.MainWindow;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import valueset.Value;
 import architecture.NetworkManager;
 import architecture.StructureParameters;
 
@@ -20,7 +21,7 @@ public class StructureParametersOuts extends WriteFile{
 		wr.append("Tipo de datos: " +red.getTypeData()+"\n");
 		wr.append("Nº de neuronas de entrada: "+red.getNumNeuronsE()+ "\n");
 		wr.append("Nº de neuronas de salida: "+red.getNumNeuronsS()+ "\n");
-		if (red.getTypeNet() == NetworkManager.SIMPLE)
+		if (red.getTypeNet() == Value.RedType.SIMPLE)
 			wr.append("Nº de neuronas ocultas: "+red.getNumNeuronsO()+ "\n");
 		wr.append("Nº de patrones: "+red.getNumPatterns()+ "\n");
 		if (red.hasBias())

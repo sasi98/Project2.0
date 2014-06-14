@@ -3,6 +3,8 @@ package architecture;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import valueset.Value;
+
 public class StructureParameters {
 	
 	private String     				name,
@@ -30,7 +32,7 @@ public class StructureParameters {
 		this.numNeuronsS = sizeNetwork;
 		if (bias) {
 			this.numNeuronsE = sizeNetwork + 1;
-			if (typeNet == NetworkManager.OCULTA)
+			if (typeNet == Value.RedType.OCULTA)
 				this.numNeuronsO = numNeuronsO + 1;
 		} else {
 			this.numNeuronsE = sizeNetwork;

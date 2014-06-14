@@ -291,19 +291,19 @@ public class SetUpParametersTrainWindow extends JPanel{
 	}
 		
 	private void btnIniciarEntrenamientoActionPerformed() {
-			if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
-				double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
-				double currentValue = Double.parseDouble(tflearningCNT.getText()); 
-					if (currentValue> max){
-						JOptionPane.showMessageDialog(
-								null,
-								"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
-								+ "relación a los datos. Modifica este parámetro",
-								"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
-						start = false; 
-					}
-					
-				}
+//			if ( (cbAcotadoLearning.isSelected()) && (ne != null) ){
+//				double max = Double.parseDouble(lbMsnlearningCuoteMax.getText());
+//				double currentValue = Double.parseDouble(tflearningCNT.getText()); 
+//					if (currentValue> max){
+//						JOptionPane.showMessageDialog(
+//								null,
+//								"El coeficiente de aprendizaje es mayor que el máximo recomendado en "
+//								+ "relación a los datos. Modifica este parámetro",
+//								"Coeficiente de aprendizaje", JOptionPane.WARNING_MESSAGE);
+//						start = false; 
+//					}
+//					
+//				}
 			
 		if (rdbtnLineal.isSelected())
 			funtionStr = Value.Funtion.LINEAL;
@@ -342,10 +342,11 @@ public class SetUpParametersTrainWindow extends JPanel{
 		if ((stCnsLearning == null) || (stCnsLearning.equals(""))) {
 			tflearningCNT.setText("0.00001");
 			 learningValue = 0.00001;
-			} else {
+		} 
+		else 
 			learningValue = Double.parseDouble(stCnsLearning);
-		}
-		comboBox.getSelectedItem().toString(); //Fijo o Variable
+		
+		String tipologia = comboBox.getSelectedItem().toString(); //Fijo o Variable
 		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
 			acotado = true;
 			Matrix R = Matrix.createMatrixFromArrayOfVectors(currentRed.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
@@ -355,7 +356,8 @@ public class SetUpParametersTrainWindow extends JPanel{
 		}
 		else
 			textField.setText("Sin cuota");
-		learningClass = new LearningConstant(learningValue, increment, tipologia)
+		
+		learningClass = new LearningConstant(learningValue, tipologia , acotado, learningCoute);
 		
 		
 		
