@@ -39,7 +39,7 @@ import org.jfree.util.Log;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.Value;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.StructureParameters;
 import architecture.TrainingParameters;
 import dataManager.*;
@@ -62,7 +62,7 @@ public class TrainingWindow extends JPanel {
 	/**Data variables*/
 	private StructureParameters					structurePar;
 	private TrainingParameters					trainingPar; 
-	private NetworkManager 						manager;
+	private Manager 						manager;
 	private SwingWorker<Integer, Integer> 		sw;
 	private String 								directoryName; 
 	private File								directory;

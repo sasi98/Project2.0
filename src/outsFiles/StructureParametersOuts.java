@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import valueset.Value;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.StructureParameters;
 
 public class StructureParametersOuts extends WriteFile{

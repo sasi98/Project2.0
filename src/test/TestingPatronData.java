@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import dataManager.PatronData;
-import architecture.NetworkManager;
+import architecture.Manager;
 
 public class TestingPatronData {
 	
@@ -18,7 +18,7 @@ public class TestingPatronData {
 		PatronData manejador = new PatronData("002");
 		int numNeuronES = 6, numPatrones = 8;
 		ArrayList<ArrayList<Integer>> randomLists = manejador.generateRandomLists(numPatrones, numNeuronES); 
-		ArrayList<BigDecimal[]> inputs = manejador.createRandomArrayRm(NetworkManager.CNT,
+		ArrayList<BigDecimal[]> inputs = manejador.createRandomArrayRm(Manager.CNT,
 				randomLists);
 		for (ArrayList<Integer> list: randomLists){
 			for (int i: list){
@@ -27,7 +27,7 @@ public class TestingPatronData {
 			System.out.print(" \n");
 		}
 		ArrayList<BigDecimal[]> outputs = manejador.createRandomArrayRi(
-				NetworkManager.CNT, randomLists);
+				Manager.CNT, randomLists);
 		manejador.printPatrones(inputs);
 		manejador.printPatrones(outputs);
 	}

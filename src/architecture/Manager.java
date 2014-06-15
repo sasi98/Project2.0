@@ -11,7 +11,7 @@ import utilities.WeightMatrix;
 import valueset.LearningConstant;
 import outsFiles.*;
 
-public class NetworkManager {
+public class Manager {
 
 	public static final int 				CNT = 1000,  		/**Valor CNT por el que se multiplican los valores del excel*/
 											PRECISION = 10,     /**Valor que indica el número de dígitos decimales que tienes los datos*/
@@ -24,9 +24,9 @@ public class NetworkManager {
 	private StructureParameters 			structurePar;
 	private TrainingParameters 				trainPar;
 	
-	private static Logger log = Logger.getLogger(NetworkManager.class);
+	private static Logger log = Logger.getLogger(Manager.class);
 
-	public NetworkManager(StructureParameters structurePar, TrainingParameters trainPar) {
+	public Manager(StructureParameters structurePar, TrainingParameters trainPar) {
 		super();
 		this.structurePar= structurePar;
 		this.trainPar = trainPar;

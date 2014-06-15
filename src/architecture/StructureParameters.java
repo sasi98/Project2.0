@@ -117,5 +117,17 @@ public class StructureParameters {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	@Override
+	 public String toString() {
+	  return "          StructureParameters " + "\nname:" + name + ""
+	    + "\ntypeNet: " + typeNet + "" + "\ntypeData: " + typeData + ""
+	    + "\nnumNeuronsE: " + numNeuronsE + "" + "\nnumNeuronsS: "
+	    + numNeuronsS + "\nnumNeuronsO: " + numNeuronsO
+	    + "\nnumPatterns: " + numPatterns + "\ninputs: " + inputs
+	    + "\ndesiredOutputs: " + desiredOutputs + "\nbias: " + bias
+	    + "";
+	 }
 
 }

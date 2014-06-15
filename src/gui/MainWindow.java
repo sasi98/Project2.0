@@ -29,7 +29,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import architecture.NetworkManager;
+import com.petersoft.advancedswing.onoffbutton.OnOffButton;
+
+import architecture.Manager;
 import architecture.StructureParameters;
 
 import javax.swing.JMenuBar;
@@ -290,8 +292,8 @@ public class MainWindow extends JFrame {
 				logger.setLevel(Level.ALL);
 			}
 		}
-
 	}
+	
 
 	public static void clearTextFields (Container container) {
 		for (Component c : container.getComponents()) {

@@ -210,7 +210,7 @@ public class SimplyNetwork {
 	            	BigDecimal aux = derivative(outputLayer[i].getOutValue());
 	            	deltaE = deltaE.multiply(aux);   	
 	            }
-	            deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+	            deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 	            outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
 	        	deltaOutput[i] = deltaE;
 	        }
@@ -244,14 +244,14 @@ public class SimplyNetwork {
 	       log.debug("Muestro deltaW trás multiplicarla por el coeficiente de aprendizaje");
 	       deltaW.printMatrix();
 
-	       deltaW.truncarMatrixUP(NetworkManager.PRECISION);
+	       deltaW.truncarMatrixUP(Manager.PRECISION);
 //	       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
 //	    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
 //	       
 	      
 	       //Actualizamos las matrices con los deltas calculados
 	       this.W = Matrix.addition(this.W, deltaW);		  	   
-		   this.W.truncarMatrixUP(NetworkManager.PRECISION);
+		   this.W.truncarMatrixUP(Manager.PRECISION);
 
 		   
 		   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
@@ -549,7 +549,7 @@ public class SimplyNetwork {
 		public static BigDecimal derivative (BigDecimal x){
 			BigDecimal aux = new BigDecimal (1);
 			aux = aux.subtract(x.pow(2));
-			aux = aux.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+			aux = aux.setScale(Manager.PRECISION, RoundingMode.HALF_DOWN);
 			return aux;
 		}
 		

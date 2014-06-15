@@ -40,7 +40,7 @@ import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.LearningConstant;
 import valueset.Value;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.SimplyNetwork;
 import architecture.StructureParameters;
 import architecture.TrainingParameters;
@@ -321,17 +321,17 @@ public class SetUpParametersTrainWindow extends JPanel{
 																	 			//se generan de forma aleatoria,
 			if (currentStructure.getTypeNet() == Value.RedType.SIMPLE){
 				final Dimension dW = new Dimension(currentStructure.getNumNeuronsE(),currentStructure.getNumNeuronsS());
-				Matrix W = Matrix.createRandomMatrix( NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW, NetworkManager.PRECISION);
+				Matrix W = Matrix.createRandomMatrix( Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW, Manager.PRECISION);
 				matrices = new WeightMatrix(W);
 			}
 			else{ 
 				final Dimension dW = new Dimension(currentStructure.getNumNeuronsO(), currentStructure.getNumNeuronsE());
 				final Matrix W = Matrix.createRandomMatrix(
-				NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dW,
-				NetworkManager.PRECISION);
+				Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW,
+				Manager.PRECISION);
 				final Dimension dV = new Dimension(currentStructure.getNumNeuronsS(), currentStructure.getNumNeuronsO());
-				final Matrix V = Matrix.createRandomMatrix(NetworkManager.MATRIX_MIN, NetworkManager.MATRIX_MAX, dV,
-				NetworkManager.PRECISION);
+				final Matrix V = Matrix.createRandomMatrix(Manager.MATRIX_MIN, Manager.MATRIX_MAX, dV,
+				Manager.PRECISION);
 				matrices = new WeightMatrix(W, V);
 			}
 		}
@@ -359,10 +359,10 @@ public class SetUpParametersTrainWindow extends JPanel{
 		if ((stCotaError == null) || (stCotaError.equals(""))) {
 			tfcortaError.setText("0.001");
 			cotaError = new BigDecimal(0.001);
-			cotaError.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+			cotaError.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 		} else {
 			cotaError = new BigDecimal(stCotaError);
-			cotaError.setScale(NetworkManager.PRECISION);
+			cotaError.setScale(Manager.PRECISION);
 		}
 		
 		final String stItMax = tfmaxIt.getText();

@@ -19,7 +19,7 @@ import javax.swing.border.TitledBorder;
 import org.apache.log4j.Logger;
 
 import outsFiles.StructureParametersOuts;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.StructureParameters;
 import dataManager.PatronData;
 import valueset.Value;
@@ -259,9 +259,9 @@ public class NewSimplyNetworkWindow extends JPanel {
 				if (this.comboBox_inputType.getSelectedItem().equals(
 						Value.ComboBox.SOLAPADOS)) {
 					inputs = manejador.createSolapadoArrayRm(numPatrones,
-							inicio, NetworkManager.CNT, numNeuronES);
+							inicio, Manager.CNT, numNeuronES);
 					desiredOutputs = manejador.createSolapadoArrayRi(
-							numPatrones, inicio, NetworkManager.CNT,
+							numPatrones, inicio, Manager.CNT,
 							numNeuronES);
 				}
 
@@ -269,9 +269,9 @@ public class NewSimplyNetworkWindow extends JPanel {
 				else if (this.comboBox_inputType.getSelectedItem().equals(
 						Value.ComboBox.NOSOLAPADOS)) {
 					inputs = manejador.createNoSolapadoArrayRm(numPatrones,
-							inicio, NetworkManager.CNT, numNeuronES);
+							inicio, Manager.CNT, numNeuronES);
 					desiredOutputs = manejador.createNoSolapadoArrayRi(
-							numPatrones, inicio, NetworkManager.CNT,
+							numPatrones, inicio, Manager.CNT,
 							numNeuronES);
 				}
 
@@ -279,8 +279,8 @@ public class NewSimplyNetworkWindow extends JPanel {
 				else if (this.comboBox_inputType.getSelectedItem().equals(
 						Value.ComboBox.ALEATORIOS)) {
 					ArrayList<ArrayList<Integer>> randomLists = manejador.generateRandomLists(numPatrones, numNeuronES); // It generates the list that contains randoms values equivalent to a positions in the company table				
-					inputs = manejador.createRandomArrayRm(NetworkManager.CNT, randomLists);
-					desiredOutputs = manejador.createRandomArrayRi(NetworkManager.CNT, randomLists);
+					inputs = manejador.createRandomArrayRm(Manager.CNT, randomLists);
+					desiredOutputs = manejador.createRandomArrayRi(Manager.CNT, randomLists);
 				}
 				
 				// Create the Network, give it an id

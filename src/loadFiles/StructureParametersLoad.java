@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 import utilities.Matrix;
 import utilities.WeightMatrix;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.StructureParameters;
 
 public class StructureParametersLoad extends ReadFile {

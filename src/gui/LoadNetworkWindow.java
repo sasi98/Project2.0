@@ -15,7 +15,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.StructureParameters;
 import architecture.TrainingParameters;
 
@@ -32,6 +32,8 @@ import outsFiles.StructureParametersOuts;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import jxl.read.biff.File;
 import loadFiles.StructureParametersLoad;
@@ -116,6 +118,11 @@ public class LoadNetworkWindow extends JPanel {
 			}
 		});
 		
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			   showGeneralInformation();
+			}
+		});
 	}
 	
 	private void btnAbrirActionPerformed() {
@@ -134,11 +141,13 @@ public class LoadNetworkWindow extends JPanel {
 		}
 	}
 	
-	private void showGeneralInformation (){
-		
-		
-		
-	}
+	private void showGeneralInformation() {
+
+		  redShowed = new StructureParameters("testData", "testData", "testData",
+		    123, 123, 123, new ArrayList<BigDecimal[]>(),
+		    new ArrayList<BigDecimal[]>(), true);
+		  textPane.setText(this.redShowed.toString());
+		 }
 	
 	
 	

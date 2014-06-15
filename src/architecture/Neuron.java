@@ -94,11 +94,11 @@ public class Neuron {
 	        }
 	        log.trace("Valor acum: "+ acum+"\n");
 	        if (funtion == "Lineal"){
-	        	acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+	        	acum = acum.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 		        outValue = acum;
 	        } else if (funtion == "Tangencial"){
 	        	acum = Neuron.TangentFuntion(acum.doubleValue());
-	        	acum = acum.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+	        	acum = acum.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 	        	outValue = acum;
 	        }
 	        

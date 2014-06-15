@@ -274,7 +274,7 @@ public class Network {
             	BigDecimal aux = derivative(outputLayer[i].getOutValue());
             	deltaE = deltaE.multiply(aux);   	
             }
-            deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+            deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
             outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
         	deltaOutput[i] = deltaE;
         }
@@ -307,7 +307,7 @@ public class Network {
         			}
         		}
         	}
-        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
         	deltaHidden[i] = deltaE;   	
         }
         
@@ -398,10 +398,10 @@ public class Network {
        
        deltaW.printMatrix();
 
-       mDeltaOutput.truncarMatrixUP(NetworkManager.PRECISION);
-       mDeltaHidden.truncarMatrixUP(NetworkManager.PRECISION);
-       deltaV.truncarMatrixUP(NetworkManager.PRECISION);
-       deltaW.truncarMatrixUP(NetworkManager.PRECISION);
+       mDeltaOutput.truncarMatrixUP(Manager.PRECISION);
+       mDeltaHidden.truncarMatrixUP(Manager.PRECISION);
+       deltaV.truncarMatrixUP(Manager.PRECISION);
+       deltaW.truncarMatrixUP(Manager.PRECISION);
 //       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
 //    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
 //       
@@ -410,8 +410,8 @@ public class Network {
        this.W = Matrix.addition(this.W, deltaW);
 	   this.V = Matrix.addition(this.V, deltaV);
 	  	   
-	   this.W.truncarMatrixUP(NetworkManager.PRECISION);
-	   this.V.truncarMatrixUP(NetworkManager.PRECISION);
+	   this.W.truncarMatrixUP(Manager.PRECISION);
+	   this.V.truncarMatrixUP(Manager.PRECISION);
 	   
 	   //Actualizamos las conexiones con las nuevas matrices (no es necesario en el trainnig)
        //updateConnections(W, V);
@@ -441,13 +441,13 @@ public class Network {
         for (int i = 0; i<outputLayer.length; i++){
         	BigDecimal deltaE = desiredOutputLayer[i];
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
-        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
         	
         	 if (FuntionType == Value.Funtion.TANGENCIAL){
              	BigDecimal aux = derivative(outputLayer[i].getOutValue());
              	deltaE = deltaE.multiply(aux);   	
              }
-        	 deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	 deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
         	outputLayer[i].setDeltaError(deltaE); //Le metemos su delta de error correspondiente
         	deltaOutput[i] = deltaE;
         }
@@ -477,7 +477,7 @@ public class Network {
         			}
         		}
         	}
-        	deltaE.setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP);
+        	deltaE.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
         	deltaHidden[i] = deltaE;   	
         }
         
@@ -563,10 +563,10 @@ public class Network {
 //       
 //       deltaW.printMatrix();
 
-       mDeltaOutput.truncarMatrixUP(NetworkManager.PRECISION);
-       mDeltaHidden.truncarMatrixUP(NetworkManager.PRECISION);
-       deltaV.truncarMatrixUP(NetworkManager.PRECISION);
-       deltaW.truncarMatrixUP(NetworkManager.PRECISION);
+       mDeltaOutput.truncarMatrixUP(Manager.PRECISION);
+       mDeltaHidden.truncarMatrixUP(Manager.PRECISION);
+       deltaV.truncarMatrixUP(Manager.PRECISION);
+       deltaW.truncarMatrixUP(Manager.PRECISION);
 //       writer.writeInfPatron(idPatron, W, V, inputLayer, desiredOutputLayer, hiddenLayer, outputLayer, 
 //    		   mDeltaOutput, mDeltaHidden, deltaW, deltaV);
 //       
@@ -577,18 +577,18 @@ public class Network {
        
        
        //And for update I'll use the previous of the previous instance (the parameter's one)
-       momentW = Matrix.subtraction(momentW, NetworkManager.previousW);
-       momentV = Matrix.subtraction(momentV, NetworkManager.previousV);
+       momentW = Matrix.subtraction(momentW, Manager.previousW);
+       momentV = Matrix.subtraction(momentV, Manager.previousV);
        
        momentW = momentW.multEscalar(momentoB);
        momentV = momentV.multEscalar(momentoB);
        
        log.trace("showing (t-1):");
-       NetworkManager.previousW.printMatrix();
-       NetworkManager.previousV.printMatrix();
+       Manager.previousW.printMatrix();
+       Manager.previousV.printMatrix();
        
-       NetworkManager.previousW = this.W;
-       NetworkManager.previousV = this.V; //We save them before update
+       Manager.previousW = this.W;
+       Manager.previousV = this.V; //We save them before update
        
        log.trace("showing (t):");
        this.W.printMatrix();
@@ -601,8 +601,8 @@ public class Network {
 	   this.W = Matrix.addition(this.W, momentW);
 	   this.V = Matrix.addition(this.V, momentV);
 	   
-	   this.W.truncarMatrixUP(NetworkManager.PRECISION);
-	   this.V.truncarMatrixUP(NetworkManager.PRECISION);
+	   this.W.truncarMatrixUP(Manager.PRECISION);
+	   this.V.truncarMatrixUP(Manager.PRECISION);
 	   
 	   log.trace("showing (t + 1 )");
        this.W.printMatrix();
@@ -768,7 +768,7 @@ public class Network {
 	public static BigDecimal derivative (BigDecimal x){
 		BigDecimal aux = new BigDecimal (1);
 		aux = aux.subtract(x.pow(2));
-		aux = aux.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+		aux = aux.setScale(Manager.PRECISION, RoundingMode.HALF_DOWN);
 		return aux;
 	}
 	

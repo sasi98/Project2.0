@@ -22,7 +22,7 @@ import outsFiles.CalculateOutputsOuts;
 import outsFiles.WriteFile;
 import utilities.StandardDeviation;
 import utilities.WeightMatrix;
-import architecture.NetworkManager;
+import architecture.Manager;
 
 
 public class CalculateOutputsWindow {

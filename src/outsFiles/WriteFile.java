@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import architecture.Network;
-import architecture.NetworkManager;
+import architecture.Manager;
 import architecture.Neuron;
 import architecture.OutputNeuron;
 
@@ -365,11 +365,11 @@ public class WriteFile {
 			 }
 			 wr.append("\n Valores ocultas: \n");
 			 for (Neuron i: hiddenLayer){
-				wr.append(i.getOutValue().setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP)+ ";");
+				wr.append(i.getOutValue().setScale(Manager.PRECISION, RoundingMode.HALF_UP)+ ";");
 			 }
 			 wr.append("\n Valores salidas: \n");
 			 for (Neuron i: outputLayer){
-				wr.append(i.getOutValue().setScale(NetworkManager.PRECISION, RoundingMode.HALF_UP)+ ";");
+				wr.append(i.getOutValue().setScale(Manager.PRECISION, RoundingMode.HALF_UP)+ ";");
 			} 
 			 wr.append("\n Salidas deseadas: \n");
 			 for (BigDecimal b: desiredOutputLayer){

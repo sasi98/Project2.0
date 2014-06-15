@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import architecture.NetworkManager;
+import architecture.Manager;
 
 public class StandardDeviation {
 	
@@ -26,7 +26,7 @@ public class StandardDeviation {
 			acum = acum.add(b);
 		}
 		BigDecimal result = acum.divide(new BigDecimal(values.length));
-		result = result.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+		result = result.setScale(Manager.PRECISION, RoundingMode.HALF_DOWN);
 		return result;
 	}
 	
@@ -39,7 +39,7 @@ public class StandardDeviation {
 			acum = acum.add(aux.pow(2));
 		}
 		BigDecimal result = acum.divide(new BigDecimal(values.length));
-		result = result.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+		result = result.setScale(Manager.PRECISION, RoundingMode.HALF_DOWN);
 		return result;
 	}
 	
@@ -47,7 +47,7 @@ public class StandardDeviation {
 	public static BigDecimal calculateDeviation (BigDecimal average, BigDecimal[] values){
 		double aux = calculateVariance(average, values).doubleValue();
 		BigDecimal deviation = new BigDecimal(Math.sqrt(aux));
-		deviation = deviation.setScale(NetworkManager.PRECISION, RoundingMode.HALF_DOWN);
+		deviation = deviation.setScale(Manager.PRECISION, RoundingMode.HALF_DOWN);
 		return deviation;
 		
 	}
