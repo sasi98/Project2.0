@@ -25,4 +25,11 @@ public class Value {
 				                    VARIABLE = "Variable";
     }
     
+//    public class TrainingState{
+//    	public final static FINISHED_BY_MAX_IT = "El entrenamiento ha superado el máximo número de iteraciones permitidas";
+//    	 					FINISHED_BY_REACH_GOAL = "El entrenamiento ha alcanzado la cota ";
+//    	 					CANCELLED = "";
+//    }
+    
+    
 }

@@ -256,7 +256,7 @@ public class Network {
 
 		
         feedForward();
-        log.trace("Ejecutando m�dulo train() after feedForward \n");
+        log.trace("Ejecutando modulo train() after feedForward \n");
 
     	log.trace("Just for make sure, we are showing the inputs that we are training:  \n");
         for (Neuron i: inputLayer){
@@ -271,6 +271,7 @@ public class Network {
         	deltaE = deltaE.subtract(outputLayer[i].getOutValue());
         	//Si estamos usando la tangencial los deltan son multiplicados por la derivada de la funcion. 
             if (FuntionType == Value.Funtion.TANGENCIAL){
+            	System.out.print("Entrenando con tangencial");
             	BigDecimal aux = derivative(outputLayer[i].getOutValue());
             	deltaE = deltaE.multiply(aux);   	
             }

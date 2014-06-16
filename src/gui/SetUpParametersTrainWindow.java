@@ -34,6 +34,7 @@ import javax.swing.SwingWorker;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.apache.log4j.chainsaw.Main;
 import org.jfree.util.Log;
 
 import utilities.Matrix;
@@ -100,8 +101,6 @@ public class SetUpParametersTrainWindow extends JPanel{
 												directoryName;
 	private File 								directory,
 												filechoosen;
-	private StructureParameters 				currentStructure;
-	private TrainingParameters 					trainingParameters;
 	
 	private static Logger log = Logger.getLogger(SetUpParametersTrainWindow.class);
 
@@ -115,7 +114,6 @@ public class SetUpParametersTrainWindow extends JPanel{
 	
 	
 	public void initialize() {
-		currentStructure = NewHiddenNetworkWindow.estructuraPrueba;
 		pathMatrices = "";
 		selectMatrixFile = false;
 		this.setLayout(null);
@@ -317,39 +315,47 @@ public class SetUpParametersTrainWindow extends JPanel{
 	}
 		
 	private void btnAceptarActionPerformed() {
-		if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { 			//Las matrices no fueron seleccionadas de archivo
-																	 			//se generan de forma aleatoria,
-			if (currentStructure.getTypeNet() == Value.RedType.SIMPLE){
-				final Dimension dW = new Dimension(currentStructure.getNumNeuronsE(),currentStructure.getNumNeuronsS());
+		if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { 			//Las matrices no fueron seleccionadas de archivo								
+			//se generan de forma aleatoria,
+			int numNeuronS = MainWindow.structurePar.getNumNeuronsS(),
+				numNeuronE = MainWindow.structurePar.getNumNeuronsE();
+			if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+				final Dimension dW = new Dimension(numNeuronS, numNeuronE);
 				Matrix W = Matrix.createRandomMatrix( Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW, Manager.PRECISION);
 				matrices = new WeightMatrix(W);
 			}
 			else{ 
-				final Dimension dW = new Dimension(currentStructure.getNumNeuronsO(), currentStructure.getNumNeuronsE());
+				int numNeuronO = MainWindow.structurePar.getNumNeuronsO();
+				final Dimension dW = new Dimension(numNeuronO, numNeuronE);
 				final Matrix W = Matrix.createRandomMatrix(
 				Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW,
 				Manager.PRECISION);
-				final Dimension dV = new Dimension(currentStructure.getNumNeuronsS(), currentStructure.getNumNeuronsO());
+				final Dimension dV = new Dimension(numNeuronS, numNeuronO);
 				final Matrix V = Matrix.createRandomMatrix(Manager.MATRIX_MIN, Manager.MATRIX_MAX, dV,
 				Manager.PRECISION);
 				matrices = new WeightMatrix(W, V);
 			}
 		}
-		else{
-			ReadFile readMatrices;
-			try {
-				readMatrices = new ReadFile(filechoosen);
-				WeightMatrix aux = readMatrices.readWeightMatrix();
-				Matrix Waux = readMatrices.readSingleWeightMatrix();
-				if (aux != null) { // Hemos seleccionado matrices del fichero
-					selectMatrixFile = true; // o quiere decir q tengas las dimensiones apropiadas
-					matrices = aux;
-					pathMatrices = filechoosen.getName();
-				}
-			}catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
+//		else{
+//			ReadFile readMatrices;
+//			try {
+//				readMatrices = new ReadFile(filechoosen);
+//				WeightMatrix aux = null; 
+//				if (MainWindow.structurePar.getTypeNet() == Value.RedType.OCULTA)
+//					aux = readMatrices.readWeightMatrix();
+//				else if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+//					Matrix Waux = readMatrices.readSingleWeightMatrix();
+//					aux = new WeightMatrix(Waux, null);
+//				}
+//				if  (aux != null) { // Hemos seleccionado matrices del fichero
+//					selectMatrixFile = true; // o quiere decir q tengas las dimensiones apropiadas
+//					matrices = aux;
+//					pathMatrices = filechoosen.getName();
+//				}
+//			}catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		if (rdbtnLineal.isSelected())
 			funtionStr = Value.Funtion.LINEAL;
 		else if (rdbtnTangencial.isSelected())
@@ -375,7 +381,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		final String stMomentoB = tfmomentoB.getText();
 		if ((stMomentoB == null) || (stMomentoB.equals(""))) {
 			momentB = false; 	/*No utilizamos momento*/
-
+			momentBValue = 0;
 		} else {
 			momentBValue = Double.parseDouble(stMomentoB);
 			momentB = true;
@@ -394,7 +400,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		String tipologia = comboBox.getSelectedItem().toString(); //Fijo o Variable
 		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
 			acotado = true;
-			Matrix R = Matrix.createMatrixFromArrayOfVectors(currentStructure.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
 			learningCoute = calculateCotaLearning (R);
 			System.out.print(learningCoute);
 			textField.setText(Double.toString(learningCoute));
@@ -404,8 +410,9 @@ public class SetUpParametersTrainWindow extends JPanel{
 			textField.setText("Sin cuota");
 		
 		learningClass = new LearningConstant(learningValue, tipologia, acotado, learningCoute);
-		
-		trainingParameters = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
+		MainWindow.trainPar = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
+		JOptionPane.showMessageDialog (null,"Los parámetros del entrenamiento han sido creados",
+				"Paramétros de entrenamiento establecidos", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	//Dada la matriz de correlación de datos, devuelve 1/maximo de la diagona R · R Transp
@@ -424,24 +431,24 @@ public class SetUpParametersTrainWindow extends JPanel{
 			final int returnValue = filechooser.showOpenDialog(null);
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				final File filechoosen = filechooser.getSelectedFile();
+				ReadFile readMatrices;
 				try {
-					final ReadFile readMatrices = new ReadFile(filechoosen);
-					WeightMatrix aux = readMatrices.readWeightMatrix();
-					Matrix Waux = readMatrices.readSingleWeightMatrix();
-					if (aux != null) { // Hemos seleccionado matrices del fichero
-						selectMatrixFile = true; // (no quiere decir q tengas las
-													// dimensiones apropiadas
+					readMatrices = new ReadFile(filechoosen);
+					WeightMatrix aux = null; 
+					if (MainWindow.structurePar.getTypeNet() == Value.RedType.OCULTA)
+						aux = readMatrices.readWeightMatrix();
+					else if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+						Matrix Waux = readMatrices.readSingleWeightMatrix();
+						aux = new WeightMatrix(Waux, null);
+					}
+					if  (aux != null) { // Hemos seleccionado matrices del fichero
+						selectMatrixFile = true; // o quiere decir q tengas las dimensiones apropiadas
 						matrices = aux;
-						//lblNewLabel_1.setText(filechoosen.getName());
 						pathMatrices = filechoosen.getName();
 					}
-					
-					
-				} catch (final FileNotFoundException e) {
-					// TODO Auto-generated catch block
+				}catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
-
 			} else {
 				System.out.println("Open command cancelled by user.");
 			}
@@ -471,7 +478,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		}
 
 		private void btnGuardarActionPerformed() {
-			if (trainingParameters != null){
+			if (MainWindow.trainPar != null){
 				final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
 				fileChooser.setDialogTitle("Guardar parámetros de entrenamiento"); 
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		

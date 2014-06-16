@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.chainsaw.Main;
 
 import outsFiles.StructureParametersOuts;
 import valueset.Value;
@@ -40,7 +41,6 @@ import javax.swing.border.LineBorder;
 
 public class NewHiddenNetworkWindow extends JPanel {
 
-	public static StructureParameters estructuraPrueba;
 	/**GUI Variables*/
 	private JButton 			bCreateNN, 
 								btnCancelar,
@@ -67,7 +67,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 								numNeuronO,
 								inicio;
 	private boolean 			bias;
-	private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
+	//private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
 
 	private static Logger log = Logger.getLogger(NewHiddenNetworkWindow.class);
 	
@@ -220,7 +220,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 
 	//Guardamos la red en un fichero. 
 	private void btnGuardarActionPerformed() {
-		if (currentNet != null){
+		if (MainWindow.structurePar != null){
 			final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
 			fileChooser.setDialogTitle("Guardar parámetros de estructura de la red"); 
 			if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
@@ -229,7 +229,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 					file = new File (file + ".csv");
 				}
 				StructureParametersOuts classFile = new StructureParametersOuts(file.toString());
-				classFile.saveStructureParameters(currentNet);
+				classFile.saveStructureParameters(MainWindow.structurePar);
 				JOptionPane.showMessageDialog (null,"Los parámetros de la red han sido guardados",
 						"Archivo guardado", JOptionPane.PLAIN_MESSAGE);
 			}
@@ -311,15 +311,15 @@ public class NewHiddenNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				currentNet = new StructureParameters (name, Value.RedType.OCULTA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
-				MainWindow.structureCreatedList.add(currentNet);
-				estructuraPrueba = currentNet;
+				MainWindow.structurePar = new StructureParameters (name, Value.RedType.OCULTA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				
+				
 
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
 				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
-				resultados.consoleOut(currentNet);
+				resultados.consoleOut(MainWindow.structurePar);
 				// Display results
 				FileReader reader;
 				try {
@@ -337,7 +337,9 @@ public class NewHiddenNetworkWindow extends JPanel {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
+				
+				JOptionPane.showMessageDialog (null,"La estructura y datos de la red con capa oculta han sido creados",
+						"Estructura de red establecida", JOptionPane.PLAIN_MESSAGE);
 			}// end else2
 		}// end else1
 	}

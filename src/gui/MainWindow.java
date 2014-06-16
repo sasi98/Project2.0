@@ -33,6 +33,7 @@ import com.petersoft.advancedswing.onoffbutton.OnOffButton;
 
 import architecture.Manager;
 import architecture.StructureParameters;
+import architecture.TrainingParameters;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -44,14 +45,18 @@ import javax.swing.JMenuItem;
 public class MainWindow extends JFrame {
 
 	
+	public static final Rectangle JPANEL_MEASURES = new Rectangle(0, 0, 984, 491);
+	public static final Rectangle DESKTOP_PANEL_MEASURES = new Rectangle(0, 21, 984, 491);
+	
 	// Lista con las actuales estructuras de red creadas
 	public static ArrayList<StructureParameters> structureCreatedList = new ArrayList<>();
 	public static int numInstances = 0; 
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
 	public static ArrayList<JPanel> createdWindows = new ArrayList<>();
-	public static final Rectangle JPANEL_MEASURES = new Rectangle(0, 0, 984, 491);
-	public static final Rectangle DESKTOP_PANEL_MEASURES = new Rectangle(0, 21, 984, 491);
+	public static StructureParameters structurePar;
+	public static TrainingParameters trainPar;
+	
 	
 
 	// Variables GUI

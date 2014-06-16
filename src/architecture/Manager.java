@@ -2,10 +2,13 @@ package architecture;
 
 import gui.MainWindow;
 import gui.TrainingWindow;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
+
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.LearningConstant;
@@ -24,18 +27,25 @@ public class Manager {
 	private StructureParameters 			structurePar;
 	private TrainingParameters 				trainPar;
 	
+	
+	private TrainingResults 				results;
+	
 	private static Logger log = Logger.getLogger(Manager.class);
 
+	
+	
 	public Manager(StructureParameters structurePar, TrainingParameters trainPar) {
 		super();
 		this.structurePar= structurePar;
 		this.trainPar = trainPar;
 	}
 
-	public void training (String directoryName){ 
+	public TrainingResults training (String directoryName){ 
 		int contToResetLearn = 0;
 		double increment;
-		BigDecimal previousError = null;
+		BigDecimal  previousError = null,
+					errorfinal = null; //Error obtenido al terminar el entrenamiento
+		int state = 0;
 //		increment = learningCNT/2;
 
 		/**Sacamos los parámetros de la estructura que usaremos*/
@@ -43,9 +53,9 @@ public class Manager {
 		ArrayList<BigDecimal[]> desiredOutputs = structurePar.getDesiredOutputs();
 		int numNeuronO = structurePar.getNumNeuronsO();
 		boolean bias = structurePar.hasBias();
-		String funtion = structurePar.getTypeData();
 		
 		/**Sacamos los parámetros de entrenamiento*/
+		String funtion = trainPar.getFuncion(); 
 		Matrix W = trainPar.getMatrices().getW();
 		Matrix V = trainPar.getMatrices().getV();
 		LearningConstant learning = trainPar.getLearning();
@@ -115,19 +125,23 @@ public class Manager {
 			}
 		
 			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
+			errorfinal = errorIt; //Por si decidimos finalizar el entrenamiento
 
 			if (iteration == iterMax) {
 				log.debug("LLegamos al límite de las iteraciones. Iteration: " + iteration + " Máximo: " + iterMax);
+				state = 0;
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, new WeightMatrix(W, V));
 				end = true;
 			}
 			if (MainWindow.cancelTraining) { // Se cancela el  entrenamiento,
 				log.debug("Se cancela el entrenamiento en la iteración" + iteration);
+				state = 1;
 				resultados.cancelledTraining(iteration, errorIt , new WeightMatrix(W, V));
 				end = true; 
 			}
 			if (errorIt.compareTo(cuote) == -1) { //Error menor que la cota
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, new WeightMatrix(W, V));
+				state = 2;
 				end = true;
 				
 			} 				
@@ -155,10 +169,13 @@ public class Manager {
 			iteration++;
 		} // fin while
 		
-	//Salimos del bucle
+		
+		//Salimos del bucle
+		results = new TrainingResults(iteration-1, errorfinal, state, new WeightMatrix(W, V));
 		writerMatrices.writeMatrices(new WeightMatrix(W, V));
 		writerMatrices.closeFile();
 		writerErrorProgress.closeFile();
+		return results;
 	}
 
 //	// pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos
@@ -215,21 +232,23 @@ public class Manager {
 //	
 	
 	
-	public void trainingSimplyNetwork (String directoryName) {
+	public TrainingResults trainingSimplyNetwork (String directoryName) {
 		
-		int contToResetLearn = 0;
+		int contToResetLearn = 0, 
+				state = 0;
 		double increment;
-		BigDecimal previousError = null;
+		BigDecimal 	previousError = null,
+					errorfinal = null;
 //		increment = learningCNT/2;
+		
 
 		/**Sacamos los parámetros de la estructura que usaremos*/
 		ArrayList<BigDecimal[]> inputs = structurePar.getInputs();
 		ArrayList<BigDecimal[]> desiredOutputs = structurePar.getDesiredOutputs();
-		int numNeuronO = structurePar.getNumNeuronsO();
 		boolean bias = structurePar.hasBias();
-		String funtion = structurePar.getTypeData();
 		
 		/**Sacamos los parámetros de entrenamiento*/
+		String funtion = trainPar.getFuncion();
 		Matrix W = trainPar.getMatrices().getW();
 		LearningConstant learning = trainPar.getLearning();
 		int iterMax = trainPar.getIterMax();
@@ -299,14 +318,17 @@ public class Manager {
 			if (iteration == iterMax) {
 				log.debug("LLegamos al límite de las iteraciones. Iteration: " + iteration + " Máximo: " + iterMax);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, W);
+				state = 0;
 				end = true;
 			}
 			if (MainWindow.cancelTraining) {
 				resultados.cancelledTraining(iteration, errorIt , W);
+				state = 1;
 				end = true; 
 			}
 			if (errorIt.compareTo(cuote) == -1) {
 				resultados.finishedTrainingSuccessfully (iteration, errorIt,cuote, W);
+				state = 2;
 				end = true;
 				
 			}
@@ -315,8 +337,10 @@ public class Manager {
 		
 
 		//writerMatrices.writeMatrices(new WeightMatrix(W, V));
+		results = new TrainingResults(iteration-1, errorfinal, state, new WeightMatrix(W, null));
 		writerMatrices.closeFile();
 		writerErrorProgress.closeFile();
+		return results;
 	}
 	
 	

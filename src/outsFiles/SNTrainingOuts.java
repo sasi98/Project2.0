@@ -2,6 +2,8 @@ package outsFiles;
 
 import java.math.BigDecimal;
 
+import architecture.StructureParameters;
+import architecture.TrainingParameters;
 import utilities.Matrix;
 
 
@@ -15,7 +17,7 @@ public class SNTrainingOuts extends WriteFile {
 	}
 	
 	
-	public void previousInformation(String name, Matrix W, double learningCnt, double momentB, String funcion, String pathArchivo){
+	public void previousInformation(String name, Matrix W, double learningCnt, double momentB, String funcion){
 		wr.append("Comenzando entrenamiento de la Red: "+name+"\n");
 		wr.append("Coeficiente de aprendizaje: "+ learningCnt +"\n");
 		if (momentB != 0){
@@ -26,10 +28,10 @@ public class SNTrainingOuts extends WriteFile {
 		}
 		wr.append("Función de activación: "+funcion+"\n");
 		wr.append("Matriz inicial ");
-		if (pathArchivo != "")
-			wr.append(" procedente del archivo: "+ pathArchivo+"\n");
-		else
-			wr.append(" generada de forma aletoria \n");
+//		if (pathArchivo != "")
+//			wr.append(" procedente del archivo: "+ pathArchivo+"\n");
+//		else
+//			wr.append(" generada de forma aletoria \n");
 		writeMatriz(W);
 		wr.append("\n");
 		closeFile();

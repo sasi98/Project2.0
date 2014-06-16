@@ -129,5 +129,9 @@ public class StructureParameters {
 	    + "\ndesiredOutputs: " + desiredOutputs + "\nbias: " + bias
 	    + "";
 	 }
+	
+	
+	
+	
 
 }

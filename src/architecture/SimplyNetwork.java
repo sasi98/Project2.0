@@ -25,7 +25,7 @@ public class SimplyNetwork {
 		
 		private String FuntionType;
 
-		private static Logger log = Logger.getLogger(Network.class);
+		private static Logger log = Logger.getLogger(SimplyNetwork.class);
 		
 
 		
@@ -51,13 +51,13 @@ public class SimplyNetwork {
 		public void setUpPatronWithoutBias (BigDecimal[] valuesInputLayer, double learningCNT, 
 				BigDecimal [] desiredOutputLayer, Matrix W, String funtion)
 		{	
-			log.debug ("Entrando en SetUpPatronWithoutBias. NÃºmero de neuronas de entrada y de salida: "+ valuesInputLayer.length);
+			log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada y de salida: "+ valuesInputLayer.length);
 			log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
 			
-			if ( (W.getRow()  == numNeuronsS) && (W.getColumn() == valuesInputLayer.length) ){
+			this.numNeuronsE = valuesInputLayer.length;
+			this.numNeuronsS = valuesInputLayer.length;
+			if ( (W.getRow()  == numNeuronsS) && (W.getColumn() == numNeuronsE) ){
 				this.desiredOutputLayer = desiredOutputLayer;
-				this.numNeuronsE = valuesInputLayer.length;
-				this.numNeuronsS = valuesInputLayer.length;
 				this.learningCNT = learningCNT;
 				this.W = W;
 				this.FuntionType = funtion;

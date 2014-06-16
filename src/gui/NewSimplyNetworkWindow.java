@@ -49,7 +49,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 								numPatrones, 
 								inicio;
 	private boolean 			bias;
-	private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
+	//private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
 	
 	private static Logger log = Logger.getLogger(NewSimplyNetworkWindow.class);
 	private JPanel panel_2;
@@ -194,7 +194,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 	
 	//Guardamos la red en un fichero. 
 		private void btnGuardarActionPerformed() {
-			if (currentNet != null){
+			if (MainWindow.structurePar != null){
 				final JFileChooser fileChooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
 				fileChooser.setDialogTitle("Guardar parámetros de estructura de la red"); 
 				if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {		
@@ -203,7 +203,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 						file = new File (file + ".csv");
 					}
 					StructureParametersOuts classFile = new StructureParametersOuts(file.toString());
-					classFile.saveStructureParameters(currentNet);
+					classFile.saveStructureParameters(MainWindow.structurePar);
 					JOptionPane.showMessageDialog (null,"Los parámetros de la red han sido guardados",
 							"Archivo guardado", JOptionPane.PLAIN_MESSAGE);
 				}
@@ -286,14 +286,13 @@ public class NewSimplyNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				currentNet = new StructureParameters (name,Value.RedType.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
-				MainWindow.structureCreatedList.add(currentNet);
-				NewHiddenNetworkWindow.estructuraPrueba = currentNet;
+				MainWindow.structurePar = new StructureParameters (name,Value.RedType.SIMPLE, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
+				MainWindow.structureCreatedList.add(MainWindow.structurePar);
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
 				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
-				resultados.consoleOut(currentNet);
+				resultados.consoleOut(MainWindow.structurePar);
 				
 				// Display results
 				FileReader reader;
@@ -313,6 +312,8 @@ public class NewSimplyNetworkWindow extends JPanel {
 					e.printStackTrace();
 				}
 
+				JOptionPane.showMessageDialog (null,"La estructura y datos de la red simple han sido creados",
+						"Estructura de red establecida", JOptionPane.PLAIN_MESSAGE);
 			}// end else2
 		}// end else1
 	}

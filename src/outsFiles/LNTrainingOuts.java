@@ -15,7 +15,7 @@ public class LNTrainingOuts extends WriteFile {
 		super(fileName);
 	}
 	
-	public void previousInformation(String name, WeightMatrix matrices, double learningCnt, double momentB, String funcion, String pathArchivo){
+	public void previousInformation(String name, WeightMatrix matrices, double learningCnt, double momentB, String funcion){
 		wr.append("Comenzando entrenamiento de la Red: "+name+"\n");
 		wr.append("Coeficiente de aprendizaje: "+ learningCnt +"\n");
 		if (momentB != 0){
@@ -26,10 +26,10 @@ public class LNTrainingOuts extends WriteFile {
 		}
 		wr.append("Función de activación: "+funcion+"\n");
 		wr.append("Matrices iniciales");
-		if (pathArchivo != "")
-			wr.append(" procedentes del archivo: "+ pathArchivo+"\n");
-		else
-			wr.append(" generadas de forma aletoria \n");
+//		if (pathArchivo != "")
+//			wr.append(" procedentes del archivo: "+ pathArchivo+"\n");
+//		else
+//			wr.append(" generadas de forma aletoria \n");
 		writeMatrices(matrices);
 		wr.append("\n");
 		closeFile();
@@ -38,7 +38,7 @@ public class LNTrainingOuts extends WriteFile {
 	
 	public void cancelledTraining (int it, BigDecimal error, WeightMatrix matrices){
 		wr.append("El entrenamiento ha sido cancelado en la iteración: " + it+"\n");
-		wr.append("Error resultante en la iteración = " +error+"\n");
+		wr.append("Error resultante = " +error+"\n");
 		wr.append("Matrices de pesos obtenidas: \n ");
 		writeMatrices(matrices);
 		wr.append("\n");
@@ -47,7 +47,7 @@ public class LNTrainingOuts extends WriteFile {
 	
 	public void finishedTrainingByMaxIt (int it, BigDecimal error, BigDecimal cota, WeightMatrix matrices){
 		wr.append("El entrenamiento ha alcanzado el máximo número de iteraciónes permitidas "+it+"\n");
-		wr.append("Error = "+error+" Cota = "+cota+"\n");
+		wr.append("Error resultante = "+error+" Cota = "+cota+"\n");
 		wr.append("Matrices de pesos obtenidas: \n");
 		writeMatrices(matrices);
 		wr.append("\n");
@@ -55,7 +55,7 @@ public class LNTrainingOuts extends WriteFile {
 	}
 	
 	public void finishedTrainingSuccessfully (int it, BigDecimal error, BigDecimal cota, WeightMatrix matrices){
-		wr.append("El error ha alcanzado la cota  en la iteración "+it+"\n");
+		wr.append("El error ha alcanzado la cota en la iteración "+it+"\n");
 		wr.append("Error = "+error+" Cota = "+cota+"\n");
 		wr.append("Matrices de pesos obtenidas: \n");
 		writeMatrices(matrices);

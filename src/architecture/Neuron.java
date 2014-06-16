@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
+import valueset.Value;
+
 
 
 public class Neuron {
@@ -93,10 +95,10 @@ public class Neuron {
 	        	} 	
 	        }
 	        log.trace("Valor acum: "+ acum+"\n");
-	        if (funtion == "Lineal"){
+	        if (funtion == Value.Funtion.LINEAL){
 	        	acum = acum.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 		        outValue = acum;
-	        } else if (funtion == "Tangencial"){
+	        } else if (funtion == Value.Funtion.TANGENCIAL){
 	        	acum = Neuron.TangentFuntion(acum.doubleValue());
 	        	acum = acum.setScale(Manager.PRECISION, RoundingMode.HALF_UP);
 	        	outValue = acum;
