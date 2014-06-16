@@ -479,14 +479,16 @@ public class WriteFile {
 				 
 				 wr.append("\n"); //Salto de fila en excel
 			 }
-			 wr.append("Matrix V:\n");
-			 for (int i = 0; i < V.getRow(); i++){
-				 for (int j= 0; j < V.getColumn(); j++){
-					 String valueStr = V.getValuePos(i, j).toString();
-					 valueStr = valueStr.replace(".", ",");
-					 wr.append(valueStr+ ";");
+			 if (V != null){ 
+				 wr.append("Matrix V:\n");
+				 for (int i = 0; i < V.getRow(); i++){
+					 for (int j= 0; j < V.getColumn(); j++){
+						 String valueStr = V.getValuePos(i, j).toString();
+						 valueStr = valueStr.replace(".", ",");
+						 wr.append(valueStr+ ";");
+					 }
+					 wr.append("\n");
 				 }
-				 wr.append("\n");
 			 }
 		}
 		

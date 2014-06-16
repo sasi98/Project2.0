@@ -226,7 +226,6 @@ public class TrainingWindow extends JPanel {
 				}
 				else{
 					results = manager.training(directoryName);
-					
 				}
 				return null;
 			}
@@ -236,7 +235,7 @@ public class TrainingWindow extends JPanel {
 				// Display results
 				String fileName = new String(directoryName +"\\resultsTraining.txt");
 				try {
-					JOptionPane.showMessageDialog (null, results.getContentWindowBox(),
+				JOptionPane.showMessageDialog (null, results.getContentWindowBox(),
 							results.getTitleWindowBox(),JOptionPane.PLAIN_MESSAGE);
 					String strToAdd = FileUtils.readFileToString(new File(fileName));
 					textPane.setText(textPane.getText() + strToAdd);

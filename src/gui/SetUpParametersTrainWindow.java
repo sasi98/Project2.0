@@ -411,8 +411,8 @@ public class SetUpParametersTrainWindow extends JPanel{
 		
 		learningClass = new LearningConstant(learningValue, tipologia, acotado, learningCoute);
 		MainWindow.trainPar = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
-		JOptionPane.showMessageDialog (null,"Los parámetros del entrenamiento han sido creados",
-				"Paramétros de entrenamiento establecidos", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog (null,"Los parámetros del entrenamiento han sido establecidos",
+				"Paramétros de entrenamiento", JOptionPane.PLAIN_MESSAGE);
 	}
 
 	//Dada la matriz de correlación de datos, devuelve 1/maximo de la diagona R · R Transp

@@ -277,11 +277,11 @@ public class Manager {
 					subNetwork.setUpPatronWithoutBias(inputs.get(i), learning.getValue(), desiredOutputs.get(i),
 							W, funtion);
 				}
-//				if (momentoBool) {
-//					subNetwork.trainWithMomentB(i, momentoB);
-//				} else {
+				if (trainPar.isMomentoB()) {
+					subNetwork.trainWithMomentB(i, momentoValue);
+				} else {
 					subNetwork.train(i);
-				//}
+				}
 				W = subNetwork.getW();
 				log.debug("Valores de W tras actualización de matriz");
 				W.printMatrix(); 	//Logger prints
@@ -312,9 +312,10 @@ public class Manager {
 			// Add current error, matrix and iteration in memory and in results class
 			TrainingWindow.errorGraph.put(iteration, errorIt);
 			writerErrorProgress.writeError(errorIt, iteration);
-			
-			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
 
+			log.debug("Error ponderado en la interación " + iteration + " es " + errorIt);
+			
+			errorfinal = errorIt; //Por si decidimos finalizar el entrenamiento
 			if (iteration == iterMax) {
 				log.debug("LLegamos al límite de las iteraciones. Iteration: " + iteration + " Máximo: " + iterMax);
 				resultados.finishedTrainingByMaxIt(iteration, errorIt, cuote, W);
@@ -323,6 +324,7 @@ public class Manager {
 			}
 			if (MainWindow.cancelTraining) {
 				resultados.cancelledTraining(iteration, errorIt , W);
+				System.out.print("Entramiento cancelado, red simple");
 				state = 1;
 				end = true; 
 			}
@@ -335,11 +337,11 @@ public class Manager {
 			iteration++;
 		} // fin while
 		
-
-		//writerMatrices.writeMatrices(new WeightMatrix(W, V));
-		results = new TrainingResults(iteration-1, errorfinal, state, new WeightMatrix(W, null));
+		writerMatrices.writeMatrices(new WeightMatrix(W, null));
 		writerMatrices.closeFile();
 		writerErrorProgress.closeFile();
+		results = new TrainingResults(iteration-1, errorfinal, state, new WeightMatrix(W, null));
+	
 		return results;
 	}
 	

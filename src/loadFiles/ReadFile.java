@@ -94,6 +94,9 @@ public class ReadFile {
 		try {
 			row = br.readLine();
 			while (row != null){
+				if (row.equals("Matrix W:") ){
+					row = br.readLine();
+				}
 				StringTokenizer st = new StringTokenizer (row,";" );
 				ArrayList<BigDecimal> arrayRow = new ArrayList<>();
 				while(st.hasMoreTokens()){  
