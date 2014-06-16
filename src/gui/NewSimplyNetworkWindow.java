@@ -135,15 +135,15 @@ public class NewSimplyNetworkWindow extends JPanel {
 		panel.add(lblNewLabel_3);
 
 		bCreateNN = new JButton("Crear red");
-		bCreateNN.setBounds(591, 425, 110, 29);
+		bCreateNN.setBounds(591, 425, MainWindow.BUTTON_SIZE.width, MainWindow.BUTTON_SIZE.height);
 		this.add(bCreateNN);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(864, 425, 110, 29);
+		btnCancelar.setBounds(864, 425, MainWindow.BUTTON_SIZE.width, MainWindow.BUTTON_SIZE.height);
 		add(btnCancelar);
 		
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(726, 425, 110, 29);
+		btnGuardar.setBounds(726, 425, MainWindow.BUTTON_SIZE.width, MainWindow.BUTTON_SIZE.height);
 		add(btnGuardar);
 		
 		panel_2 = new JPanel();

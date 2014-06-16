@@ -344,6 +344,22 @@ public class Manager {
 	
 		return results;
 	}
+
+	public StructureParameters getStructurePar() {
+		return structurePar;
+	}
+
+	public void setStructurePar(StructureParameters structurePar) {
+		this.structurePar = structurePar;
+	}
+
+	public TrainingParameters getTrainPar() {
+		return trainPar;
+	}
+
+	public void setTrainPar(TrainingParameters trainPar) {
+		this.trainPar = trainPar;
+	}
 	
 	
 	

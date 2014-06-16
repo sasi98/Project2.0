@@ -43,7 +43,7 @@ public class Graph {
 	}
 
 	private XYDataset createDataset() {
-		xyseries = new XYSeries("Progresión del error");
+		xyseries = new XYSeries("Error medio por iteración");
 		// xyseries.add(1.0D, 1.0D);
 		XYSeriesCollection xyseriescollection = new XYSeriesCollection();
 		xyseriescollection.addSeries(xyseries); //Para poner más de un dato por gráfico
@@ -51,7 +51,7 @@ public class Graph {
 	}
 
 	private JFreeChart createChart(XYDataset xydataset) {
-		jfreechart = ChartFactory.createXYLineChart("Progresión del error",
+		jfreechart = ChartFactory.createXYLineChart("Progreso entrenamiento",
 				"Iteración", "Error", xydataset, PlotOrientation.VERTICAL,
 				true, true, false);
 		XYPlot xyplot = (XYPlot) jfreechart.getPlot();
@@ -63,6 +63,8 @@ public class Graph {
 		xylineandshaperenderer.setBaseShapesFilled(true);
 		NumberAxis numberaxis = (NumberAxis) xyplot.getRangeAxis();
 		numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		
+		
 		return jfreechart;
 	}
 

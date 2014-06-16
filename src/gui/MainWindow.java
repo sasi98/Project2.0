@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +48,8 @@ public class MainWindow extends JFrame {
 	
 	public static final Rectangle JPANEL_MEASURES = new Rectangle(0, 0, 984, 491);
 	public static final Rectangle DESKTOP_PANEL_MEASURES = new Rectangle(0, 21, 984, 491);
+	public static final Dimension BUTTON_SIZE = new Dimension(110, 30);
+	
 	
 	// Lista con las actuales estructuras de red creadas
 	public static ArrayList<StructureParameters> structureCreatedList = new ArrayList<>();
@@ -155,7 +158,7 @@ public class MainWindow extends JFrame {
 								
 												
 		tglbtnTrazas = new JToggleButton("Desactivar trazas");
-		tglbtnTrazas.setBounds(855, 29, 123, 21);
+		tglbtnTrazas.setBounds(875, 11, 99, 21);
 		desktopPane.add(tglbtnTrazas);
 
 	}
