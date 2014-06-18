@@ -42,7 +42,7 @@ import loadFiles.StructureParametersLoad;
 
 public class LoadNetworkWindow extends JPanel {
 	
-	private StructureParameters redShowed; //Red actual cargada
+	private StructureParameters currentStructurePar; //Red actual cargada
 	
 	
 	
@@ -178,9 +178,9 @@ public class LoadNetworkWindow extends JPanel {
 			final java.io.File filechoosen = filechooser.getSelectedFile();
 			try {
 				StructureParametersLoad reader = new StructureParametersLoad(filechoosen.getAbsolutePath());
-				redShowed = reader.loadStructureParameters();
-				 showGeneralInformation();
-				 redShowed.print();
+				currentStructurePar = reader.loadStructureParameters();
+				showStructureInformation();
+				 currentStructurePar.print();
 				//Mostrar redShow in right window//				
 			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -191,10 +191,10 @@ public class LoadNetworkWindow extends JPanel {
 	
 	//La red cargada pasa a ser la que estamos usando en la aplicación
 	private void btnAceptarActionPerformed() {
-		if (redShowed != null){
-			MainWindow.structurePar = redShowed;
+		if (currentStructurePar != null){
+			MainWindow.structurePar = currentStructurePar;
 			MainWindow.structurePar.print();
-			JOptionPane.showMessageDialog (null,"La estructura de red "+ redShowed.getName()+ " ha sido seleccionada. ",
+			JOptionPane.showMessageDialog (null,"La estructura de red "+ currentStructurePar.getName()+ " ha sido seleccionada. ",
 					"Red seleccionada", JOptionPane.PLAIN_MESSAGE);
 		}
 		else{
@@ -204,16 +204,16 @@ public class LoadNetworkWindow extends JPanel {
 		
 	}
 	
-	private void showGeneralInformation() {
-		if (redShowed != null){
-			label_4.setText(redShowed.getName());
-			label_5.setText(redShowed.getTypeNet());
-			label_7.setText(Integer.toString(redShowed.getNumPatterns()));
-			if (redShowed.getTypeNet() == Value.RedType.SIMPLE)
-				label_6.setText(Integer.toString(redShowed.getNumNeuronsE())+ " X "+ Integer.toString(redShowed.getNumNeuronsS()));
+	private void showStructureInformation() {
+		if (currentStructurePar != null){
+			label_4.setText(currentStructurePar.getName());
+			label_5.setText(currentStructurePar.getTypeNet());
+			label_7.setText(Integer.toString(currentStructurePar.getNumPatterns()));
+			if (currentStructurePar.getTypeNet().equals(Value.RedType.MONOCAPA))
+				label_6.setText(Integer.toString(currentStructurePar.getNumNeuronsE())+ " X "+ Integer.toString(currentStructurePar.getNumNeuronsS()));
 			else
-				label_6.setText(Integer.toString(redShowed.getNumNeuronsE())+ " X "+ Integer.toString(redShowed.getNumNeuronsO())+" X "+Integer.toString(redShowed.getNumNeuronsS()));
-			if (redShowed.hasBias()){
+				label_6.setText(Integer.toString(currentStructurePar.getNumNeuronsE())+ " X "+ Integer.toString(currentStructurePar.getNumNeuronsO())+" X "+Integer.toString(currentStructurePar.getNumNeuronsS()));
+			if (currentStructurePar.hasBias()){
 				label_8.setText("Sí");
 			}
 			else{

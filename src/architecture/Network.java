@@ -17,7 +17,7 @@ public class Network {
 									numNeuronsS, /*NÃºmero de neuronas de salida*/
 									numNeuronsO; /*NÃºmero de neuronas ocultas, bias incluido en el caso*/
 							
-	private double				learningCNT; 
+	//private double				learningCNT; 
 	
 	
 	private Neuron[] 				inputLayer,  //Vector que contiene las neuronas de entrada de la red (bias incluido en el caso)
@@ -53,8 +53,7 @@ public class Network {
 	//V tiene que tener dimensiones: NÂº de salidas X NÂº ocultas
 	//post: 
 	
-	public void setUpPatronWithoutBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-			BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
+	public void setUpPatronWithoutBias (int numNeuronsO, BigDecimal[] valuesInputLayer, BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
 	{	
 		log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada y de salida: "+ valuesInputLayer.length + 
 					"Número de neuronas ocultas: "+ numNeuronsO);
@@ -66,7 +65,7 @@ public class Network {
 			this.desiredOutputLayer = desiredOutputLayer;
 			this.numNeuronsE = valuesInputLayer.length;
 			this.numNeuronsS = valuesInputLayer.length;
-			this.learningCNT = learningCNT;
+		//	this.learningCNT = learningCNT;
 			this.numNeuronsO = numNeuronsO;
 			this.W = W;
 			this.V = V;
@@ -135,8 +134,7 @@ public class Network {
 		//post: 
 		//post: 
 		
-		public void setUpPatronWithBias (int numNeuronsO, BigDecimal[] valuesInputLayer, double learningCNT, 
-				BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
+		public void setUpPatronWithBias (int numNeuronsO, BigDecimal[] valuesInputLayer, BigDecimal [] desiredOutputLayer, Matrix W, Matrix V, String funtion)
 		{	
 			int numNeuronsE = valuesInputLayer.length+1;
 			int numNeuronsS = valuesInputLayer.length;
@@ -153,7 +151,7 @@ public class Network {
 				this.desiredOutputLayer = desiredOutputLayer;
 				this.numNeuronsE = valuesInputLayer.length + 1;
 				this.numNeuronsS = valuesInputLayer.length;
-				this.learningCNT = learningCNT;
+				//this.learningCNT = learningCNT;
 				this.numNeuronsO = numNeuronsO;
 				this.W = W;
 				this.V = V;
@@ -241,7 +239,7 @@ public class Network {
 
 	//pre: Realizar el setup antes
 	
-	public void train (int idPatron) {
+	public void train (int idPatron, double learningCNT) {
 		
 		log.info("Entro en train e imprimo W y V");
 		this.V.printMatrix();
@@ -379,7 +377,7 @@ public class Network {
       
 	//pre: Realizar el setup antes
 	//previousW, previousV: matrices (t - 1) utilizadas en el momento beta  
-	public void trainWithMomentB (int idPatron, double momentoB) {
+	public void trainWithMomentB (int idPatron, double momentoB, double learningCNT) {
 		
 		log.info("Entrenando con momento Beta. Patrón: "+ idPatron);
 		log.info("Momento B: "+ momentoB);

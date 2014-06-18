@@ -311,7 +311,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 				// Create the Network, give it an id
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
-				MainWindow.structurePar = new StructureParameters (name, Value.RedType.OCULTA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				MainWindow.structurePar = new StructureParameters (name, Value.RedType.MULTICAPA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
 				
 				
 

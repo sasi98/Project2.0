@@ -417,6 +417,9 @@ public BigDecimal getMaxDiagonal (){
 		return max;
 	}
 }
+
+
+
 	
 	
 

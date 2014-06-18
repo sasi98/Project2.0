@@ -15,229 +15,226 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 import outsFiles.CalculateOutputsOuts;
 import outsFiles.WriteFile;
+import utilities.Matrix;
 import utilities.StandardDeviation;
 import utilities.WeightMatrix;
 import architecture.Manager;
+import architecture.StructureParameters;
+
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+
+import loadFiles.ReadFile;
+
+import org.omg.CORBA.Current;
+
+import valueset.*;
+
+import javax.swing.JTextField;
 
 
-public class CalculateOutputsWindow {
+public class CalculateOutputsWindow extends JPanel{
+	
+	/**GUI Variables*/
+	private JPanel 			panel;
+	private JLabel 			label_4,
+							label_5,
+							label_6,
+							label_7,
+							label_8;
+	private JTextField 		textField;
+	private String 			strMatrices;
+	private JButton 		btnNewButton,
+							btnAceptar;
+							
+	
+	/**Data variables */
+	private StructureParameters currentStructurePar;
+	private WeightMatrix 	matrices;
+	private boolean 		selectMatrixFile;
+	
+	
+	
+	/**
+	 * Create the application.
+	 */
+	public CalculateOutputsWindow(){
+		initialize();
+		createEvents();
+	}
 
-//	private Panel panel;
-//	private JLabel lblNewLabel;
-//	private JComboBox comboBox;
-//	private JButton btnNewButton, btnCalcularOutputs;
-//	private JTextPane textPane;
-//	private	JScrollPane scrollPane;
-//	
-//	private WeightMatrix matrices;
-//	
-//
-//	/**
-//	 * Create the frame.
-//	 */
-//	public CalculateOutputsWindow() {
-//		  initialize();
-//	      createEvents();
-//	}
-//
-//	/**
-//     * Initialize the contents of the frame.
-//     */
-//	private void initialize() {
-//		
-//		panel = new Panel();
-//		panel.setBounds(6, 0, 980, 633);
-//        panel.setLayout(null);
-//        
-//        JLabel lblSeleccionaRed = new JLabel("Sistema de datos: ");
-//        lblSeleccionaRed.setBounds(44, 60, 99, 14);
-//        panel.add(lblSeleccionaRed);
-//        
-//        JLabel lblSeleccionaMatricesDe = new JLabel("Matrices de pesos:\r\n");
-//        lblSeleccionaMatricesDe.setBounds(44, 113, 154, 14);
-//        panel.add(lblSeleccionaMatricesDe);
-//        
-//        lblNewLabel = new JLabel("");
-//        lblNewLabel.setBounds(272, 171, 46, 14);
-//        panel.add(lblNewLabel);
-//        
-//        comboBox = new JComboBox();
-//    	for (NetworkManager ne: MainWindow.neList){ //Aï¿½adimos las instancias creadas al ComBox
-//    		comboBox.addItem(ne.getName());
-//    	}
-//        comboBox.setBounds(229, 57, 121, 20);
-//        panel.add(comboBox);
-//        
-//        btnNewButton = new JButton("Selecciona archivo");
-//        btnNewButton.setBounds(229, 109, 121, 23);
-//        panel.add(btnNewButton);
-//        
-//        btnCalcularOutputs = new JButton("Calcular Outputs");
-//        btnCalcularOutputs.setBounds(474, 167, 113, 23);
-//        panel.add(btnCalcularOutputs);
-//		JScrollPane scrollPane = new JScrollPane();
-//		scrollPane.setBounds(41, 214, 484, 231);
-//		panel.add(scrollPane);
-//		
-//		
-//		textPane = new JTextPane();
-//		scrollPane.setViewportView(textPane);
-//		textPane.setEditable(false);
-//
-//	}
-//
-//	private void createEvents() {
-//		 btnNewButton.addActionListener(new ActionListener() {
-//	        	public void actionPerformed(ActionEvent arg0) {
-//	        		 btnNewButtonActionPerformed();
-//	        	}
-//	        });
-//		 
-//		 btnCalcularOutputs.addActionListener(new ActionListener() {
-//	        	public void actionPerformed(ActionEvent e) {
-//	        		btnCalcularOutputsActionPerformed();
-//	        	}
-//	        });
-//		
-//	}
-//
-//	private void btnNewButtonActionPerformed() {
-//		JFileChooser filechooser = new JFileChooser("C:\\repositoryGit\\Salidas");
-//		int returnValue = filechooser.showOpenDialog(null);
-//		if (returnValue == JFileChooser.APPROVE_OPTION) {
-//			File filechoosen= filechooser.getSelectedFile();
-//			try {
-//				ReadFile readWM = new ReadFile(filechoosen);
-//				matrices = readWM.readWeightMatrix();
-//				lblNewLabel.setText(filechoosen.getName());
-//	
-//			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	
-//		} else 
-//			System.out.println("Open command cancelled by user.");
-//		
-//		
-//		
-//	}
-//	
-//	private void btnCalcularOutputsActionPerformed() {
-//		//matrices can't be null!
-//		NetworkManager ne = null;
-//		for (NetworkManager aux: MainWindow.neList){
-//			if (aux.getName().equals(comboBox.getSelectedItem())){
-//				ne = aux;
-//			}
-//		}
-//		ArrayList<BigDecimal[]> salidas = ne.calculateOutputs(matrices); //Salidas obtenidas
-//		//manejar excepciones!!!!!!!!!!!!!!!
-//		
-//		//Calculamos la media de cada patrón.
-//		ArrayList<BigDecimal> averageByPatterns = new ArrayList<>();
-//		for (BigDecimal[] desiredOutputsPattern: ne.getDesiredOutputs()){
-//			BigDecimal average = StandardDeviation.calculateAverage(desiredOutputsPattern);
-//			averageByPatterns.add(average);
-//		}
-//		//Calculamos la desviación típica de los resultados obtenidos con respecto a la media
-//		ArrayList<BigDecimal> standardDeviation = new ArrayList<>();
-//		for (int i = 0; i<salidas.size(); i++){
-//			BigDecimal deviation = StandardDeviation.calculateDeviation(averageByPatterns.get(i), salidas.get(i));
-//			standardDeviation.add(deviation);
-//		}
-//		int k = 0;
-//		for (BigDecimal b: standardDeviation){
-//			System.out.print("Patrón "+ k+"; Desviación estandar:  "+standardDeviation+"\n");
-//			k++;
-//		}
-//		
-//		/**  RESULTADO:  standarDeviation array*/
-//		
-//		//Solo en el caso de que sea la desviación estandar de entre todos los resultados
-//		//Calculamos la media de todas las neuronas de salida, para eso las metemos todas juntas en un vector
-//		int vectorSize = ne.getNumPatrones() * ne.getNumNeuronsS();
-//		BigDecimal[] desiredOutputsJoined = new BigDecimal[vectorSize];
-//		int j = 0;
-//		for (BigDecimal[] desiredOutputsPattern: ne.getDesiredOutputs()){
-//			for (int i = 0; i< desiredOutputsPattern.length; i++){
-//				desiredOutputsJoined[j] = desiredOutputsPattern[i];
-//				j = j + i;
-//			}
-//		}
-//		//Media de todas las neuronas usadas en el training
-//		BigDecimal average = StandardDeviation.calculateAverage(desiredOutputsJoined);
-//		
-//		
-//		//Calculamos la desviación típica de los resultados obtenidos (juntos) con respecto a la media
-//		BigDecimal[] outputsObtainedJoined = new BigDecimal[vectorSize];
-//		for (BigDecimal[] outputsObtainedPattern: salidas){
-//			for (int i = 0; i< outputsObtainedPattern.length; i++){
-//				outputsObtainedJoined[j] = outputsObtainedPattern[i];
-//				j = j + i;
-//			}
-//		}
-//		BigDecimal deviation = StandardDeviation.calculateDeviation(average, outputsObtainedJoined);
-//		
-//		System.out.print("Desviación típica de todas las neuronas de salida con respecto a la media de las"
-//				+ "neuronas de salida deseadas: " +deviation+"\n");
-//		
-//		/**RESULTADO: deviation value**/
-//		
-//		
-//		
-//		
-//		
-//		
-//		//Escribir salidas en fichero y en pantalla
-//		//Grafico con las deseadas y las obtenidas
-//		WriteFile writer = new WriteFile ("C:\\repositoryGit\\Salidas\\Desired_Obtained_Outputs.csv"); 
-//		writer.writeOuDesiredOuObtained(salidas, ne.getDesiredOutputs());
-//		writer.closeFile();
-//		
-//		
-//		// Testing collecting data
-//		String outFile = new String( "C:\\repositoryGit\\Salidas\\previousInformationCalculateOutputs.txt");
-//		CalculateOutputsOuts resultados = new CalculateOutputsOuts(outFile);
-//		resultados.results (ne.getName(), matrices, ne.getInputs(), ne.getDesiredOutputs(), salidas);
-//		// Display results
-//		FileReader reader;
-//		try {
-//			reader = new FileReader(outFile);
-//			BufferedReader br = new BufferedReader(reader);
-//			textPane.read(br, null);
-//			br.close();
-//			//br.toString()
-//			
-//		//	textPane.getText();
-//			
-//			//textPane.requestFocus();
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//
-//		
-//		
-//		
-//	}
-//
-//	public Panel getPanel() {
-//		return panel;
-//	}
-//
-//	public void setPanel(Panel panel) {
-//		this.panel = panel;
-//	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+
+		selectMatrixFile = false;
+		this.setBounds(MainWindow.JPANEL_MEASURES);
+		this.setLayout(null);
+		
+		/**Paneles*/
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Estructura de red", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(70, 95, 204, 166);
+		add(panel);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Matriz de pesos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_2.setBounds(304, 120, 398, 108);
+		add(panel_2);
+		panel_2.setLayout(null);
+		
+		/**Etiquetas*/
+		JLabel label = new JLabel("Nombre: ");
+		label.setBounds(20, 28, 57, 14);
+		panel.add(label);
+		
+		JLabel label_1 = new JLabel("Tipo: ");
+		label_1.setBounds(20, 53, 46, 14);
+		panel.add(label_1);
+		
+		JLabel label_2 = new JLabel("Dimensiones: ");
+		label_2.setBounds(20, 78, 90, 14);
+		panel.add(label_2);
+		
+		JLabel label_3 = new JLabel("N\u00BA de Patrones:");
+		label_3.setBounds(20, 103, 90, 14);
+		panel.add(label_3);
+		
+		label_4 = new JLabel("New label");
+		label_4.setBounds(122, 28, 72, 14);
+		panel.add(label_4);
+		
+		label_5 = new JLabel("New label");
+		label_5.setBounds(122, 53, 72, 14);
+		panel.add(label_5);
+		
+		label_6 = new JLabel("New label");
+		label_6.setBounds(122, 78, 72, 14);
+		panel.add(label_6);
+		
+		label_7 = new JLabel("New label");
+		label_7.setBounds(122, 103, 72, 14);
+		panel.add(label_7);
+		
+		JLabel lblBias = new JLabel("Bias:");
+		lblBias.setBounds(20, 128, 46, 14);
+		panel.add(lblBias);
+		
+		JLabel label_8 = new JLabel("New label");
+		label_8.setBounds(122, 128, 46, 14);
+		panel.add(label_8);
+		
+		/**Botones*/
+		btnNewButton = new JButton("Seleccionar\r\n");
+		btnNewButton.setBounds(25, 42, 89, 23);
+		panel_2.add(btnNewButton);
+		
+		btnAceptar = new JButton("Aceptar");
+		btnAceptar.setBounds(529, 433, 89, 23);
+		add(btnAceptar);
+		
+		textField = new JTextField();
+		textField.setBounds(182, 43, 206, 20);
+		panel_2.add(textField);
+		textField.setColumns(10);
+		
+	}
+	
+	private void createEvents() {
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnNewButtonActionPerformed();
+			}
+		});
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnAceptarActionPerformed();
+			}
+		});
+	}
+	
+	
+	private void btnNewButtonActionPerformed() {
+		final JFileChooser filechooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+		final int returnValue = filechooser.showOpenDialog(null);
+		if (returnValue == JFileChooser.APPROVE_OPTION) {
+			final File filechoosen = filechooser.getSelectedFile();
+			ReadFile readMatrices;
+			try {
+				readMatrices = new ReadFile(filechoosen);
+				WeightMatrix aux = null; 
+				if (currentStructurePar.getTypeNet().equals(Value.RedType.MULTICAPA))
+					aux = readMatrices.readWeightMatrix();
+				else if (currentStructurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+					Matrix Waux = readMatrices.readSingleWeightMatrix();
+					aux = new WeightMatrix(Waux, null);
+				}
+				if  (aux != null) { // Hemos seleccionado matrices del fichero
+					selectMatrixFile = true; // o quiere decir q tengas las dimensiones apropiadas
+					matrices = aux;
+				}
+			}catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			textField.setText(filechooser.getName());
+		}
+	}
+	
+	private void btnAceptarActionPerformed() {
+		if (!MainWindow.MatrixSuitStructure(currentStructurePar, matrices)){			
+			String dimensiones = " ";
+			if (matrices.getW()!= null)
+				dimensiones =  "W ["+matrices.getW().getRow() + " X "+ matrices.getW().getColumn() +"]";
+			if (matrices.getV()!= null)
+				dimensiones = dimensiones + "V ["+matrices.getV().getRow() + " X "+ matrices.getV().getColumn() +"]";
+			
+			JOptionPane.showMessageDialog (null,"Las dimensiones de las matrices elegidas no corresponden con la estructura de la red\n "+ dimensiones, 
+					"Dimensiones no adecuadas", JOptionPane.ERROR_MESSAGE);
+		}
+		else{
+			//Calcula salidas
+			
+		}
+		
+	}
+	
+	
+	
+	//Comprueba que las matrices seleccionadas encajan con la estructura de la red. 
+	
+	
+	
+	private void showStructureInformation() {
+		if (currentStructurePar != null){
+			label_4.setText(currentStructurePar.getName());
+			label_5.setText(currentStructurePar.getTypeNet());
+			label_7.setText(Integer.toString(currentStructurePar.getNumPatterns()));
+			if (currentStructurePar.getTypeNet().equals(Value.RedType.MONOCAPA))
+				label_6.setText(Integer.toString(currentStructurePar.getNumNeuronsE())+ " X "+ Integer.toString(currentStructurePar.getNumNeuronsS()));
+			else
+				label_6.setText(Integer.toString(currentStructurePar.getNumNeuronsE())+ " X "+ Integer.toString(currentStructurePar.getNumNeuronsO())+" X "+Integer.toString(currentStructurePar.getNumNeuronsS()));
+			if (currentStructurePar.hasBias())
+				label_8.setText("Sí");
+			else
+				label_8.setText("No");
+		}
+		else{
+			label_4.setText("");
+			label_5.setText("");
+			label_7.setText("");
+			label_6.setText("");
+		}
+		  
+	}
 }
 
 

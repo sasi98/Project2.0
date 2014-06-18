@@ -30,6 +30,10 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import utilities.Matrix;
+import utilities.WeightMatrix;
+import valueset.Value;
+
 import com.petersoft.advancedswing.onoffbutton.OnOffButton;
 
 import architecture.Manager;
@@ -57,8 +61,8 @@ public class MainWindow extends JFrame {
 	public static boolean cancelTraining = false;
 	public static JDesktopPane desktopPane;
 	public static ArrayList<JPanel> createdWindows = new ArrayList<>();
-	public static StructureParameters structurePar;
-	public static TrainingParameters trainPar;
+	public static StructureParameters structurePar; /**Estructura utilizada a lo largo de toda la GUI de la red*/
+	public static TrainingParameters trainPar;    /**Parámetros utilizados en el entrenamiento de la red*/
 	
 	
 
@@ -70,7 +74,8 @@ public class MainWindow extends JFrame {
 					  mntmCrearRedCon,
 					  mntmCargarRedExistente,
 					  mntmEstablecerParametros,
-					  mntmEntrenarRed;
+					  mntmEntrenarRed, 
+					  mntmCalcularSalidas;
 
 	// JPanel classes
 	private NewSimplyNetworkWindow newSimplyNet;
@@ -78,6 +83,7 @@ public class MainWindow extends JFrame {
 	private LoadNetworkWindow loadNetwork;
 	private SetUpParametersTrainWindow sepUpParameters;
 	private TrainingWindow trainingWindow;
+	private CalculateOutputsWindow calculateOutputs;
 	
 	/**
 	 * @param args the command line arguments
@@ -153,6 +159,9 @@ public class MainWindow extends JFrame {
 		JMenu mnResultados = new JMenu("Resultados");
 		menuBar.add(mnResultados);
 		
+		mntmCalcularSalidas = new JMenuItem("Calcular salidas");
+		mnResultados.add(mntmCalcularSalidas);
+		
 		JMenu mnAcercaDe = new JMenu("Acerca de ");
 		menuBar.add(mnAcercaDe);
 								
@@ -196,6 +205,11 @@ public class MainWindow extends JFrame {
 			@Override
 			public void itemStateChanged(ItemEvent ev) {
 				tglbtnTrazasActionPerformed(ev);
+			}
+		});
+		mntmCalcularSalidas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mntmCalcularSalidasActionPerformed();
 			}
 		});
 
@@ -271,12 +285,29 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
+	private void mntmCalcularSalidasActionPerformed() {
+		hideWindows();
+		if (calculateOutputs == null) {
+			calculateOutputs = new CalculateOutputsWindow();
+			calculateOutputs.setBounds(JPANEL_MEASURES);
+			desktopPane.add(calculateOutputs, BorderLayout.CENTER);
+			calculateOutputs.show();
+			createdWindows.add(calculateOutputs);
+		}
+		else{
+			trainingWindow.show();
+		}
+		
+		
+	}
+	
 	private void hideWindows(){
 		for (JPanel panel: createdWindows){
 			panel.hide();
 		}	
 	}
 
+	
 
 	// Switch button: Si las trazas estaban activas, las desactiva (delete all
 	// the loggers)
@@ -318,5 +349,32 @@ public class MainWindow extends JFrame {
 				clearTextFields((Container) c);
 			}
 		}
+	}
+	
+	public static boolean MatrixSuitStructure (StructureParameters structurePar, WeightMatrix matrices){
+		boolean suit = true; 
+		Matrix W = matrices.getW();
+		if (matrices.getW() != null){
+			int WCol = W.getColumn(), 
+				WRow = W.getRow(),
+				nE = structurePar.getNumNeuronsE(),
+				nS = structurePar.getNumNeuronsS();
+			if (structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+				if ( (nS != WRow) || (nE != WCol) )
+					suit = false;
+			}
+			else if (structurePar.getTypeNet().equals(Value.RedType.MULTICAPA) && (matrices.getV() != null)){
+				Matrix V = matrices.getV();
+				int VCol = V.getColumn(), 
+					VRow = V.getRow(),
+					nO = structurePar.getNumNeuronsO();
+				if ((nO != WRow) ||(nE != WCol) || (nS != VRow) || (nO != VCol))
+					suit = false; 
+			}
+		}
+		else
+			return suit = false;
+		
+		return suit;
 	}
 }

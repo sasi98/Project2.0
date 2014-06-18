@@ -235,7 +235,8 @@ public class TrainingWindow extends JPanel {
 		MainWindow.cancelTraining = false;
 		deleteGraph();
 		addNewGraph();
-		manager = new Manager(MainWindow.structurePar, MainWindow.trainPar);
+		//manager = new Manager();
+		//manager = new Manager(MainWindow.structurePar, MainWindow.trainPar);
 		MainWindow.structurePar.print();
 
 		
@@ -255,11 +256,11 @@ public class TrainingWindow extends JPanel {
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
-				if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
-					results = manager.trainingSimplyNetwork (directoryName);
+				if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+					results = Manager.trainingSimplyNetwork (directoryName, MainWindow.structurePar, MainWindow.trainPar);
 				}
 				else{
-					results = manager.training(directoryName);
+					results = Manager.training (directoryName, MainWindow.structurePar, MainWindow.trainPar);
 					
 				}
 				return null;
@@ -293,7 +294,7 @@ public class TrainingWindow extends JPanel {
 		
 		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
 		
-		if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
+		if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
 			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
 			resultados.previousInformation(MainWindow.structurePar.getName(),MainWindow.trainPar.getMatrices().getW(),  MainWindow.trainPar.getLearning().getValue(),  MainWindow.trainPar.getMomentoBvalue(), MainWindow.trainPar.getFuncion());
 		}else{
@@ -357,7 +358,7 @@ public class TrainingWindow extends JPanel {
 			lblNombre.setText(structPar.getName());
 			lblTipo.setText(structPar.getTypeNet());
 			lblPatrones.setText(Integer.toString(structPar.getNumPatterns()));
-			if (structPar.getTypeNet().equals(Value.RedType.SIMPLE))
+			if (structPar.getTypeNet().equals(Value.RedType.MONOCAPA))
 				lblDimensiones.setText(Integer.toString(structPar.getNumNeuronsE())+ " X "+ Integer.toString(structPar.getNumNeuronsS()));
 			else
 				lblDimensiones.setText(Integer.toString(structPar.getNumNeuronsE())+ " X "+ Integer.toString(structPar.getNumNeuronsO())+" X "+Integer.toString(structPar.getNumNeuronsS()));

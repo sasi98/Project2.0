@@ -13,7 +13,7 @@ public class SimplyNetwork {
 		private int 					numNeuronsE, /*Número de neuronas de entrada por patrón, bias incluido en el caso*/
 										numNeuronsS; /*Número de neuronas de salida*/
 		
-		private double				learningCNT; 
+		//private double				learningCNT; 
 									 //Lo utilizaremos para evitar minimos locales
 		
 		private Neuron[] 				inputLayer;  //Vector que contiene las neuronas de entrada de la red (bias incluido en el caso) 
@@ -48,8 +48,7 @@ public class SimplyNetwork {
 		//V tiene que tener dimensiones: Nº de salidas X Nº ocultas
 		//post: 
 		
-		public void setUpPatronWithoutBias (BigDecimal[] valuesInputLayer, double learningCNT, 
-				BigDecimal [] desiredOutputLayer, Matrix W, String funtion)
+		public void setUpPatronWithoutBias (BigDecimal[] valuesInputLayer, BigDecimal [] desiredOutputLayer, Matrix W, String funtion)
 		{	
 			log.debug ("Entrando en SetUpPatronWithoutBias. N�mero de neuronas de entrada y de salida: "+ valuesInputLayer.length);
 			log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
@@ -58,7 +57,7 @@ public class SimplyNetwork {
 			this.numNeuronsS = valuesInputLayer.length;
 			if ( (W.getRow()  == numNeuronsS) && (W.getColumn() == numNeuronsE) ){
 				this.desiredOutputLayer = desiredOutputLayer;
-				this.learningCNT = learningCNT;
+			//	this.learningCNT = learningCNT;
 				this.W = W;
 				this.FuntionType = funtion;
 				
@@ -106,8 +105,7 @@ public class SimplyNetwork {
 			//post: 
 			//post: 
 			
-			public void setUpPatronWithBias (BigDecimal[] valuesInputLayer, double learningCNT, 
-					BigDecimal [] desiredOutputLayer, Matrix W,String funtion)
+			public void setUpPatronWithBias (BigDecimal[] valuesInputLayer, BigDecimal [] desiredOutputLayer, Matrix W,String funtion)
 			{	
 				int numNeuronsE = valuesInputLayer.length+1;
 				int numNeuronsS = valuesInputLayer.length;
@@ -121,7 +119,7 @@ public class SimplyNetwork {
 					this.desiredOutputLayer = desiredOutputLayer;
 					this.numNeuronsE = valuesInputLayer.length + 1;
 					this.numNeuronsS = valuesInputLayer.length;
-					this.learningCNT = learningCNT;
+					//this.learningCNT = learningCNT;
 					this.W = W;
 					this.FuntionType = funtion;
 					
@@ -180,7 +178,7 @@ public class SimplyNetwork {
 
 		//pre: Realizar el setup antes
 		
-		public void train (int idPatron) {
+		public void train (int idPatron, double learningCNT) {
 			
 			log.info("Entro en train e imprimo W y V");
 			this.W.printMatrix();
@@ -257,7 +255,7 @@ public class SimplyNetwork {
 	      
 		//pre: Realizar el setup antes
 		//previousW, previousV: matrices (t - 1) utilizadas en el momento beta  
-		public void trainWithMomentB (int idPatron, double momentoB) {
+		public void trainWithMomentB (int idPatron, double momentoB, double learningCNT) {
 			log.info("Entro en train e imprimo W y V");
 			this.W.printMatrix();
 			Matrix aux1W = this.W;

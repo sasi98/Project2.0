@@ -21,7 +21,7 @@ public class StructureParametersOuts extends WriteFile{
 		wr.append("Tipo de datos: " +red.getTypeData()+"\n");
 		wr.append("Nº de neuronas de entrada: "+red.getNumNeuronsE()+ "\n");
 		wr.append("Nº de neuronas de salida: "+red.getNumNeuronsS()+ "\n");
-		if (red.getTypeNet().equals(Value.RedType.OCULTA))
+		if (red.getTypeNet().equals(Value.RedType.MULTICAPA))
 			wr.append("Nº de neuronas ocultas: "+red.getNumNeuronsO()+ "\n");
 		wr.append("Nº de patrones: "+red.getNumPatterns()+ "\n");
 		if (red.hasBias())

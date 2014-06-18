@@ -333,7 +333,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 			//se generan de forma aleatoria,
 			int numNeuronS = MainWindow.structurePar.getNumNeuronsS(),
 				numNeuronE = MainWindow.structurePar.getNumNeuronsE();
-			if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
+			if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
 				final Dimension dW = new Dimension(numNeuronS, numNeuronE);
 				Matrix W = Matrix.createRandomMatrix( Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW, Manager.PRECISION);
 				matrices = new WeightMatrix(W);
@@ -461,9 +461,9 @@ public class SetUpParametersTrainWindow extends JPanel{
 				try {
 					readMatrices = new ReadFile(filechoosen);
 					WeightMatrix aux = null; 
-					if (MainWindow.structurePar.getTypeNet() == Value.RedType.OCULTA)
+					if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MULTICAPA))
 						aux = readMatrices.readWeightMatrix();
-					else if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+					else if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
 						Matrix Waux = readMatrices.readSingleWeightMatrix();
 						aux = new WeightMatrix(Waux, null);
 					}

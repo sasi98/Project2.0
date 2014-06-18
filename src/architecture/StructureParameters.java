@@ -40,7 +40,7 @@ public class StructureParameters {
 		this.numNeuronsS = sizeNetwork;
 		if (bias) {
 			this.numNeuronsE = sizeNetwork + 1;
-			if (typeNet.compareTo(Value.RedType.OCULTA) == 0)
+			if (typeNet.compareTo(Value.RedType.MULTICAPA) == 0)
 				this.numNeuronsO = numNeuronsO + 1;
 		} else {
 			this.numNeuronsE = sizeNetwork;

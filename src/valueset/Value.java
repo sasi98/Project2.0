@@ -16,13 +16,13 @@ public class Value {
     }
     
     public class RedType{
-    	public static final String  SIMPLE = "Simple",
-    								OCULTA = "Con capa oculta";   	
+    	public static final String  MONOCAPA = "monocapa",
+    								MULTICAPA = "multicapa";   	
     }
     
     public class LearningCNTTipologia{
-		public final static String 	FIJO = "Fijo",
-				                    VARIABLE = "Variable";
+		public final static String 	FIJO = "fijo",
+				                    VARIABLE = "variable";
     }
     
 //    public class TrainingState{
