@@ -156,19 +156,19 @@ public class TrainingWindow extends JPanel {
 		panel_3.add(lblNewLabel_3);
 		
 		lblNombre = new JLabel("New label");
-		lblNombre.setBounds(122, 28, 46, 14);
+		lblNombre.setBounds(122, 28, 72, 14);
 		panel_3.add(lblNombre);
 		
 		lblTipo = new JLabel("New label");
-		lblTipo.setBounds(122, 53, 46, 14);
+		lblTipo.setBounds(122, 53, 72, 14);
 		panel_3.add(lblTipo);
 		
 		lblDimensiones = new JLabel("New label");
-		lblDimensiones.setBounds(122, 78, 46, 14);
+		lblDimensiones.setBounds(122, 78, 72, 14);
 		panel_3.add(lblDimensiones);
 		
 		lblPatrones = new JLabel("New label");
-		lblPatrones.setBounds(122, 103, 46, 14);
+		lblPatrones.setBounds(122, 103, 72, 14);
 		panel_3.add(lblPatrones);
 		
 		
@@ -189,15 +189,15 @@ public class TrainingWindow extends JPanel {
 		panel_4.add(lblNewLabel_11);
 		
 		lblFuncion = new JLabel("New label");
-		lblFuncion.setBounds(120, 28, 46, 14);
+		lblFuncion.setBounds(120, 28, 74, 14);
 		panel_4.add(lblFuncion);
 		
 		lblLearning = new JLabel("New label");
-		lblLearning.setBounds(120, 53, 46, 14);
+		lblLearning.setBounds(120, 53, 74, 14);
 		panel_4.add(lblLearning);
 		
 		lblMomentoB = new JLabel("New label");
-		lblMomentoB.setBounds(120, 78, 46, 14);
+		lblMomentoB.setBounds(120, 78, 74, 14);
 		panel_4.add(lblMomentoB);
 
 		/**Botones*/
@@ -208,11 +208,6 @@ public class TrainingWindow extends JPanel {
 		btnCancelarEntrenamiento = new JButton("Cancelar");
 		btnCancelarEntrenamiento.setBounds(new Rectangle(864, 439, 110, 30));
 		this.add(btnCancelarEntrenamiento);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(53, 32, 607, 257);
-		add(panel);
-	
 		addNewGraph();
 		displayGeneralInformation();
 
@@ -241,6 +236,7 @@ public class TrainingWindow extends JPanel {
 		deleteGraph();
 		addNewGraph();
 		manager = new Manager(MainWindow.structurePar, MainWindow.trainPar);
+		MainWindow.structurePar.print();
 
 		
 		//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
@@ -259,11 +255,12 @@ public class TrainingWindow extends JPanel {
 		sw = new SwingWorker<Integer, Integer>() {
 			@Override
 			protected Integer doInBackground() throws Exception {
-				if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+				if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
 					results = manager.trainingSimplyNetwork (directoryName);
 				}
 				else{
 					results = manager.training(directoryName);
+					
 				}
 				return null;
 			}
@@ -296,7 +293,7 @@ public class TrainingWindow extends JPanel {
 		
 		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
 		
-		if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+		if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
 			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
 			resultados.previousInformation(MainWindow.structurePar.getName(),MainWindow.trainPar.getMatrices().getW(),  MainWindow.trainPar.getLearning().getValue(),  MainWindow.trainPar.getMomentoBvalue(), MainWindow.trainPar.getFuncion());
 		}else{
@@ -360,7 +357,7 @@ public class TrainingWindow extends JPanel {
 			lblNombre.setText(structPar.getName());
 			lblTipo.setText(structPar.getTypeNet());
 			lblPatrones.setText(Integer.toString(structPar.getNumPatterns()));
-			if (structPar.getTypeNet() == Value.RedType.SIMPLE)
+			if (structPar.getTypeNet().equals(Value.RedType.SIMPLE))
 				lblDimensiones.setText(Integer.toString(structPar.getNumNeuronsE())+ " X "+ Integer.toString(structPar.getNumNeuronsS()));
 			else
 				lblDimensiones.setText(Integer.toString(structPar.getNumNeuronsE())+ " X "+ Integer.toString(structPar.getNumNeuronsO())+" X "+Integer.toString(structPar.getNumNeuronsS()));

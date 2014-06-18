@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JEditorPane;
@@ -28,6 +29,7 @@ import javax.swing.UIManager;
 import javax.swing.JTextPane;
 
 import outsFiles.StructureParametersOuts;
+import valueset.Value;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -40,7 +42,7 @@ import loadFiles.StructureParametersLoad;
 
 public class LoadNetworkWindow extends JPanel {
 	
-	private StructureParameters redShowed;
+	private StructureParameters redShowed; //Red actual cargada
 	
 	
 	
@@ -48,7 +50,12 @@ public class LoadNetworkWindow extends JPanel {
 	private JComboBox				 comboBox;
 	private JButton 				 btnAbrir,
 									 btnAceptar;
-	private JTextPane				 textPane;
+	
+	private JLabel 					label_4,
+									label_5,
+									label_6,
+									label_7,
+									label_8;
 
 	public LoadNetworkWindow() {
 		initialize();
@@ -96,18 +103,58 @@ public class LoadNetworkWindow extends JPanel {
 		panelSeleccion.add(btnAbrir);
 		
 		btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(124, 412, 90, 30);
+		btnAceptar.setBounds(478, 111, 90, 30);
 		add(btnAceptar);
 		
-		textPane = new JTextPane();
-		textPane.setBounds(652, 50, 290, 367);
-		textPane.setEditable (false);
-		add(textPane);
-		textPane.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Informaci\u00F3n general", TitledBorder.CENTER, TitledBorder.TOP, null, null));
-		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(307, 412, 90, 30);
+		btnCancelar.setBounds(513, 208, 90, 30);
 		add(btnCancelar);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Estructura de red", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(662, 106, 204, 168);
+		add(panel);
+		
+		JLabel label = new JLabel("Nombre: ");
+		label.setBounds(20, 28, 57, 14);
+		panel.add(label);
+		
+		JLabel label_1 = new JLabel("Tipo: ");
+		label_1.setBounds(20, 53, 46, 14);
+		panel.add(label_1);
+		
+		JLabel label_2 = new JLabel("Dimensiones: ");
+		label_2.setBounds(20, 78, 90, 14);
+		panel.add(label_2);
+		
+		JLabel label_3 = new JLabel("N\u00BA de Patrones:");
+		label_3.setBounds(20, 103, 90, 14);
+		panel.add(label_3);
+		
+		label_4 = new JLabel("New label");
+		label_4.setBounds(122, 28, 72, 14);
+		panel.add(label_4);
+		
+		label_5 = new JLabel("New label");
+		label_5.setBounds(122, 53, 72, 14);
+		panel.add(label_5);
+		
+		label_6 = new JLabel("New label");
+		label_6.setBounds(122, 78, 72, 14);
+		panel.add(label_6);
+		
+		label_7 = new JLabel("New label");
+		label_7.setBounds(122, 103, 72, 14);
+		panel.add(label_7);
+		
+		label_8 = new JLabel("New label");
+		label_8.setBounds(122, 128, 46, 14);
+		panel.add(label_8);
+		
+		JLabel lblBias = new JLabel("Bias: ");
+		lblBias.setBounds(20, 128, 46, 14);
+		panel.add(lblBias);
 		
 	}
 	
@@ -120,7 +167,7 @@ public class LoadNetworkWindow extends JPanel {
 		
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			   showGeneralInformation();
+			  btnAceptarActionPerformed();
 			}
 		});
 	}
@@ -132,7 +179,8 @@ public class LoadNetworkWindow extends JPanel {
 			try {
 				StructureParametersLoad reader = new StructureParametersLoad(filechoosen.getAbsolutePath());
 				redShowed = reader.loadStructureParameters();
-				MainWindow.structurePar = redShowed;
+				 showGeneralInformation();
+				 redShowed.print();
 				//Mostrar redShow in right window//				
 			} catch (final FileNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -141,15 +189,47 @@ public class LoadNetworkWindow extends JPanel {
 		}
 	}
 	
+	//La red cargada pasa a ser la que estamos usando en la aplicación
+	private void btnAceptarActionPerformed() {
+		if (redShowed != null){
+			MainWindow.structurePar = redShowed;
+			MainWindow.structurePar.print();
+			JOptionPane.showMessageDialog (null,"La estructura de red "+ redShowed.getName()+ " ha sido seleccionada. ",
+					"Red seleccionada", JOptionPane.PLAIN_MESSAGE);
+		}
+		else{
+			JOptionPane.showMessageDialog (null,"No se ha cargado ninguna estructura de red",
+					"Red no seleccionada", JOptionPane.ERROR_MESSAGE);	
+		}
+		
+	}
+	
 	private void showGeneralInformation() {
-
-		  redShowed = new StructureParameters("testData", "testData", "testData",
-		    123, 123, 123, new ArrayList<BigDecimal[]>(),
-		    new ArrayList<BigDecimal[]>(), true);
-		  textPane.setText(this.redShowed.toString());
-		 }
-	
-	
-	
-	
+		if (redShowed != null){
+			label_4.setText(redShowed.getName());
+			label_5.setText(redShowed.getTypeNet());
+			label_7.setText(Integer.toString(redShowed.getNumPatterns()));
+			if (redShowed.getTypeNet() == Value.RedType.SIMPLE)
+				label_6.setText(Integer.toString(redShowed.getNumNeuronsE())+ " X "+ Integer.toString(redShowed.getNumNeuronsS()));
+			else
+				label_6.setText(Integer.toString(redShowed.getNumNeuronsE())+ " X "+ Integer.toString(redShowed.getNumNeuronsO())+" X "+Integer.toString(redShowed.getNumNeuronsS()));
+			if (redShowed.hasBias()){
+				label_8.setText("Sí");
+			}
+			else{
+				label_8.setText("No");
+				
+			}
+		}
+		else{
+			label_4.setText("");
+			label_5.setText("");
+			label_7.setText("");
+			label_6.setText("");
+		}
+		  
+	}
 }
+
+
+

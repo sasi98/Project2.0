@@ -21,7 +21,7 @@ public class StructureParametersOuts extends WriteFile{
 		wr.append("Tipo de datos: " +red.getTypeData()+"\n");
 		wr.append("Nº de neuronas de entrada: "+red.getNumNeuronsE()+ "\n");
 		wr.append("Nº de neuronas de salida: "+red.getNumNeuronsS()+ "\n");
-		if (red.getTypeNet() == Value.RedType.OCULTA)
+		if (red.getTypeNet().equals(Value.RedType.OCULTA))
 			wr.append("Nº de neuronas ocultas: "+red.getNumNeuronsO()+ "\n");
 		wr.append("Nº de patrones: "+red.getNumPatterns()+ "\n");
 		if (red.hasBias())
@@ -46,7 +46,7 @@ public class StructureParametersOuts extends WriteFile{
 	public void saveStructureParameters (StructureParameters red){
 		wr.append(red.getName()+";"+red.getTypeNet()+";"+red.getTypeData()+";"+red.getNumNeuronsE()
 				+";"+red.getNumNeuronsS()+";"+red.getNumNeuronsO()+";"+red.getNumPatterns()+
-				";"+red.hasBias()+"\n");
+				";"+red.hasBias()+";"+"\n");
 		for (BigDecimal[] pattern: red.getInputs()){
 			for (BigDecimal a: pattern){
 				wr.append(a+";");

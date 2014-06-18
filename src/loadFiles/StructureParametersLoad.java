@@ -41,14 +41,16 @@ public class StructureParametersLoad extends ReadFile {
 			String nP_str = (String) st.nextElement();
 			nP = Integer.parseInt(nP_str);
 			String bias_str = (String) st.nextElement();
-			if (bias_str == "true")
+			if (bias_str.equals("true"))
 				bias = true;
+			System.out.print(name + typeNet + typeData+ nE+nS + nO + nP+ bias_str+ bias);
 			
 			row = br.readLine();
 			int cont = 0;
 			while ((row != null) && (cont<nP)){	//Ahora cada fila es un patrón
 				BigDecimal[] patron = new BigDecimal[nS];
 				int i = 0;
+				st = new StringTokenizer (row,";" );
 				while(st.hasMoreTokens()){  
 					String strValue = (String) st.nextElement();
 					//strValue = strValue.replace(",", ".");
@@ -65,6 +67,7 @@ public class StructureParametersLoad extends ReadFile {
 			while ((row != null) && (cont<nP)){	//Ahora cada fila es un patrón
 				BigDecimal[] patron = new BigDecimal[nS];
 				int i = 0;
+				st = new StringTokenizer (row,";" );
 				while(st.hasMoreTokens()){  
 					String strValue = (String) st.nextElement();
 					//strValue = strValue.replace(",", ".");
@@ -73,7 +76,6 @@ public class StructureParametersLoad extends ReadFile {
 					i++;
 				}
 				cont++;
-				inputs.add(patron);
 				desiredOutputs.add(patron);
 				row = br.readLine();
 			}			

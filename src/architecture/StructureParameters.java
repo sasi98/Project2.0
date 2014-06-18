@@ -40,7 +40,7 @@ public class StructureParameters {
 		this.numNeuronsS = sizeNetwork;
 		if (bias) {
 			this.numNeuronsE = sizeNetwork + 1;
-			if (typeNet == Value.RedType.OCULTA)
+			if (typeNet.compareTo(Value.RedType.OCULTA) == 0)
 				this.numNeuronsO = numNeuronsO + 1;
 		} else {
 			this.numNeuronsE = sizeNetwork;
@@ -130,7 +130,25 @@ public class StructureParameters {
 	    + "";
 	 }
 	
-	
+	public void print(){
+		System.out.print("Nombre: " +name+ " "+" Tipo de red: "+typeNet+" Tipo de datos: "+typeData+" Bias: "+ bias+
+				" NE "+numNeuronsE+" NS "+numNeuronsS+" NO "+numNeuronsO+"\n");
+		System.out.print("Inputs: \n");
+		for (BigDecimal[] pattern: inputs){
+			for (BigDecimal a: pattern){
+				System.out.print(a+ " ");
+			}
+			System.out.print("\n");
+		}
+		System.out.print("Desired outputs: \n");
+		for (BigDecimal[] pattern: desiredOutputs){
+			for (BigDecimal a: pattern){
+				System.out.print(a+ " ");
+			}
+			System.out.print("\n");
+		}		
+
+	}
 	
 	
 

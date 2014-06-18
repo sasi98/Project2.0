@@ -87,7 +87,9 @@ public class SetUpParametersTrainWindow extends JPanel{
 	/**Data variables*/
 	
 	private BigDecimal 							cotaError;
-	private double  							momentBValue;
+	private double  							momentBValue,
+	 											learningValue,
+	 											learningCoute;
 	private int 								iterationMax;
 	private boolean 							momentB,
 												acotadoMax,   
@@ -265,6 +267,18 @@ public class SetUpParametersTrainWindow extends JPanel{
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.setBounds(192, 369, 89, 23);
 		panel_1.add(btnGuardar);
+		
+//		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
+//			acotadoMax = true;
+//			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+//			learningCoute = calculateCotaLearning (R);
+//			
+//			System.out.print(learningCoute);
+//			BigDecimal aux = new BigDecimal (learningCoute);
+//			aux = aux.setScale(5, RoundingMode.HALF_DOWN);
+//			textField.setText(aux.toString());
+//			acotadoMax = true;
+//		}
 																	
 																											
 //
@@ -315,11 +329,11 @@ public class SetUpParametersTrainWindow extends JPanel{
 	}
 		
 	private void btnAceptarActionPerformed() {
-		if ((!selectMatrixFile) && (rdbtnAleatorias.isSelected())) { 			//Las matrices no fueron seleccionadas de archivo								
+		if (rdbtnAleatorias.isSelected()) { 			//Las matrices no fueron seleccionadas de archivo								
 			//se generan de forma aleatoria,
 			int numNeuronS = MainWindow.structurePar.getNumNeuronsS(),
 				numNeuronE = MainWindow.structurePar.getNumNeuronsE();
-			if (MainWindow.structurePar.getTypeNet() == Value.RedType.SIMPLE){
+			if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.SIMPLE)){
 				final Dimension dW = new Dimension(numNeuronS, numNeuronE);
 				Matrix W = Matrix.createRandomMatrix( Manager.MATRIX_MIN, Manager.MATRIX_MAX, dW, Manager.PRECISION);
 				matrices = new WeightMatrix(W);
@@ -402,12 +416,24 @@ public class SetUpParametersTrainWindow extends JPanel{
 			acotado = true;
 			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
 			learningCoute = calculateCotaLearning (R);
-			System.out.print(learningCoute);
 			textField.setText(Double.toString(learningCoute));
 			acotado = true;
 		}
 		else
 			textField.setText("Sin cuota");
+		
+		
+		if (comboBox_1.getSelectedItem().toString().equals("Cota superior")){
+			acotadoMax = true;
+			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+			learningCoute = calculateCotaLearning (R);
+			
+			System.out.print(learningCoute);
+			BigDecimal aux = new BigDecimal (learningCoute);
+			aux = aux.setScale(5, RoundingMode.HALF_DOWN);
+			textField.setText(aux.toString());
+			acotadoMax = true;
+		}
 		
 		learningClass = new LearningConstant(learningValue, tipologia, acotado, learningCoute);
 		MainWindow.trainPar = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
