@@ -422,7 +422,9 @@ public class WriteFile {
 			 
 		public void writeError (BigDecimal errorIt, int iteration){
 			wr.append("Iteration: ; "+ iteration+ ";");
-			wr.append("Error: ;" + errorIt+"\n");
+			String errorStr = errorIt.toString();
+			errorStr = errorStr.replace(".", ",");
+			wr.append("Error: ;" + errorStr+"\n");
 			
 		}
 		

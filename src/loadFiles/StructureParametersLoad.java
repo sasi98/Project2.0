@@ -53,7 +53,7 @@ public class StructureParametersLoad extends ReadFile {
 				st = new StringTokenizer (row,";" );
 				while(st.hasMoreTokens()){  
 					String strValue = (String) st.nextElement();
-					//strValue = strValue.replace(",", ".");
+					strValue = strValue.replace(",", ".");
 					BigDecimal value = new BigDecimal(strValue);
 					patron[i] = value;
 					i++;
@@ -70,7 +70,7 @@ public class StructureParametersLoad extends ReadFile {
 				st = new StringTokenizer (row,";" );
 				while(st.hasMoreTokens()){  
 					String strValue = (String) st.nextElement();
-					//strValue = strValue.replace(",", ".");
+					strValue = strValue.replace(",", ".");
 					BigDecimal value = new BigDecimal(strValue);
 					patron[i] = value;
 					i++;

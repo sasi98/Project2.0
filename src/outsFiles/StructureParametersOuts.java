@@ -44,18 +44,28 @@ public class StructureParametersOuts extends WriteFile{
 	//Los parámetros están separados por el token ; 
 	//Pre: Debe contener el mismo formato que el fichero de carga de structure Parameters 
 	public void saveStructureParameters (StructureParameters red){
-		wr.append(red.getName()+";"+red.getTypeNet()+";"+red.getTypeData()+";"+red.getNumNeuronsE()
-				+";"+red.getNumNeuronsS()+";"+red.getNumNeuronsO()+";"+red.getNumPatterns()+
+		int nO = red.getNumNeuronsO(),
+			nE = red.getNumNeuronsE();
+		if (red.hasBias()){
+			nE--;
+			if (nO != 0) nO--;
+		}
+		wr.append(red.getName()+";"+red.getTypeNet()+";"+red.getTypeData()+";"+nE
+				+";"+red.getNumNeuronsS()+";"+nO+";"+red.getNumPatterns()+
 				";"+red.hasBias()+";"+"\n");
 		for (BigDecimal[] pattern: red.getInputs()){
 			for (BigDecimal a: pattern){
-				wr.append(a+";");
+				String valueStr = a.toString();
+				valueStr = valueStr.replace(".", ",");
+				wr.append(valueStr+ ";");
 			}
 			wr.append("\n");
 		}
 		for (BigDecimal[] pattern: red.getDesiredOutputs()){
 			for (BigDecimal a: pattern){
-				wr.append(a+";");
+				String valueStr = a.toString();
+				valueStr = valueStr.replace(".", ",");
+				wr.append(valueStr+ ";");
 			}
 			wr.append("\n");
 		}	

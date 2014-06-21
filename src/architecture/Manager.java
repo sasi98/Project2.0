@@ -12,31 +12,24 @@ import org.apache.log4j.Logger;
 import utilities.Matrix;
 import utilities.WeightMatrix;
 import valueset.LearningConstant;
+import valueset.Value;
 import outsFiles.*;
 
 public class Manager {
 
-	public static final int 				CNT = 1000,  		/**Valor CNT por el que se multiplican los valores del excel*/
+	public static final int 				CNT = 100,  		/**Valor CNT por el que se multiplican los valores del excel*/
 											PRECISION = 10,     /**Valor que indica el número de dígitos decimales que tienes los datos*/
-											MATRIX_MAX = 10,    /**Valor máximo para la creación de matrices de pesos aleatorias*/ 
-											MATRIX_MIN = -10;   /**Valor minimo para la creación de matrices de pesos aleatorias*/
+											MATRIX_MAX = 1,    /**Valor máximo para la creación de matrices de pesos aleatorias*/ 
+											MATRIX_MIN = -1;   /**Valor minimo para la creación de matrices de pesos aleatorias*/
 	
 	public static Matrix 					previousW, 
 											previousV;
-//	
-//	private StructureParameters 			structurePar;
-//	private TrainingParameters 				trainPar;
-//	private TrainingResults 				results;
 	
 	private static Logger log = Logger.getLogger(Manager.class);
 
-	
-	
-//	public Manager(StructureParameters structurePar, TrainingParameters trainPar) {
-//		super();
-//		this.structurePar= structurePar;
-//		this.trainPar = trainPar;
-//	}
+	public Manager (){
+		
+	}
 
 	public static TrainingResults training (String directoryName, StructureParameters structurePar, TrainingParameters trainPar){ 
 		int contToResetLearn = 0;
@@ -285,72 +278,68 @@ public class Manager {
 		return results;
 	}
 
-//	public StructureParameters getStructurePar() {
-//		return structurePar;
-//	}
-//
-//	public void setStructurePar(StructureParameters structurePar) {
-//		this.structurePar = structurePar;
-//	}
-//
-//	public TrainingParameters getTrainPar() {
-//		return trainPar;
-//	}
-//
-//	public void setTrainPar(TrainingParameters trainPar) {
-//		this.trainPar = trainPar;
-//	}
 	
-// pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos
+// pre: this debe de ser una red vï¿½lida, sus atributos no pueden ser nulos. Las dimensiones de las matrices del fichero y la estructura 
+	//de la red debe coincidir
 //	// Calcula los outputs resultantes con las entradas de la red (inputs)
 //	// returns: Array con los vectores los cuales se corresponden con los
 //	// valores de la neuronas de salida de un patrï¿½n
-//	public ArrayList<BigDecimal[]> calculateOutputs (WeightMatrix matrices) {
-//		log.info("Calculate Outputs");
-//			ArrayList<BigDecimal[]> outputs = new ArrayList<>();
-//			for (int i = 0; i < inputs.size(); i++) {
-//				Network subNetwork = new Network();
-//				// We are not using learning constant, we ignore his value
-//				if (bias) {
-//					subNetwork.setUpPatronWithBias(numNeuronsO, inputs.get(i), desiredOutputs.get(i), matrices.getW(),
-//							matrices.getV(), "Lineal");
-//				} else {
-//					subNetwork.setUpPatronWithoutBias(numNeuronsO,
-//							inputs.get(i), 0.00001, desiredOutputs.get(i),
-//							matrices.getW(), matrices.getV(), "Lineal");
-//				}
-//				subNetwork.feedForward(); // PropagaciÃ³n hacia delante, se
-//											// calculan las salidas
-//				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
-//				BigDecimal[] aux = new BigDecimal[auxNeurons.length];
-//				for (int j = 0; j < auxNeurons.length; j++) { // Obtenemos el
-//																// vector de
-//																// neuronas de
-//																// salida, y
-//																// pasamos sus
-//																// valores a un
-//																// vector
-//					aux[j] = auxNeurons[j].getOutValue();
-//				}
-//				outputs.add(aux);
-//			}
-//			return outputs;
-//		} else {
-//			log.error("La estructura de la red no coincide con las de las matrices seleccionadas."
-//					+ " No es posible calcular las salidas");
-//			return null;
-//		}
-//
-//	}
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
+	public static ArrayList<BigDecimal[]> calculateOutputs (StructureParameters structurePar, WeightMatrix matrices, String function) {
+		log.info("Calculate Outputs");
+		
+		ArrayList<BigDecimal[]> outputs = new ArrayList<>();
+		/**Sacamos los parámetros de la estructura que usaremos*/
+		ArrayList<BigDecimal[]> inputs = structurePar.getInputs();
+		ArrayList<BigDecimal[]> desiredOutputs = structurePar.getDesiredOutputs();
+		int numNeuronO = structurePar.getNumNeuronsO();
+		boolean bias = structurePar.hasBias();
+		
+		
+		if (structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+			for (int i = 0; i < inputs.size(); i++) {
+				SimplyNetwork subNetwork = new SimplyNetwork();
+				if (bias) 
+					subNetwork.setUpPatronWithBias (inputs.get(i), desiredOutputs.get(i), matrices.getW(), function);
+				else 
+					subNetwork.setUpPatronWithoutBias (inputs.get(i), desiredOutputs.get(i), matrices.getW(), function);
+				
+				subNetwork.feedForward(); 	/**Propagación hacia delante, se calculan las salidas*/
+				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+				BigDecimal[] aux = new BigDecimal[auxNeurons.length];
+				for (int j = 0; j < auxNeurons.length; j++) { /** Obtenemos el vector de neuronas de salida y creamos un vector con los valores de cada neurona otenida*/
+					aux[j] = auxNeurons[j].getOutValue();
+				}
+				outputs.add(aux);
+			}
+			
+		}else if (structurePar.getTypeNet().equals(Value.RedType.MULTICAPA)){
+			for (int i = 0; i < inputs.size(); i++) {
+				Network subNetwork = new Network();
+				if (bias) 
+					subNetwork.setUpPatronWithBias(numNeuronO, inputs.get(i), desiredOutputs.get(i), matrices.getW(), matrices.getV(), function);
+				else 
+					subNetwork.setUpPatronWithoutBias(numNeuronO,inputs.get(i), desiredOutputs.get(i), matrices.getW(), matrices.getV(), function);
+				
+				subNetwork.feedForward(); 	/**Propagación hacia delante, se calculan las salidas*/
+				OutputNeuron[] auxNeurons = subNetwork.getOutputLayer();
+				BigDecimal[] aux = new BigDecimal[auxNeurons.length];
+				for (int j = 0; j < auxNeurons.length; j++) { /** Obtenemos el vector de neuronas de salida y creamos un vector con los valores de cada neurona otenida*/
+					aux[j] = auxNeurons[j].getOutValue();
+				}
+				outputs.add(aux);
+			}
+		}
+		return outputs;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

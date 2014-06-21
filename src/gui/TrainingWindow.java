@@ -82,7 +82,6 @@ public class TrainingWindow extends JPanel {
 												lblPatrones;
 	
 	/**Data variables*/
-	private Manager 					     	manager;
 	private SwingWorker<Integer, Integer> 		sw;
 	private String 								directoryName;		/**Nombre del directorio donde se guardan los ficheros de salida correspondientes al proceso de entrenamiento*/ 
 	private TrainingResults						results;  			/**Clase que devuelve el método training que informa sobre el la finalización del proceso de entrenamiento*/
@@ -235,14 +234,12 @@ public class TrainingWindow extends JPanel {
 		MainWindow.cancelTraining = false;
 		deleteGraph();
 		addNewGraph();
-		//manager = new Manager();
-		//manager = new Manager(MainWindow.structurePar, MainWindow.trainPar);
 		MainWindow.structurePar.print();
 
 		
 		//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
 		
-		directoryName = "C:\\repositoryGit\\Salidas\\Training_"+TrainingWindow.getCurrentTimeStamp();
+		directoryName = "C:\\repositoryGit\\Salidas\\Training_"+MainWindow.getCurrentTimeStamp();
 		File directory = new File(directoryName);
 		try{
 			boolean creado = directory.mkdir();
@@ -293,7 +290,10 @@ public class TrainingWindow extends JPanel {
 		// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
 		
 		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
-		
+		String initialMatrixFile = new String(directoryName+ "\\MatricesIniciales.csv");
+		WriteFile writerMatrix = new WriteFile(initialMatrixFile);
+		writerMatrix.writeMatrices(MainWindow.trainPar.getMatrices());
+		writerMatrix.closeFile();
 		if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
 			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
 			resultados.previousInformation(MainWindow.structurePar.getName(),MainWindow.trainPar.getMatrices().getW(),  MainWindow.trainPar.getLearning().getValue(),  MainWindow.trainPar.getMomentoBvalue(), MainWindow.trainPar.getFuncion());
@@ -343,12 +343,7 @@ public class TrainingWindow extends JPanel {
 		this.remove(panelGraph);
 	}
 
-	public static String getCurrentTimeStamp() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-	    Date now = new Date();
-	    String strDate = dateFormat.format(now);
-	    return strDate;
-	}
+
 	
 	//Muestra la información acerca del entrenamiento (estructura y parámetros) en el panel de la derecha
 	void displayGeneralInformation(){

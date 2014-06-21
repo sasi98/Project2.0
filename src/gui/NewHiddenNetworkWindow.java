@@ -317,7 +317,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 
 				
 				// Testing collecting data
-				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
+				outFile = new String(directoryName+"\\"+MainWindow.getCurrentTimeStamp()+".txt");
 				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
 				resultados.consoleOut(MainWindow.structurePar);
 				// Display results

@@ -139,8 +139,8 @@ public class Network {
 			int numNeuronsE = valuesInputLayer.length+1;
 			int numNeuronsS = valuesInputLayer.length;
 			
-			log.debug ("Entrando en SetUpPatronWithoutBias. NÃºmero de neuronas de entrada: "+ 
-					numNeuronsE + " NÃºmero de neuronas de salida: "+ valuesInputLayer.length + 
+			log.debug ("Entrando en SetUpPatronWithoutBias. Número de neuronas de entrada: "+ 
+					numNeuronsE + " Número de neuronas de salida: "+ valuesInputLayer.length + 
 					"NÃºmero de neuronas ocultas: "+ numNeuronsO);
 			log.debug("Dimensiones de W (Filas X Columnas): (" + W.getRow()+ " X " + W.getColumn() +" )\n");
 			log.debug("Dimensiones de V (Filas X Columnas): (" + V.getRow()+ " X " + V.getColumn() +" )\n");

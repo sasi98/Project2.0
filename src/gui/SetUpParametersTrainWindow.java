@@ -99,10 +99,9 @@ public class SetUpParametersTrainWindow extends JPanel{
 	private LearningConstant					learningClass;
 	
 	private String 								pathMatrices, 
-												funtionStr,
-												directoryName;
-	private File 								directory,
-												filechoosen;
+												funtionStr;
+	private File 								lastVisitedDirectory;
+												
 	
 	private static Logger log = Logger.getLogger(SetUpParametersTrainWindow.class);
 
@@ -116,10 +115,12 @@ public class SetUpParametersTrainWindow extends JPanel{
 	
 	
 	public void initialize() {
-		pathMatrices = "";
-		selectMatrixFile = false;
+		
+		lastVisitedDirectory = new File("C:\\repositoryGit\\Salidas");
+		
 		this.setLayout(null);
 		this.setBounds(MainWindow.JPANEL_MEASURES);
+		
 		/**Paneles*/
 		
 		panel_4 = new JPanel();
@@ -329,8 +330,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 	}
 		
 	private void btnAceptarActionPerformed() {
-		if (rdbtnAleatorias.isSelected()) { 			//Las matrices no fueron seleccionadas de archivo								
-			//se generan de forma aleatoria,
+		if (rdbtnAleatorias.isSelected()) { 			//Las matrices no fueron seleccionadas de archivo, se general de forma aleatoria. 							
 			int numNeuronS = MainWindow.structurePar.getNumNeuronsS(),
 				numNeuronE = MainWindow.structurePar.getNumNeuronsE();
 			if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
@@ -349,6 +349,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 				Manager.PRECISION);
 				matrices = new WeightMatrix(W, V);
 			}
+	
 		}
 //		else{
 //			ReadFile readMatrices;
@@ -453,7 +454,8 @@ public class SetUpParametersTrainWindow extends JPanel{
 
 
 	private void rdbtnProcedentesDeArchivoActionPerformed() {
-		final JFileChooser filechooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+		final JFileChooser filechooser = new JFileChooser();
+		filechooser.setCurrentDirectory(lastVisitedDirectory);
 			final int returnValue = filechooser.showOpenDialog(null);
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				final File filechoosen = filechooser.getSelectedFile();
@@ -475,6 +477,8 @@ public class SetUpParametersTrainWindow extends JPanel{
 				}catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
+				
+				lastVisitedDirectory = filechooser.getCurrentDirectory();
 			} else {
 				System.out.println("Open command cancelled by user.");
 			}

@@ -290,7 +290,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 				MainWindow.structureCreatedList.add(MainWindow.structurePar);
 				
 				// Testing collecting data
-				outFile = new String(directoryName+"\\"+TrainingWindow.getCurrentTimeStamp()+".txt");
+				outFile = new String(directoryName+"\\"+MainWindow.getCurrentTimeStamp()+".txt");
 				StructureParametersOuts resultados = new StructureParametersOuts(outFile);
 				resultados.consoleOut(MainWindow.structurePar);
 				

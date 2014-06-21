@@ -47,15 +47,19 @@ public class LoadNetworkWindow extends JPanel {
 	
 	
 	//GUI variables
-	private JComboBox				 comboBox;
-	private JButton 				 btnAbrir,
-									 btnAceptar;
+	private JComboBox				comboBox;
+	private JButton 				btnAbrir,
+									btnAceptar;
 	
 	private JLabel 					label_4,
 									label_5,
 									label_6,
 									label_7,
 									label_8;
+	
+	
+	private java.io.File 			lastVisitedDirectory;
+	
 
 	public LoadNetworkWindow() {
 		initialize();
@@ -69,6 +73,8 @@ public class LoadNetworkWindow extends JPanel {
 	 */
 	private void initialize() {
 
+		lastVisitedDirectory = new java.io.File("C:\\repositoryGit\\Salidas");
+		
 		this.setBounds(MainWindow.JPANEL_MEASURES);
 		this.setLayout(null);
 		
@@ -173,7 +179,8 @@ public class LoadNetworkWindow extends JPanel {
 	}
 	
 	private void btnAbrirActionPerformed() {
-		final JFileChooser filechooser = new JFileChooser ("C:\\repositoryGit\\Salidas");
+		final JFileChooser filechooser = new JFileChooser();
+		filechooser.setCurrentDirectory(lastVisitedDirectory);
 		if (filechooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			final java.io.File filechoosen = filechooser.getSelectedFile();
 			try {
@@ -186,6 +193,7 @@ public class LoadNetworkWindow extends JPanel {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			lastVisitedDirectory = filechooser.getCurrentDirectory();
 		}
 	}
 	

@@ -12,8 +12,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
@@ -295,7 +297,7 @@ public class MainWindow extends JFrame {
 			createdWindows.add(calculateOutputs);
 		}
 		else{
-			trainingWindow.show();
+			calculateOutputs.show();
 		}
 		
 		
@@ -351,6 +353,13 @@ public class MainWindow extends JFrame {
 		}
 	}
 	
+	public static String getCurrentTimeStamp() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+	    Date now = new Date();
+	    String strDate = dateFormat.format(now);
+	    return strDate;
+	}
+	
 	public static boolean MatrixSuitStructure (StructureParameters structurePar, WeightMatrix matrices){
 		boolean suit = true; 
 		Matrix W = matrices.getW();
@@ -362,8 +371,7 @@ public class MainWindow extends JFrame {
 			if (structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
 				if ( (nS != WRow) || (nE != WCol) )
 					suit = false;
-			}
-			else if (structurePar.getTypeNet().equals(Value.RedType.MULTICAPA) && (matrices.getV() != null)){
+			}else if (structurePar.getTypeNet().equals(Value.RedType.MULTICAPA) && (matrices.getV() != null)){
 				Matrix V = matrices.getV();
 				int VCol = V.getColumn(), 
 					VRow = V.getRow(),
@@ -373,7 +381,7 @@ public class MainWindow extends JFrame {
 			}
 		}
 		else
-			return suit = false;
+			suit = false;
 		
 		return suit;
 	}
