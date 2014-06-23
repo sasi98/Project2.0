@@ -287,7 +287,7 @@ public class NewSimplyNetworkWindow extends JPanel {
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
 				MainWindow.structurePar = new StructureParameters (name,Value.RedType.MONOCAPA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, 0, inputs, desiredOutputs, bias);
-				MainWindow.structureCreatedList.add(MainWindow.structurePar);
+				MainWindow.updateInformationsPanels();
 				
 				// Testing collecting data
 				outFile = new String(directoryName+"\\"+MainWindow.getCurrentTimeStamp()+".txt");

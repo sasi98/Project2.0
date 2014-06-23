@@ -53,6 +53,8 @@ public class MainWindow extends JFrame {
 
 	
 	public static final Rectangle JPANEL_MEASURES = new Rectangle(0, 0, 984, 491);
+	public static final Rectangle LOAD_JFRAME_MEASURES = new Rectangle(240,170, 370, 470);
+	public static final Rectangle SETUP_JFRAME_MEASURES = new Rectangle(240,170, 430, 460);
 	public static final Rectangle DESKTOP_PANEL_MEASURES = new Rectangle(0, 21, 984, 491);
 	public static final Dimension BUTTON_SIZE = new Dimension(110, 30);
 	
@@ -79,13 +81,13 @@ public class MainWindow extends JFrame {
 					  mntmEntrenarRed, 
 					  mntmCalcularSalidas;
 
-	// JPanel classes
-	private NewSimplyNetworkWindow newSimplyNet;
-	private NewHiddenNetworkWindow newHiddenNet;
-	private LoadNetworkWindow loadNetwork;
-	private SetUpParametersTrainWindow sepUpParameters;
-	private TrainingWindow trainingWindow;
-	private CalculateOutputsWindow calculateOutputs;
+	// JPanel/JFrames classes
+	public static NewSimplyNetworkWindow newSimplyNet;
+	public static NewHiddenNetworkWindow newHiddenNet;
+	public static LoadNetworkWindow loadNetwork;
+	public static SetUpParametersTrainWindow setUpParameters;
+	public static TrainingWindow trainingWindow;
+	public static CalculateOutputsWindow calculateOutputs;
 	
 	/**
 	 * @param args the command line arguments
@@ -246,30 +248,22 @@ public class MainWindow extends JFrame {
 	}
 	
 	private void mntmCargarRedExistenteActionPerformed() {
-		hideWindows();
 		if (loadNetwork == null) {
 			loadNetwork = new LoadNetworkWindow();
-			loadNetwork.setBounds(JPANEL_MEASURES);
-			desktopPane.add(loadNetwork, BorderLayout.CENTER);
-			loadNetwork.show();
-			createdWindows.add(loadNetwork);
+			loadNetwork.setVisible(true);
 		}
 		else{
-			loadNetwork.show();
+			loadNetwork.setVisible(true);
 		}
 	}
 	
 	private void mntmEstablecerParametrosActionPerformed() {
-		hideWindows();
-		if (sepUpParameters == null) {
-			sepUpParameters = new SetUpParametersTrainWindow();
-			sepUpParameters.setBounds(JPANEL_MEASURES);
-			desktopPane.add(sepUpParameters, BorderLayout.CENTER);
-			sepUpParameters.show();
-			createdWindows.add(sepUpParameters);
+		if (setUpParameters == null) {
+			setUpParameters = new SetUpParametersTrainWindow();
+			setUpParameters.setVisible(true);
 		}
 		else{
-			sepUpParameters.show();
+			setUpParameters.setVisible(true);
 		}
 	}
 	
@@ -361,28 +355,35 @@ public class MainWindow extends JFrame {
 	}
 	
 	public static boolean MatrixSuitStructure (StructureParameters structurePar, WeightMatrix matrices){
-		boolean suit = true; 
+		boolean suit = false;
 		Matrix W = matrices.getW();
 		if (matrices.getW() != null){
 			int WCol = W.getColumn(), 
 				WRow = W.getRow(),
 				nE = structurePar.getNumNeuronsE(),
 				nS = structurePar.getNumNeuronsS();
-			if (structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
-				if ( (nS != WRow) || (nE != WCol) )
-					suit = false;
+			if (structurePar.getTypeNet().equals(Value.RedType.MONOCAPA) && (matrices.getV() == null)){
+				if ( (nS == WRow) && (nE == WCol) )
+					suit = true;
 			}else if (structurePar.getTypeNet().equals(Value.RedType.MULTICAPA) && (matrices.getV() != null)){
 				Matrix V = matrices.getV();
 				int VCol = V.getColumn(), 
 					VRow = V.getRow(),
 					nO = structurePar.getNumNeuronsO();
-				if ((nO != WRow) ||(nE != WCol) || (nS != VRow) || (nO != VCol))
-					suit = false; 
+				if ((nO == WRow) && (nE == WCol) && (nS == VRow) && (nO == VCol))
+					suit = true;
 			}
 		}
-		else
-			suit = false;
-		
 		return suit;
 	}
+	
+	public static void updateInformationsPanels(){
+		if (trainingWindow != null){
+			trainingWindow.displayGeneralInformation();
+		}
+		if (calculateOutputs != null){
+			calculateOutputs.showStructureInformation();
+		}
+	}
+	
 }

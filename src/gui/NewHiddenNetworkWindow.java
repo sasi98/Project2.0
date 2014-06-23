@@ -67,7 +67,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 								numNeuronO,
 								inicio;
 	private boolean 			bias;
-	//private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
+	private StructureParameters	currentNet;       /**Representa la actual que hemos creado en esta ventana*/
 
 	private static Logger log = Logger.getLogger(NewHiddenNetworkWindow.class);
 	
@@ -312,6 +312,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 				MainWindow.numInstances++;
 				String name = idCompany + "_"+ this.comboBox_inputType.getSelectedItem() + MainWindow.numInstances;
 				MainWindow.structurePar = new StructureParameters (name, Value.RedType.MULTICAPA, this.comboBox_inputType.getSelectedItem().toString(), numPatrones, numNeuronES, numNeuronO, inputs, desiredOutputs, bias);
+				MainWindow.updateInformationsPanels();
 				
 				
 
@@ -348,5 +349,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 	private void btnCancelarActionPerformed() {
 		MainWindow.clearTextFields(this);
 	}
+	
+
 }
 

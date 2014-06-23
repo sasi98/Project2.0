@@ -77,6 +77,7 @@ public class TrainingWindow extends JPanel {
 												lblTipo,
 												lblFuncion,
 												lblLearning,
+												lblBias,
 												lblMomentoB,
 												lblDimensiones,
 												lblPatrones;
@@ -106,21 +107,21 @@ public class TrainingWindow extends JPanel {
 		/**Paneles*/
 		panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Informaci\u00F3n general", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(703, 95, 258, 305);
+		panel_1.setBounds(703, 51, 258, 349);
 		panel_1.setLayout(null);
 		add(panel_1);
 		panel_1.setLayout(null);
 
 		panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Estructura de red", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.setBounds(27, 25, 204, 139);
+		panel_3.setBounds(27, 25, 204, 164);
 		panel_1.add(panel_3);
 		panel_3.setLayout(null);
 
 		panel_4 = new JPanel();
 		panel_4.setLayout(null);
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Par\u00E1metros de entrenamiento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_4.setBounds(27, 184, 204, 110);
+		panel_4.setBounds(27, 210, 204, 110);
 		panel_1.add(panel_4);
 		
 		panel_2 = new JPanel();
@@ -154,21 +155,29 @@ public class TrainingWindow extends JPanel {
 		lblNewLabel_3.setBounds(20, 103, 90, 14);
 		panel_3.add(lblNewLabel_3);
 		
-		lblNombre = new JLabel("New label");
+		lblNombre = new JLabel("");
 		lblNombre.setBounds(122, 28, 72, 14);
 		panel_3.add(lblNombre);
 		
-		lblTipo = new JLabel("New label");
+		lblTipo = new JLabel("");
 		lblTipo.setBounds(122, 53, 72, 14);
 		panel_3.add(lblTipo);
 		
-		lblDimensiones = new JLabel("New label");
+		lblDimensiones = new JLabel("");
 		lblDimensiones.setBounds(122, 78, 72, 14);
 		panel_3.add(lblDimensiones);
 		
-		lblPatrones = new JLabel("New label");
+		lblPatrones = new JLabel("");
 		lblPatrones.setBounds(122, 103, 72, 14);
 		panel_3.add(lblPatrones);
+		
+		JLabel lblNewLabel_4 = new JLabel("Bias: ");
+		lblNewLabel_4.setBounds(20, 128, 46, 14);
+		panel_3.add(lblNewLabel_4);
+		
+		lblBias = new JLabel("");
+		lblBias.setBounds(122, 128, 46, 14);
+		panel_3.add(lblBias);
 		
 		
 		JLabel lblNewLabel_6 = new JLabel("Funci\u00F3n: ");
@@ -187,15 +196,15 @@ public class TrainingWindow extends JPanel {
 		lblNewLabel_11.setBounds(20, 53, 90, 14);
 		panel_4.add(lblNewLabel_11);
 		
-		lblFuncion = new JLabel("New label");
+		lblFuncion = new JLabel("");
 		lblFuncion.setBounds(120, 28, 74, 14);
 		panel_4.add(lblFuncion);
 		
-		lblLearning = new JLabel("New label");
+		lblLearning = new JLabel("");
 		lblLearning.setBounds(120, 53, 74, 14);
 		panel_4.add(lblLearning);
 		
-		lblMomentoB = new JLabel("New label");
+		lblMomentoB = new JLabel("");
 		lblMomentoB.setBounds(120, 78, 74, 14);
 		panel_4.add(lblMomentoB);
 
@@ -229,97 +238,110 @@ public class TrainingWindow extends JPanel {
 	}
 
 	private void btnIniciarEntrenamientoActionPerformed() {
-
 		boolean start = true; 
 		MainWindow.cancelTraining = false;
 		deleteGraph();
 		addNewGraph();
-		MainWindow.structurePar.print();
-
-		
-		//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
-		
-		directoryName = "C:\\repositoryGit\\Salidas\\Training_"+MainWindow.getCurrentTimeStamp();
-		File directory = new File(directoryName);
-		try{
-			boolean creado = directory.mkdir();
-			System.out.print("creado: "+ creado+"\n");
+		final StructureParameters currentStructurePar = MainWindow.structurePar;
+		final TrainingParameters currentTrainPar = MainWindow.trainPar;
+		WeightMatrix matrices = currentTrainPar.getMatrices();
+		if (!MainWindow.MatrixSuitStructure(currentStructurePar,matrices)){			
+//			String dimensiones = " ";
+//			if (matrices.getW()!= null)
+//				dimensiones =  "W ["+matrices.getW().getRow() + " X "+ matrices.getW().getColumn() +"]";
+//			if (matrices.getV()!= null)
+//				dimensiones = dimensiones + "V ["+matrices.getV().getRow() + " X "+ matrices.getV().getColumn() +"]";
+			JOptionPane.showMessageDialog (null,"Restablece los parámetros de entrenamiento. Las matrices iniciales no se corresponden con la estructura de red actual\n", 
+					"Error de correspondencia", JOptionPane.ERROR_MESSAGE);
+			System.out.print("no coinicide");
 		}
-		catch(SecurityException se){
-			Log.error("El directorio "+ directoryName + "no ha podido ser creado");
-		}
+		else{
 
-		// Creamos el hilo que llama al training
-		sw = new SwingWorker<Integer, Integer>() {
-			@Override
-			protected Integer doInBackground() throws Exception {
-				if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
-					results = Manager.trainingSimplyNetwork (directoryName, MainWindow.structurePar, MainWindow.trainPar);
-				}
-				else{
-					results = Manager.training (directoryName, MainWindow.structurePar, MainWindow.trainPar);
-					
-				}
-				return null;
+			//Creamos el directorio donde guardaremos los archivos procedentes al entrenamiento
+			directoryName = "C:\\repositoryGit\\Salidas\\Training_"+MainWindow.getCurrentTimeStamp();
+			File directory = new File(directoryName);
+			try{
+				boolean creado = directory.mkdir();
 			}
-
-			@Override
-			protected void done() {
-				// Display results
-				String fileName = new String(directoryName +"\\resultsTraining.txt");
-				try {
-				JOptionPane.showMessageDialog (null, results.getContentWindowBox(),
-							results.getTitleWindowBox(),JOptionPane.PLAIN_MESSAGE);
-					String strToAdd = FileUtils.readFileToString(new File(fileName));
-					textPane.setText(textPane.getText() + strToAdd);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				super.done();
+			catch(SecurityException se){
+				Log.error("El directorio "+ directoryName + "no ha podido ser creado");
 			}
-
-		};
-
-		sw.execute();
-
-		if (sw.isCancelled()) {
-			System.out.print("ha terminado");
-
-		}
-		
-		// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
-		
-		String outFile = new String(directoryName +"\\previousInformationTraining.txt");
-		String initialMatrixFile = new String(directoryName+ "\\MatricesIniciales.csv");
-		WriteFile writerMatrix = new WriteFile(initialMatrixFile);
-		writerMatrix.writeMatrices(MainWindow.trainPar.getMatrices());
-		writerMatrix.closeFile();
-		if (MainWindow.structurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
-			SNTrainingOuts resultados = new SNTrainingOuts(outFile);
-			resultados.previousInformation(MainWindow.structurePar.getName(),MainWindow.trainPar.getMatrices().getW(),  MainWindow.trainPar.getLearning().getValue(),  MainWindow.trainPar.getMomentoBvalue(), MainWindow.trainPar.getFuncion());
-		}else{
-			LNTrainingOuts resultados = new LNTrainingOuts(outFile);
-			resultados.previousInformation(MainWindow.structurePar.getName(), MainWindow.trainPar.getMatrices(),  MainWindow.trainPar.getLearning().getValue(),  MainWindow.trainPar.getMomentoBvalue(),  MainWindow.trainPar.getFuncion());
-		}
-		
-		// Display results
-		FileReader reader;
-		try {
-			reader = new FileReader(outFile);
-			BufferedReader br = new BufferedReader(reader);
-			textPane.read(br, null);
-			br.close();
-//			br.toString();
-//
-//			textPane.getText();
-//
-//			 textPane.requestFocus();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	
+			// Creamos el hilo que llama al training
+			sw = new SwingWorker<Integer, Integer>() {
+				@Override
+				protected Integer doInBackground() throws Exception {
+					if (currentStructurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+						System.out.print("entra en trainign MONOCAPA");
+						results = Manager.trainingSimplyNetwork (directoryName, currentStructurePar, currentTrainPar);
+						
+					}
+					else{
+						System.out.print("entra en trainign MULTICAPA");
+						results = Manager.training (directoryName, currentStructurePar, currentTrainPar);
+						
+					}
+					return null;
+				}
+	
+				@Override
+				protected void done() {
+					// Display results
+					String fileName = new String(directoryName +"\\resultsTraining.txt");
+					try {
+					JOptionPane.showMessageDialog (null, results.getContentWindowBox(),
+								results.getTitleWindowBox(),JOptionPane.PLAIN_MESSAGE);
+						String strToAdd = FileUtils.readFileToString(new File(fileName));
+						textPane.setText(textPane.getText() + strToAdd);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					super.done();
+				}
+	
+			};
+	
+			sw.execute();
+	
+			if (sw.isCancelled()) {
+				System.out.print("ha terminado");
+	
+			}
+			
+			// Testing collecting data, guardamos la información previa obtenida dentro de la carpeta actual 
+			
+			String outFile = new String(directoryName +"\\previousInformationTraining.txt");
+			String initialMatrixFile = new String(directoryName+ "\\MatricesIniciales.csv");
+			WriteFile writerMatrix = new WriteFile(initialMatrixFile);
+			writerMatrix.writeMatrices(MainWindow.trainPar.getMatrices());
+			writerMatrix.closeFile();
+			if (currentStructurePar.getTypeNet().equals(Value.RedType.MONOCAPA)){
+				SNTrainingOuts resultados = new SNTrainingOuts(outFile);
+				resultados.previousInformation(currentStructurePar.getName(),currentTrainPar.getMatrices().getW(),  currentTrainPar.getLearning().getValue(),  currentTrainPar.getMomentoBvalue(), currentTrainPar.getFuncion());
+			}else{
+				LNTrainingOuts resultados = new LNTrainingOuts(outFile);
+				resultados.previousInformation(currentStructurePar.getName(), currentTrainPar.getMatrices(),  currentTrainPar.getLearning().getValue(),  currentTrainPar.getMomentoBvalue(),  currentTrainPar.getFuncion());
+			}
+			
+			// Display results
+			FileReader reader;
+			try {
+				reader = new FileReader(outFile);
+				BufferedReader br = new BufferedReader(reader);
+				textPane.read(br, null);
+				br.close();
+	//			br.toString();
+	//
+	//			textPane.getText();
+	//
+	//			 textPane.requestFocus();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -353,6 +375,10 @@ public class TrainingWindow extends JPanel {
 			lblNombre.setText(structPar.getName());
 			lblTipo.setText(structPar.getTypeNet());
 			lblPatrones.setText(Integer.toString(structPar.getNumPatterns()));
+			if (structPar.hasBias())
+				lblBias.setText("Si");
+			else
+				lblBias.setText("No");
 			if (structPar.getTypeNet().equals(Value.RedType.MONOCAPA))
 				lblDimensiones.setText(Integer.toString(structPar.getNumNeuronsE())+ " X "+ Integer.toString(structPar.getNumNeuronsS()));
 			else

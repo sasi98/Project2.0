@@ -22,6 +22,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -59,15 +60,14 @@ import javax.swing.JList;
 
 import java.awt.Color;
 
-public class SetUpParametersTrainWindow extends JPanel{
+public class SetUpParametersTrainWindow extends JFrame{
 		
 		
 	/**GUI variables*/
 	
 	private JPanel 								panel_1,
 												panel_2,
-												panel_3,
-												panel_4;
+												panel_3;
 	private JTextField 							tfcortaError, 
 												tflearningCNT, 
 												tfmaxIt,
@@ -77,7 +77,6 @@ public class SetUpParametersTrainWindow extends JPanel{
 												rdbtnTangencial, 
 												rdbtnAleatorias,
 												rdbtnProcedentesDeArchivo;
-	private JTextPane							textPane;
 	private JComboBox 							comboBox,
 												comboBox_1;
 	private JButton								btnAceptar, 
@@ -109,6 +108,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 	 * Create the application.
 	 */
 	public SetUpParametersTrainWindow(){
+		setTitle("Par\u00E1metros de entrenamiento");
 		initialize();
 		createEvents();
 	}
@@ -117,26 +117,24 @@ public class SetUpParametersTrainWindow extends JPanel{
 	public void initialize() {
 		
 		lastVisitedDirectory = new File("C:\\repositoryGit\\Salidas");
+		this.setBounds(MainWindow.SETUP_JFRAME_MEASURES);
+		this.getContentPane().setBounds(MainWindow.SETUP_JFRAME_MEASURES);
 		
-		this.setLayout(null);
-		this.setBounds(MainWindow.JPANEL_MEASURES);
+		/**TextField, comboBox y RadioButton*/
 		
-		/**Paneles*/
+		final ButtonGroup groupFuncion = new ButtonGroup(); //Para que solo pueda ser selecionado uno 
+		final ButtonGroup groupMatrices = new ButtonGroup();
+						
+		/**Botones*/						
 		
-		panel_4 = new JPanel();
-		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Par\u00E1metros de entrenamiento", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_4.setBounds(30, 47, 434, 433);
-		this.add(panel_4);
-		panel_4.setLayout(null);
-			
 		panel_1 = new JPanel();
-		panel_1.setBounds(10, 19, 414, 403);
-		panel_4.add(panel_1);
+		panel_1.setBounds(10, 11, 414, 403);
+		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		panel_3 = new JPanel();
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Coeficiente de aprendizaje", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_3.setBounds(10, 200, 383, 125);
+		panel_3.setBounds(10, 216, 383, 125);
 		panel_1.add(panel_3);
 		panel_3.setLayout(null);
 		
@@ -144,30 +142,24 @@ public class SetUpParametersTrainWindow extends JPanel{
 		panel_2.setLayout(null);
 		panel_2.setBounds(10, 16, 363, 96);
 		panel_3.add(panel_2);
-			
-		textPane = new JTextPane();
-		textPane.setBounds(606, 68, 336, 398);
-		textPane.setEditable (false);
-		add(textPane);
-		textPane.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Informaci\u00F3n general", TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		
 		
 		/**Etiquetas*/
 		
 		final JLabel lblFuncion = new JLabel("Funci\u00F3n:  ");
-		lblFuncion.setBounds(24,52, 77, 14);
+		lblFuncion.setBounds(25,71, 77, 14);
 		panel_1.add(lblFuncion);
 		
 		final JLabel lblAadirMomento = new JLabel("Momento Beta: ");
-		lblAadirMomento.setBounds(24, 100, 121, 16);
+		lblAadirMomento.setBounds(25, 119, 121, 16);
 		panel_1.add(lblAadirMomento);
 		
 		final JLabel lblCotaDeError = new JLabel("Cota de error:");
-		lblCotaDeError.setBounds(24, 127, 86, 16);
+		lblCotaDeError.setBounds(25, 146, 86, 16);
 		panel_1.add(lblCotaDeError);
 		
 		final JLabel lblMaxIt = new JLabel("N\u00BA Max Iteraciones:");
-		lblMaxIt.setBounds(24, 154, 121, 16);
+		lblMaxIt.setBounds(25, 173, 121, 16);
 		panel_1.add(lblMaxIt);
 		
 		final JLabel lblValor = new JLabel("Valor: ");
@@ -187,41 +179,36 @@ public class SetUpParametersTrainWindow extends JPanel{
 		panel_2.add(lblLmite);
 		
 		final JLabel lblmatrices = new JLabel("Matrices iniciales: ");
-		lblmatrices.setBounds(24, 13, 115, 28);
+		lblmatrices.setBounds(25, 32, 115, 28);
 		panel_1.add(lblmatrices);
-		
-		/**TextField, comboBox y RadioButton*/
-		
-		final ButtonGroup groupFuncion = new ButtonGroup(); //Para que solo pueda ser selecionado uno 
-		final ButtonGroup groupMatrices = new ButtonGroup();
 		rdbtnLineal = new JRadioButton("Lineal");
-		rdbtnLineal.setBounds(145, 48, 69, 23);
+		rdbtnLineal.setBounds(146, 67, 69, 23);
 		panel_1.add(rdbtnLineal);
 		rdbtnLineal.setSelected(true);
 		groupFuncion.add(rdbtnLineal);
-									
+		
 		rdbtnTangencial = new JRadioButton("Tangencial");
-		rdbtnTangencial.setBounds(247, 48, 100, 23);
+		rdbtnTangencial.setBounds(248, 67, 100, 23);
 		panel_1.add(rdbtnTangencial);
 		groupFuncion.add(rdbtnTangencial);
 		
 		
 		rdbtnAleatorias = new JRadioButton("Aleatorias");
-		rdbtnAleatorias.setBounds(145, 16, 100, 23);
+		rdbtnAleatorias.setBounds(146, 35, 100, 23);
 		panel_1.add(rdbtnAleatorias);
 		rdbtnAleatorias.setSelected(true);
 		groupMatrices.add(rdbtnAleatorias);
 		
 	    rdbtnProcedentesDeArchivo = new JRadioButton("Seleccionar de archivo");
-	    rdbtnProcedentesDeArchivo.setBounds(247, 16, 161, 23);
-		panel_1.add(rdbtnProcedentesDeArchivo);
-		groupMatrices.add(rdbtnProcedentesDeArchivo);
-							
+	    rdbtnProcedentesDeArchivo.setBounds(248, 35, 161, 23);
+	    panel_1.add(rdbtnProcedentesDeArchivo);
+	    groupMatrices.add(rdbtnProcedentesDeArchivo);
+	    
 		tfmomentoB = new JTextField();
-		tfmomentoB.setBounds(217, 98, 80, 20);
+		tfmomentoB.setBounds(218, 117, 80, 20);
 		panel_1.add(tfmomentoB);
 		tfmomentoB.setColumns(10);
-						
+		
 		tflearningCNT = new JTextField();
 		tflearningCNT.setBounds(263, 24, 90, 17);
 		panel_2.add(tflearningCNT);
@@ -234,28 +221,26 @@ public class SetUpParametersTrainWindow extends JPanel{
 		textField.setColumns(10);
 		
 		tfcortaError = new JTextField();
-		tfcortaError.setBounds(217, 125, 80, 20);
+		tfcortaError.setBounds(218, 144, 80, 20);
 		panel_1.add(tfcortaError);
 		tfcortaError.setColumns(10);
 		
 		tfmaxIt = new JTextField();
-		tfmaxIt.setBounds(217, 152, 80, 20);
+		tfmaxIt.setBounds(218, 171, 80, 20);
 		panel_1.add(tfmaxIt);
 		tfmaxIt.setColumns(10);
 		
 		comboBox = new JComboBox();
 		comboBox.addItem(valueset.Value.LearningCNTTipologia.FIJO);
 		comboBox.addItem(valueset.Value.LearningCNTTipologia.VARIABLE);
-		comboBox.setBounds(81, 24, 90, 17);
+		comboBox.setBounds(81, 24, 103, 20);
 		panel_2.add(comboBox);
 		
 		comboBox_1 = new JComboBox();
 		comboBox_1.addItem("Cota superior");
 		comboBox_1.addItem("Sin cota");
-		comboBox_1.setBounds(81, 52, 90, 17);
+		comboBox_1.setBounds(81, 52, 103, 20);
 		panel_2.add(comboBox_1);
-						
-		/**Botones*/						
 		
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setBounds(83, 369, 89, 23);
@@ -438,6 +423,7 @@ public class SetUpParametersTrainWindow extends JPanel{
 		
 		learningClass = new LearningConstant(learningValue, tipologia, acotado, learningCoute);
 		MainWindow.trainPar = new TrainingParameters(funtionStr, iterationMax, cotaError, learningClass, matrices, momentBValue, momentB);
+		MainWindow.updateInformationsPanels();
 		JOptionPane.showMessageDialog (null,"Los parámetros del entrenamiento han sido establecidos",
 				"Paramétros de entrenamiento", JOptionPane.PLAIN_MESSAGE);
 	}

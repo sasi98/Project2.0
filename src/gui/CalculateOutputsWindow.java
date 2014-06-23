@@ -245,7 +245,7 @@ public class CalculateOutputsWindow extends JPanel{
 			}
 	}
 	
-	private void showStructureInformation() {
+	public void showStructureInformation() {
 		StructureParameters currentStructurePar = MainWindow.structurePar;
 		if (currentStructurePar != null){
 			label_4.setText(currentStructurePar.getName());
