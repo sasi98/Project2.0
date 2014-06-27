@@ -22,5 +22,8 @@
 	<classpathentry kind="lib" path="lib/jfreechart-1.0.16-demo.jar"/>
 	<classpathentry kind="lib" path="lib/PetersoftJavaStyle2_20120202.jar"/>
 	<classpathentry kind="lib" path="lib/seaglasslookandfeel-0.2.jar"/>
+	<classpathentry kind="lib" path="lib"/>
+	<classpathentry kind="lib" path="img"/>
+	<classpathentry kind="lib" path="img/img.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
