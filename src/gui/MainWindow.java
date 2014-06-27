@@ -153,9 +153,15 @@ public class MainWindow extends JFrame {
         mnArquitecturaRed.add(mntmCrearRedSimple);
 
         mntmCrearRedCon = new JMenuItem("Crear red con capa oculta");
+        final Image img_mntmCrearRedCon = ImageIO.read(MainWindow.class.getResource("/calculator.png"));
+        final Image resizedImage_mntmCrearRedCon = img_mntmCrearRedCon.getScaledInstance(16, 16, 0);
+        mntmCrearRedCon.setIcon(new ImageIcon(resizedImage_mntmCrearRedCon));
         mnArquitecturaRed.add(mntmCrearRedCon);
 
         mntmCargarRedExistente = new JMenuItem("Cargar red existente");
+        final Image img_mntmCargarRedExistente = ImageIO.read(MainWindow.class.getResource("/calculator.png"));
+        final Image resizedImage_mntmCargarRedExistente = img_mntmCargarRedExistente.getScaledInstance(16, 16, 0);
+        mntmCargarRedExistente.setIcon(new ImageIcon(resizedImage_mntmCargarRedExistente));
         mnArquitecturaRed.add(mntmCargarRedExistente);
 
 
@@ -163,10 +169,15 @@ public class MainWindow extends JFrame {
         menuBar.add(mnEntrenamiento);
 
         mntmEstablecerParametros = new JMenuItem("Establecer par\u00E1metros");
+        final Image img_mntmEstablecerParametros = ImageIO.read(MainWindow.class.getResource("/calculator.png"));
+        final Image resizedImage_mntmEstablecerParametros = img_mntmEstablecerParametros.getScaledInstance(16, 16, 0);
+        mntmEstablecerParametros.setIcon(new ImageIcon(resizedImage_mntmEstablecerParametros));
         mnEntrenamiento.add(mntmEstablecerParametros);
 
         mntmEntrenarRed = new JMenuItem("Entrenar red");
-
+        final Image img_mntmEntrenarRed = ImageIO.read(MainWindow.class.getResource("/calculator.png"));
+        final Image resizedImage_mntmEntrenarRed = img_mntmEntrenarRed.getScaledInstance(16, 16, 0);
+        mntmEntrenarRed.setIcon(new ImageIcon(resizedImage_mntmEntrenarRed));
         mnEntrenamiento.add(mntmEntrenarRed);
 
         final JMenu mnResultados = new JMenu("Resultados");
