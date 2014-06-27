@@ -249,7 +249,7 @@ public class NewHiddenNetworkWindow extends JPanel {
 							"Campo requerido", JOptionPane.ERROR_MESSAGE);
 		} else {
 			int auxInt = Integer.parseInt(idCompany);
-			if ((auxInt < 1) || (auxInt > 510) || (idCompany.length() != 3)) {
+			if ((auxInt < 1) || (auxInt > 530) || (idCompany.length() != 3)) {
 				JOptionPane.showMessageDialog (null,"Error, el identificador debe de tener formato 000" + " y valores entre 0 y 510.",
 						"Identificador no válido", JOptionPane.ERROR_MESSAGE);
 			} else {

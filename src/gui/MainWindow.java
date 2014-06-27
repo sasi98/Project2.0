@@ -94,7 +94,7 @@ public class MainWindow extends JFrame {
 	 */
 	public static void main(String args[]) {
 		try {
-			//UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+			UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -121,6 +121,7 @@ public class MainWindow extends JFrame {
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1000, 550);
+		frame.setTitle("BackPropagation - Neuronal Network");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		frame.getContentPane().setLayout(null);
@@ -383,6 +384,9 @@ public class MainWindow extends JFrame {
 		}
 		if (calculateOutputs != null){
 			calculateOutputs.showStructureInformation();
+		}
+		if (setUpParameters != null){
+			setUpParameters.updateLerningCuoteValue();
 		}
 	}
 	

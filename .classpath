@@ -21,5 +21,6 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="C:/repositoryGit/Project2.0/lib/seaglasslookandfeel-0.2.jar"/>
 	<classpathentry kind="lib" path="C:/repositoryGit/Project2.0/lib/PetersoftJavaStyle2_20120202.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Esther/Downloads/weblaf-1.27.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

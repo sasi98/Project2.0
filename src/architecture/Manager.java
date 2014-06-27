@@ -17,7 +17,7 @@ import outsFiles.*;
 
 public class Manager {
 
-	public static final int 				CNT = 100,  		/**Valor CNT por el que se multiplican los valores del excel*/
+	public static final int 				CNT = 1,  		/**Valor CNT por el que se multiplican los valores del excel*/
 											PRECISION = 10,     /**Valor que indica el número de dígitos decimales que tienes los datos*/
 											MATRIX_MAX = 1,    /**Valor máximo para la creación de matrices de pesos aleatorias*/ 
 											MATRIX_MIN = -1;   /**Valor minimo para la creación de matrices de pesos aleatorias*/

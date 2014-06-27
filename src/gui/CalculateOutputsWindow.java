@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -238,11 +239,15 @@ public class CalculateOutputsWindow extends JPanel{
 			writer.closeFile();
 			int input = JOptionPane.showOptionDialog(null, "Las salidas han sido generadas. ¿Desea abrir el archivo generado?", "Salidas generadas", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 			if (input == JOptionPane.YES_OPTION){
-				//Abrir documento
-				
+				String cmds[]= { "cmd", "/c","start notepad++ "+outFile };
+				try {
+					Runtime.getRuntime().exec(cmds);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			
-			}
+		}
 	}
 	
 	public void showStructureInformation() {

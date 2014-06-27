@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 import javax.swing.ButtonGroup;
@@ -65,14 +66,15 @@ public class SetUpParametersTrainWindow extends JFrame{
 		
 	/**GUI variables*/
 	
+	public static JTextField 					textField;
+	
 	private JPanel 								panel_1,
 												panel_2,
 												panel_3;
 	private JTextField 							tfcortaError, 
 												tflearningCNT, 
 												tfmaxIt,
-												tfmomentoB,
-												textField;
+												tfmomentoB;
 	private JRadioButton 						rdbtnLineal, 
 												rdbtnTangencial, 
 												rdbtnAleatorias,
@@ -85,10 +87,14 @@ public class SetUpParametersTrainWindow extends JFrame{
 	
 	/**Data variables*/
 	
+
+
+	public static double 						learningCoute;
+	
 	private BigDecimal 							cotaError;
 	private double  							momentBValue,
-	 											learningValue,
-	 											learningCoute;
+	 											learningValue;
+	
 	private int 								iterationMax;
 	private boolean 							momentB,
 												acotadoMax,   
@@ -254,6 +260,11 @@ public class SetUpParametersTrainWindow extends JFrame{
 		btnGuardar.setBounds(192, 369, 89, 23);
 		panel_1.add(btnGuardar);
 		
+		if (MainWindow.structurePar != null){
+			updateLerningCuoteValue();
+		}
+		
+		
 //		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
 //			acotadoMax = true;
 //			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
@@ -282,6 +293,8 @@ public class SetUpParametersTrainWindow extends JFrame{
 //				}
 //			
 
+		
+		
 	}
 
 
@@ -399,10 +412,7 @@ public class SetUpParametersTrainWindow extends JFrame{
 		
 		String tipologia = comboBox.getSelectedItem().toString(); //Fijo o Variable
 		if (comboBox_1.getSelectedItem().toString() == "Cota superior"){
-			acotado = true;
-			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
-			learningCoute = calculateCotaLearning (R);
-			textField.setText(Double.toString(learningCoute));
+			updateLerningCuoteValue();
 			acotado = true;
 		}
 		else
@@ -429,7 +439,7 @@ public class SetUpParametersTrainWindow extends JFrame{
 	}
 
 	//Dada la matriz de correlación de datos, devuelve 1/maximo de la diagona R · R Transp
-	private double calculateCotaLearning (Matrix R) {
+	private static double calculateCotaLearning (Matrix R) {
 		//valor máximo del coeficiente
 		Matrix RTransp = Matrix.transponer(R);
 		Matrix mCorrelacion = Matrix.product(R, RTransp); //R es mi matriz de datos, y R · R Transpuesta es mi matriz de correlación de datos
@@ -513,6 +523,17 @@ public class SetUpParametersTrainWindow extends JFrame{
 						"Parámetros no establecidos", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		
+		public void updateLerningCuoteValue(){
+			Matrix R = Matrix.createMatrixFromArrayOfVectors(MainWindow.structurePar.getInputs()); //Patrones de entrada -->  lo convertimos a matriz
+			learningCoute = calculateCotaLearning (R);
+			System.out.print(learningCoute);
+			BigDecimal aux = new BigDecimal (learningCoute);
+			aux = aux.setScale(7, RoundingMode.HALF_DOWN);
+			System.out.print(aux.toString());
+			textField.setText(aux.toString());
+		}
+		
 		
 		public static String getCurrentTimeStamp() {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
